@@ -21,4 +21,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "LibriaNow"
 include(":app")
- 
+include("core")
+include("feature")
+
+include(":core:network")
+include(":core:data")
+include(":core:design-system")
+include(":core:common")
+include(":core:local")
