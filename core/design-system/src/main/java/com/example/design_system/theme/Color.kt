@@ -1,4 +1,4 @@
-package com.example.librianow.ui.theme
+package com.example.design_system.theme
 
 import androidx.compose.ui.graphics.Color
 
