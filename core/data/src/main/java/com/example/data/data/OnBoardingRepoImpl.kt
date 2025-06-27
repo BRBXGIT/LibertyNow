@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class OnBoardingRepoImpl @Inject constructor(
-    onBoardingManager: OnBoardingManager
+    private val onBoardingManager: OnBoardingManager
 ): OnBoardingRepo {
 
     override val isOnBoardingCompleted = onBoardingManager.isOnboardingCompletedFlow
@@ -18,5 +18,13 @@ class OnBoardingRepoImpl @Inject constructor(
             true -> OnBoardingState.Completed
             false -> OnBoardingState.NotCompleted
         }
+    }
+
+    override suspend fun saveIsOnBoardingCompleted(isCompleted: Boolean) {
+        onBoardingManager.saveIsOnBoardingCompleted(isCompleted)
+    }
+
+    override suspend fun clearIsOnBoardingCompleted() {
+        onBoardingManager.clearIsOnBoardingCompleted()
     }
 }

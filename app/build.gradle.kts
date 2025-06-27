@@ -47,10 +47,22 @@ dependencies {
 
     // Core modules
     implementation(project(":core:design-system"))
+    implementation(project(":core:data"))
+    implementation(project(":core:local"))
+    // Feature modules
+    implementation(project(":feature:onboarding-screen"))
+    implementation(project(":feature:navbar-screens"))
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    // Material 3
+    implementation(libs.androidx.material3)
+    // Splashscreen
+    implementation(libs.androidx.core.splashscreen)
+    // Nav
+    implementation(libs.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -59,7 +71,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -8,4 +8,8 @@ interface OnBoardingRepo {
     val isOnBoardingCompleted: Flow<Boolean?>
 
     val onBoardingState: Flow<OnBoardingState>
+
+    suspend fun saveIsOnBoardingCompleted(isCompleted: Boolean)
+
+    suspend fun clearIsOnBoardingCompleted()
 }
