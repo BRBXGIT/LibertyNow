@@ -24,19 +24,24 @@ class TitlesUpdatesPagingSource(
         val startPage = params.key ?: 1
         val perPage = params.loadSize
 
-        val response = apiInstance.getTitlesUpdates(
-            page = startPage,
-            itemsPerPage = perPage
-        )
-
         return try {
+            val response = apiInstance.getTitlesUpdates(
+                page = startPage,
+                itemsPerPage = perPage
+            )
+
             if (response.code() == 200) {
-                val body = response.body()!!
-                LoadResult.Page(
-                    data = body.list,
-                    prevKey = if (body.pagination.currentPage > 1) body.pagination.currentPage - 1 else null,
-                    nextKey = body.pagination.currentPage + 1
-                )
+                val body = response.body()
+                if (body != null) {
+                    LoadResult.Page(
+                        data = body.list,
+                        prevKey = if (body.pagination.currentPage > 1) body.pagination.currentPage - 1 else null,
+                        nextKey = body.pagination.currentPage + 1
+                    )
+                } else {
+                    val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
+                    LoadResult.Error(NetworkException(NetworkErrors.SERIALIZATION, label))
+                }
             } else {
                 val exception = processNetworkErrors(response.code())
                 val label = processNetworkErrorsForUi(exception)
@@ -48,7 +53,7 @@ class TitlesUpdatesPagingSource(
                 LoadResult.Error(NetworkException(NetworkErrors.INTERNET, label))
             } else {
                 val label = processNetworkErrorsForUi(NetworkErrors.UNKNOWN)
-                LoadResult.Error(NetworkException(NetworkErrors.UNAUTHORIZED, label))
+                LoadResult.Error(NetworkException(NetworkErrors.UNKNOWN, label))
             }
         }
     }
