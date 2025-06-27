@@ -39,4 +39,5 @@ dependencies {
     implementation(libs.converter.gson)
     // Paging
     implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime.ktx)
 }
