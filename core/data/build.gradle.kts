@@ -37,4 +37,6 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     // Json
     implementation(libs.converter.gson)
+    // Paging
+    implementation(libs.androidx.paging.compose)
 }

@@ -24,6 +24,9 @@ android {
 
 dependencies {
 
+    // Core modules
+    implementation(project(":core:common"))
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
