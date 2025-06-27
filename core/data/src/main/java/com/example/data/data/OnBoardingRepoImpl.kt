@@ -14,7 +14,7 @@ class OnBoardingRepoImpl @Inject constructor(
 
     override val onBoardingState = isOnBoardingCompleted.map { isCompleted ->
         when (isCompleted) {
-            null -> OnBoardingState.Loading
+            null -> OnBoardingState.NotCompleted
             true -> OnBoardingState.Completed
             false -> OnBoardingState.NotCompleted
         }
