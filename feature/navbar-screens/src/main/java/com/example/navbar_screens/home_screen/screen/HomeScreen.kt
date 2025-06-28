@@ -177,13 +177,15 @@ fun HomeScreen(
                 } else {
                     TitlesListLVG(
                         titlesUpdates = titlesByQuery,
-                        onAnimeClick = {}
+                        onAnimeClick = {},
+                        showRandomButton = false
                     )
                 }
             } else {
                 TitlesListLVG(
                     titlesUpdates = titlesUpdates,
-                    onAnimeClick = {}
+                    onAnimeClick = {},
+                    onRandomClick = {}
                 )
             }
         }

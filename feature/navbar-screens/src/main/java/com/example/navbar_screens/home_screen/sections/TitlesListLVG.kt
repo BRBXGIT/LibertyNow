@@ -2,21 +2,33 @@ package com.example.navbar_screens.home_screen.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.theme.DesignUtils
+import com.example.design_system.theme.LibriaNowIcons
+import com.example.design_system.theme.mShapes
 import com.example.network.common.titles_list_response.Item0
 
 @Composable
 fun TitlesListLVG(
+    showRandomButton: Boolean = true,
     titlesUpdates: LazyPagingItems<Item0>,
-    onAnimeClick: (Int) -> Unit
+    onAnimeClick: (Int) -> Unit,
+    onRandomClick: () -> Unit = {}
 ) {
     LazyVerticalGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -25,6 +37,32 @@ fun TitlesListLVG(
         columns = GridCells.Adaptive(150.dp),
         contentPadding = PaddingValues(16.dp)
     ) {
+        if (showRandomButton) {
+            item(
+                span = { GridItemSpan(maxLineSpan) }
+            ) {
+                Button(
+                    onClick = onRandomClick,
+                    shape = mShapes.extraLarge
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(LibriaNowIcons.Funny),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+
+                        Text(
+                            text = "Случайное аниме"
+                        )
+                    }
+                }
+            }
+        }
+
         items(titlesUpdates.itemCount, key = { it }) { index ->
             val anime = titlesUpdates[index]
 
