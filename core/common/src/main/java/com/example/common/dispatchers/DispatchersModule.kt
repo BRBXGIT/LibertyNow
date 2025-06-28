@@ -1,4 +1,4 @@
-package com.example.common
+package com.example.common.dispatchers
 
 import dagger.Module
 import dagger.Provides
@@ -18,4 +18,8 @@ object DispatchersModule {
     @Provides
     @Dispatcher(LibriaNowDispatchers.Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    @Dispatcher(LibriaNowDispatchers.Main)
+    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }

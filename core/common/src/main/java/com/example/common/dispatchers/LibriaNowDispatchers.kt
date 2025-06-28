@@ -1,4 +1,4 @@
-package com.example.common
+package com.example.common.dispatchers
 
 import javax.inject.Qualifier
 
@@ -9,4 +9,5 @@ annotation class Dispatcher(val libriaNowDispatcher: LibriaNowDispatchers)
 enum class LibriaNowDispatchers {
     Default,
     IO,
+    Main
 }

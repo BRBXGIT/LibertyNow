@@ -2,8 +2,8 @@ package com.example.onboarding_screen.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.common.Dispatcher
-import com.example.common.LibriaNowDispatchers
+import com.example.common.dispatchers.Dispatcher
+import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.data.domain.OnBoardingRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
