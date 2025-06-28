@@ -53,6 +53,7 @@ dependencies {
     implementation(project(":feature:onboarding-screen"))
     implementation(project(":feature:navbar-screens"))
     implementation(project(":feature:anime-screen"))
+    implementation(project(":feature:common"))
 
     // Hilt
     implementation(libs.hilt.android)

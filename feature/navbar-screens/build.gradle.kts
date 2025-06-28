@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":core:common"))
     // Feature modules
     implementation(project(":feature:anime-screen"))
+    implementation(project(":feature:common"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -58,4 +59,6 @@ dependencies {
     implementation(libs.androidx.paging.runtime.ktx)
     // Json
     implementation(libs.converter.gson)
+    // Animated icons(compose animation graphics)
+    implementation(libs.androidx.animation.graphics)
 }

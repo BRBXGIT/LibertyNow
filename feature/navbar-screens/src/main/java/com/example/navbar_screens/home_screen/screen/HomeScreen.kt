@@ -23,12 +23,16 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.anime_screen.navigation.AnimeScreenRoute
+import com.example.common.CommonIntent
+import com.example.common.CommonState
+import com.example.common.CommonVM
 import com.example.common.functions.NetworkException
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.theme.mColors
+import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.home_screen.sections.HomeScreenTopBar
 import com.example.navbar_screens.home_screen.sections.NothingHereSection
 import com.example.navbar_screens.home_screen.sections.TitlesListLVG
@@ -38,6 +42,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenVM,
+    commonVM: CommonVM,
+    commonState: CommonState,
     navController: NavController
 ) {
     val titlesUpdates = viewModel.titlesUpdates.collectAsLazyPagingItems()
@@ -164,6 +170,19 @@ fun HomeScreen(
                 }
             )
         },
+        bottomBar = {
+            BottomNavBar(
+                selectedItemIndex = commonState.selectedNavBarIndex,
+                onNavItemClick = { index, route ->
+                    commonVM.sendIntent(
+                        CommonIntent.UpdateState(
+                            commonState.copy(selectedNavBarIndex = index)
+                        )
+                    )
+                    navController.navigate(route)
+                }
+            )
+        },
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
@@ -180,14 +199,22 @@ fun HomeScreen(
                 } else {
                     TitlesListLVG(
                         titlesUpdates = titlesByQuery,
-                        onAnimeClick = {},
-                        showRandomButton = false
+                        showRandomButton = false,
+                        onAnimeClick = { animeId ->
+                            navController.navigate(
+                                AnimeScreenRoute(animeId)
+                            )
+                        },
                     )
                 }
             } else {
                 TitlesListLVG(
                     titlesUpdates = titlesUpdates,
-                    onAnimeClick = {},
+                    onAnimeClick = { animeId ->
+                        navController.navigate(
+                            AnimeScreenRoute(animeId)
+                        )
+                    },
                     onRandomClick = {
                         viewModel.sendIntent(
                             HomeScreenIntent.FetchRandomTitle(
