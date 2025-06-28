@@ -4,13 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,6 +22,7 @@ import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.theme.mColors
+import com.example.navbar_screens.home_screen.sections.TitlesUpdatesLVG
 import kotlinx.coroutines.launch
 
 @Composable
@@ -80,13 +79,10 @@ fun HomeScreen(
                 .background(mColors.background)
                 .padding(innerPadding)
         ) {
-            LazyColumn {
-                items(titlesUpdates.itemCount) {
-                    Text(
-                        text = it.toString()
-                    )
-                }
-            }
+            TitlesUpdatesLVG(
+                titlesUpdates = titlesUpdates,
+                onAnimeClick = {}
+            )
         }
     }
 }

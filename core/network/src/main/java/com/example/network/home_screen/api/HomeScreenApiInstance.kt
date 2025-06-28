@@ -9,7 +9,7 @@ interface HomeScreenApiInstance {
 
     @GET("title/updates")
     suspend fun getTitlesUpdates(
-        @Query("filter") filter: String = "posters,genres,names",
+        @Query("filter") filter: String = "id,posters,genres,names",
         @Query("page") page: Int,
         @Query("items_per_page") itemsPerPage: Int
     ): Response<TitlesUpdatesResponse>
