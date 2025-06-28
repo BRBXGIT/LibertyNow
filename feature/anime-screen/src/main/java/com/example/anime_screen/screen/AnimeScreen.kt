@@ -1,5 +1,6 @@
 package com.example.anime_screen.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +20,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.anime_screen.sections.AnimeScreenTopBar
+import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarController
@@ -78,7 +80,9 @@ fun AnimeScreen(
     ) { innerPadding ->
         val anime = screenState.anime
 
-        LazyColumn {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             anime?.let {
                 item {
                     Header(
@@ -89,6 +93,10 @@ fun AnimeScreen(
                         posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.original.url,
                         topInnerPadding = innerPadding.calculateTopPadding() + 12.dp
                     )
+                }
+
+                item {
+                    GenresLR(anime.genres)
                 }
             }
         }

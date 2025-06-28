@@ -23,12 +23,14 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.design_system.cards.LibriaNowAsyncImage
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
@@ -149,5 +151,20 @@ fun Header(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun HeaderPreview() {
+    LibriaNowTheme {
+        Header(
+            nameEnglish = "Тетрадь смерти",
+            season = "2007 осень",
+            type = "ТВ 27 эпизодов",
+            releaseState = "Закончен",
+            posterPath = "",
+            topInnerPadding = 16.dp
+        )
     }
 }
