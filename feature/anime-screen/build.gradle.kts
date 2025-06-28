@@ -57,4 +57,6 @@ dependencies {
     implementation(libs.haze.materials)
     // Coil
     implementation(libs.coil.compose)
+    // Animated icons(compose animation graphics)
+    implementation(libs.androidx.animation.graphics)
 }

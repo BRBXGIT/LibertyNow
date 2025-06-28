@@ -30,6 +30,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.design_system.cards.LibriaNowAsyncImage
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
@@ -104,15 +105,17 @@ fun Header(
                 .fillMaxWidth()
                 .padding(
                     top = topInnerPadding,
-                    start = 16.dp,
-                    end = 16.dp,
+                    start = CommonConstants.HORIZONTAL_PADDING.dp,
+                    end = CommonConstants.HORIZONTAL_PADDING.dp,
                     bottom = 16.dp
                 )
 
         ) {
+            val posterHeight = 140.dp
+
             Box(
                 modifier = Modifier
-                    .size(100.dp, 140.dp)
+                    .size(100.dp, posterHeight)
                     .clip(mShapes.small)
             ) {
                 LibriaNowAsyncImage(posterPath)
@@ -120,7 +123,7 @@ fun Header(
 
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.height(140.dp)
+                modifier = Modifier.height(posterHeight)
             ) {
                 Text(
                     text = nameEnglish,

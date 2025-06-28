@@ -1,11 +1,11 @@
 package com.example.librianow
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.anime_screen.navigation.animeScreen
 import com.example.common.CommonVM
 import com.example.navbar_screens.home_screen.navigation.homeScreen
@@ -28,7 +28,7 @@ fun NavGraph(
     val homeScreenVM = hiltViewModel<HomeScreenVM>()
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = AnimeScreenRoute(9934) // TODO change to start destination
     ) {
         onBoardingScreen()
 

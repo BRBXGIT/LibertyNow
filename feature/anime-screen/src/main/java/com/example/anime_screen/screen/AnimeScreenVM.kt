@@ -34,7 +34,10 @@ class AnimeScreenVM @Inject constructor(
     private fun fetchAnime(id: Int) {
         viewModelScope.launch(dispatcherIo) {
             _animeScreenState.update { state ->
-                state.copy(isLoading = true)
+                state.copy(
+                    isLoading = true,
+                    isError = false
+                )
             }
 
             val response = repository.getAnime(id)
@@ -66,9 +69,14 @@ class AnimeScreenVM @Inject constructor(
         }
     }
 
+    private fun updateScreenState(state: AnimeScreenState) {
+        _animeScreenState.value = state
+    }
+
     fun sendIntent(intent: AnimeScreenIntent) {
         when (intent) {
             is AnimeScreenIntent.FetchAnime -> fetchAnime(intent.id)
+            is AnimeScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
         }
     }
 }

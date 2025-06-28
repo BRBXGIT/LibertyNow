@@ -20,6 +20,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.anime_screen.sections.AnimeScreenTopBar
+import com.example.anime_screen.sections.DescriptionSection
 import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
 import com.example.design_system.snackbars.ObserveAsEvents
@@ -97,6 +98,23 @@ fun AnimeScreen(
 
                 item {
                     GenresLR(anime.genres)
+                }
+
+                item {
+                    DescriptionSection(
+                        description = anime.description,
+                        isExpanded = screenState.isDescriptionExpanded,
+                        voiceActors = anime.team.voice.joinToString(", "),
+                        timingWorkers = anime.team.timing.joinToString(", "),
+                        subtitlesWorkers = anime.team.decor.joinToString(", "),
+                        onExpandClick = {
+                            viewModel.sendIntent(
+                                AnimeScreenIntent.UpdateScreenState(
+                                    screenState.copy(isDescriptionExpanded = !screenState.isDescriptionExpanded)
+                                )
+                            )
+                        }
+                    )
                 }
             }
         }
