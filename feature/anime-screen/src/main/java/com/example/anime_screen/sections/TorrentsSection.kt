@@ -23,6 +23,7 @@ import com.example.network.anime_screen.models.anime_response.Torrents
 
 @Composable
 fun TorrentsSection(
+    modifier: Modifier = Modifier,
     torrents: Torrents,
     onDownloadClick: (String) -> Unit
 ) {

@@ -30,7 +30,8 @@ import com.example.design_system.theme.mColors
 fun AddToLikesButton(
     alreadyInLikes: Boolean,
     onAddClick: () -> Unit,
-    onPopClick: () -> Unit
+    onPopClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val animatedButtonColor by animateColorAsState(
         targetValue = if (alreadyInLikes) mColors.secondary else mColors.primary,
@@ -51,7 +52,7 @@ fun AddToLikesButton(
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = animatedButtonColor),
         onClick = if (alreadyInLikes) onPopClick else onAddClick,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {

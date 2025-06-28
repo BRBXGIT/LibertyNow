@@ -21,6 +21,7 @@ import com.example.design_system.theme.mTypography
 
 @Composable
 fun EpisodeItem(
+    modifier: Modifier = Modifier,
     episode: Int,
     name: String,
     onWatchButtonClick: () -> Unit,
@@ -28,7 +29,7 @@ fun EpisodeItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
             .background(

@@ -23,11 +23,13 @@ import com.example.design_system.theme.mTypography
 @Composable
 fun GenresLR(
     genres: List<String>,
+    modifier: Modifier = Modifier
 ) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = CommonConstants.HORIZONTAL_PADDING.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
     ) {
         items(genres) { genre ->
             GenreBox(genre)

@@ -39,11 +39,12 @@ fun DescriptionSection(
     voiceActors: String,
     timingWorkers: String,
     subtitlesWorkers: String,
+    modifier: Modifier = Modifier,
     onExpandClick: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
+        modifier = modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
         Column {
             Text(

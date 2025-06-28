@@ -49,11 +49,14 @@ fun Header(
     episodes: Int,
     releaseState: String,
     posterPath: String,
-    topInnerPadding: Dp
+    topInnerPadding: Dp,
+    modifier: Modifier = Modifier
 ) {
     val hazeState = remember { HazeState() }
 
-    Box {
+    Box(
+        modifier = modifier
+    ) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(posterPath)

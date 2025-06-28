@@ -100,7 +100,7 @@ fun AnimeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             anime?.let {
-                item {
+                item(key = "header") {
                     Header(
                         nameEnglish = anime.names.en,
                         season = "${anime.season.string} ${anime.season.year}",
@@ -108,12 +108,14 @@ fun AnimeScreen(
                         episodes = anime.player.list.values.size,
                         releaseState = anime.status.string,
                         posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.original.url,
-                        topInnerPadding = innerPadding.calculateTopPadding() + 12.dp
+                        topInnerPadding = innerPadding.calculateTopPadding() + 12.dp,
+                        modifier = Modifier.animateItem()
                     )
                 }
 
-                item {
+                item(key = "addToLikeButton") {
                     AddToLikesButton(
+                        modifier = Modifier.animateItem(),
                         alreadyInLikes = screenState.isInLikes,
                         onAddClick = {
                             viewModel.sendIntent(
@@ -128,12 +130,16 @@ fun AnimeScreen(
                     )
                 }
 
-                item {
-                    GenresLR(anime.genres)
+                item(key = "genresLR") {
+                    GenresLR(
+                        genres = anime.genres,
+                        modifier = Modifier.animateItem()
+                    )
                 }
 
-                item {
+                item(key = "description") {
                     DescriptionSection(
+                        modifier = Modifier.animateItem(),
                         description = anime.description,
                         isExpanded = screenState.isDescriptionExpanded,
                         voiceActors = anime.team.voice.joinToString(", "),
@@ -149,10 +155,11 @@ fun AnimeScreen(
                     )
                 }
 
-                item {
+                item(key = "torrents") {
                     val context = LocalContext.current
 
                     TorrentsSection(
+                        modifier = Modifier.animateItem(),
                         torrents = anime.torrents,
                         onDownloadClick = { torrentLink ->
                             context.startActivity(
@@ -165,14 +172,20 @@ fun AnimeScreen(
                     )
                 }
 
-                item {
+                item(key = "divider") {
                     HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
                     )
                 }
 
-                itemsIndexed(anime.player.list.values.toList()) { index, episode ->
+                itemsIndexed(
+                    items = anime.player.list.values.toList(),
+                    key = { index, episode -> index }
+                ) { index, episode ->
                     EpisodeItem(
+                        modifier = Modifier.animateItem(),
                         episode = episode.episode,
                         name = episode.name ?: "Без названия",
                         onWatchButtonClick = {}, // TODO
