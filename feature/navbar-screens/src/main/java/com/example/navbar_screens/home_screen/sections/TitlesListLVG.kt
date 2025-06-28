@@ -11,10 +11,10 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.theme.DesignUtils
-import com.example.network.home_screen.models.titles_updates_response.Item0
+import com.example.network.common.titles_list_response.Item0
 
 @Composable
-fun TitlesUpdatesLVG(
+fun TitlesListLVG(
     titlesUpdates: LazyPagingItems<Item0>,
     onAnimeClick: (Int) -> Unit
 ) {

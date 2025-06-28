@@ -13,42 +13,90 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.design_system.theme.LibriaNowIcons
+import com.example.navbar_screens.home_screen.screen.HomeScreenState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenTopBar(
-    isLoading: Boolean,
+    screenState: HomeScreenState,
     scrollBehavior: TopAppBarScrollBehavior,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onQueryInput: (String) -> Unit,
+    onClearClick: () -> Unit
 ) {
     Column {
         TopAppBar(
             title = {
-                Text(
-                    text = "Последние обновления"
-                )
+                if(screenState.isSearching) {
+                    TextField(
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+                        singleLine = true,
+                        value = screenState.query,
+                        onValueChange = { onQueryInput(it) },
+                        placeholder = {
+                            Text(
+                                text = "Поиск"
+                            )
+                        }
+                    )
+                } else {
+                    Text(text = "Последние обновления")
+                }
             },
             actions = {
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        painter = painterResource(LibriaNowIcons.Magnifier),
-                        contentDescription = null
-                    )
+                if (screenState.isSearching) {
+                    if (screenState.query != "") {
+                        IconButton(
+                            onClick = onClearClick
+                        ) {
+                            Icon(
+                                painter = painterResource(LibriaNowIcons.CloseCircle),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                } else {
+                    IconButton(
+                        onClick = onSearchClick
+                    ) {
+                        Icon(
+                            painter = painterResource(LibriaNowIcons.Magnifier),
+                            contentDescription = null
+                        )
+                    }
+                }
+            },
+            navigationIcon = {
+                if (screenState.isSearching) {
+                    IconButton(
+                        onClick = onSearchClick
+                    ) {
+                        Icon(
+                            painter = painterResource(LibriaNowIcons.ArrowLeftFilled),
+                            contentDescription = null
+                        )
+                    }
                 }
             },
             scrollBehavior = scrollBehavior
         )
 
         AnimatedVisibility(
-            visible = isLoading,
+            visible = screenState.isLoading,
             enter = fadeIn(tween(300)) + expandVertically(tween(300)),
             exit = fadeOut(tween(300)) + shrinkVertically(tween(300))
         ) {

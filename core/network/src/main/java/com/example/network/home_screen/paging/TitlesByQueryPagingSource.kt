@@ -12,8 +12,9 @@ import java.io.IOException
 import java.net.SocketException
 import java.net.UnknownHostException
 
-class TitlesUpdatesPagingSource(
+class TitlesByQueryPagingSource(
     private val apiInstance: HomeScreenApiInstance,
+    private val query: String
 ): PagingSource<Int, Item0>() {
 
     override fun getRefreshKey(state: PagingState<Int, Item0>): Int? {
@@ -25,9 +26,10 @@ class TitlesUpdatesPagingSource(
         val perPage = params.loadSize
 
         return try {
-            val response = apiInstance.getTitlesUpdates(
+            val response = apiInstance.getTitlesByQuery(
                 page = startPage,
-                itemsPerPage = perPage
+                itemsPerPage = perPage,
+                query = query
             )
 
             if (response.code() == 200) {

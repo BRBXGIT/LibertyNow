@@ -1,6 +1,6 @@
 package com.example.network.home_screen.api
 
-import com.example.network.home_screen.models.titles_updates_response.TitlesUpdatesResponse
+import com.example.network.common.titles_list_response.TitlesListResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,5 +12,13 @@ interface HomeScreenApiInstance {
         @Query("filter") filter: String = "id,posters,genres,names",
         @Query("page") page: Int,
         @Query("items_per_page") itemsPerPage: Int
-    ): Response<TitlesUpdatesResponse>
+    ): Response<TitlesListResponse>
+
+    @GET("title/search")
+    suspend fun getTitlesByQuery(
+        @Query("search") query: String,
+        @Query("page") page: Int,
+        @Query("items_per_page") itemsPerPage: Int,
+        @Query("filter") filter: String = "id,posters,genres,names"
+    ): Response<TitlesListResponse>
 }

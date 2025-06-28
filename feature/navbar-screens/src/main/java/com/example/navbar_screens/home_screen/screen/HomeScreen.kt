@@ -28,7 +28,8 @@ import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.home_screen.sections.HomeScreenTopBar
-import com.example.navbar_screens.home_screen.sections.TitlesUpdatesLVG
+import com.example.navbar_screens.home_screen.sections.NothingHereSection
+import com.example.navbar_screens.home_screen.sections.TitlesListLVG
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +37,8 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     viewModel: HomeScreenVM
 ) {
-    val titlesUpdates = viewModel.titlesUpdate.collectAsLazyPagingItems()
+    val titlesUpdates = viewModel.titlesUpdates.collectAsLazyPagingItems()
+    val titlesByQuery = viewModel.titlesByQuery.collectAsLazyPagingItems()
     val screenState by viewModel.homeScreenState.collectAsStateWithLifecycle()
 
     // Snackbars stuff
@@ -59,7 +61,7 @@ fun HomeScreen(
         }
     }
 
-    // Check updates errors
+    // Check titles updates errors
     LaunchedEffect(titlesUpdates.loadState) {
         if (titlesUpdates.loadState.hasError) {
             val error = (titlesUpdates.loadState.refresh as LoadState.Error).error as NetworkException
@@ -94,14 +96,69 @@ fun HomeScreen(
         }
     }
 
+    // Check titles by query errors
+    LaunchedEffect(titlesByQuery.loadState) {
+        if (titlesByQuery.loadState.hasError) {
+            val error = (titlesByQuery.loadState.refresh as LoadState.Error).error as NetworkException
+
+            SnackbarController.sendEvent(
+                SnackbarEvent(
+                    message = error.label,
+                    action = SnackbarAction(
+                        name = "Retry",
+                        action = { titlesByQuery.retry() }
+                    )
+                )
+            )
+        }
+
+        if (titlesByQuery.loadState.refresh is LoadState.Loading) {
+            viewModel.sendIntent(
+                HomeScreenIntent.UpdateScreenState(
+                    screenState.copy(
+                        isLoading = true
+                    )
+                )
+            )
+        } else {
+            viewModel.sendIntent(
+                HomeScreenIntent.UpdateScreenState(
+                    screenState.copy(
+                        isLoading = false
+                    )
+                )
+            )
+        }
+    }
+
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             HomeScreenTopBar(
-                isLoading = screenState.isLoading,
+                screenState = screenState,
                 scrollBehavior = topBarScrollBehavior,
-                onSearchClick = {}
+                onSearchClick = {
+                    viewModel.sendIntent(
+                        HomeScreenIntent.UpdateScreenState(
+                            screenState.copy(isSearching = !screenState.isSearching)
+                        )
+                    )
+                },
+                onQueryInput = { query ->
+                    viewModel.sendIntent(
+                        HomeScreenIntent.UpdateScreenState(
+                            screenState.copy(query = query)
+                        )
+                    )
+                },
+                onClearClick = {
+                    viewModel.sendIntent(
+                        HomeScreenIntent.UpdateScreenState(
+                            screenState.copy(query = "")
+                        )
+                    )
+                }
             )
         },
         modifier = Modifier
@@ -114,10 +171,21 @@ fun HomeScreen(
                 .background(mColors.background)
                 .padding(innerPadding)
         ) {
-            TitlesUpdatesLVG(
-                titlesUpdates = titlesUpdates,
-                onAnimeClick = {}
-            )
+            if (screenState.isSearching) {
+                if (screenState.query == "") {
+                    NothingHereSection()
+                } else {
+                    TitlesListLVG(
+                        titlesUpdates = titlesByQuery,
+                        onAnimeClick = {}
+                    )
+                }
+            } else {
+                TitlesListLVG(
+                    titlesUpdates = titlesUpdates,
+                    onAnimeClick = {}
+                )
+            }
         }
     }
 }
