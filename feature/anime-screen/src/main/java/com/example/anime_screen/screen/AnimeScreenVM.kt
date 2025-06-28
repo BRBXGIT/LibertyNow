@@ -35,13 +35,19 @@ class AnimeScreenVM @Inject constructor(
     private fun fetchAnime(id: Int) {
         viewModelScope.launch(dispatcherIo) {
             _animeScreenState.update { state ->
-                state.copy(isLoading = true)
+                state.copy(
+                    isLoading = true,
+                    isError = false
+                )
             }
 
             val response = repository.getAnime(id)
             if (response.code() == 200) {
                 val body = response.body()
                 if (body == null) {
+                    _animeScreenState.update { state ->
+                        state.copy(isError = true)
+                    }
                     val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
 
                     SnackbarController.sendEvent(
@@ -59,6 +65,9 @@ class AnimeScreenVM @Inject constructor(
                     }
                 }
             } else {
+                _animeScreenState.update { state ->
+                    state.copy(isError = true)
+                }
                 val error = processNetworkErrors(response.code())
                 val label = processNetworkErrorsForUi(error)
 
@@ -72,6 +81,16 @@ class AnimeScreenVM @Inject constructor(
                     )
                 )
             }
+
+            _animeScreenState.update { state ->
+                state.copy(isLoading = false)
+            }
+        }
+    }
+
+    fun sendIntent(intent: AnimeScreenIntent) {
+        when (intent) {
+            is AnimeScreenIntent.FetchAnime -> fetchAnime(intent.id)
         }
     }
 }

@@ -18,11 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.anime_screen.navigation.AnimeScreenRoute
@@ -34,7 +31,6 @@ import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
-import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.home_screen.sections.HomeScreenTopBar
