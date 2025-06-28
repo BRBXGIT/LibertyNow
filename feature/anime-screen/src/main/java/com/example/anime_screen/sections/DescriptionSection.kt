@@ -34,7 +34,7 @@ import com.example.design_system.theme.mTypography
 @OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun DescriptionSection(
-    description: String,
+    description: String?,
     isExpanded: Boolean,
     voiceActors: String,
     timingWorkers: String,
@@ -71,23 +71,30 @@ fun DescriptionSection(
                 targetValue = if(isExpanded) mColors.onBackground else mColors.background,
                 label = "Animated color"
             )
-            if(!isExpanded) {
-                Text(
-                    text = AnnotatedString.fromHtml(description),
-                    style = mTypography.bodyLarge.copy(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                mColors.onBackground,
-                                animatedColor
+            if (description != null) {
+                if (!isExpanded) {
+                    Text(
+                        text = AnnotatedString.fromHtml(description),
+                        style = mTypography.bodyLarge.copy(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    mColors.onBackground,
+                                    animatedColor
+                                )
                             )
-                        )
-                    ),
-                    maxLines = 5,
-                    overflow = TextOverflow.Ellipsis
-                )
+                        ),
+                        maxLines = 5,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                } else {
+                    Text(
+                        text = AnnotatedString.fromHtml(description),
+                        style = mTypography.bodyLarge
+                    )
+                }
             } else {
                 Text(
-                    text = AnnotatedString.fromHtml(description),
+                    text = "Описания нет",
                     style = mTypography.bodyLarge
                 )
             }

@@ -5,7 +5,7 @@ import kotlin.collections.List
 
 data class AnimeResponse(
     @SerializedName("description")
-    val description: String = "",
+    val description: String? = "",
     @SerializedName("genres")
     val genres: List<String> = emptyList<String>(),
     @SerializedName("in_favorites")
