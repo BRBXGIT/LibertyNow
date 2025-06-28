@@ -31,6 +31,7 @@ dependencies {
     // Core modules
     implementation(project(":core:local"))
     implementation(project(":core:network"))
+    implementation(project(":core:common"))
 
     // Hilt
     implementation(libs.hilt.android)

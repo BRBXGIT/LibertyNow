@@ -13,7 +13,7 @@ data class Player(
     @SerializedName("is_rutube")
     val isRutube: Boolean = false,
     @SerializedName("list")
-    val list: List = List(),
+    val list: Map<String, X1> = emptyMap(),
     @SerializedName("rutube")
     val rutube: Rutube = Rutube()
 )

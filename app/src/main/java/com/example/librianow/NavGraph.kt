@@ -1,7 +1,6 @@
 package com.example.librianow
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
@@ -57,6 +56,8 @@ fun NavGraph(
             navController = navController
         )
 
-        animeScreen()
+        animeScreen(
+            navController = navController
+        )
     }
 }

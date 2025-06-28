@@ -6,12 +6,11 @@ import androidx.paging.cachedIn
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
-import com.example.common.functions.processNetworkErrors
-import com.example.common.functions.processNetworkErrorsForUi
 import com.example.data.domain.HomeScreenRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
+import com.example.network.home_screen.models.random_title_response.RandomTitleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,34 +61,16 @@ class HomeScreenVM @Inject constructor(
             _homeScreenState.update { state ->
                 state.copy(isLoading = true)
             }
+
             val response = repository.getRandomTitle()
-
-            if (response.code() == 200) {
-                val body = response.body()
-                if (body == null) {
-                    val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
-
-                    SnackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = label,
-                            action = SnackbarAction(
-                                name = "Retry",
-                                action = { fetchRandomTitle(onComplete) }
-                            )
-                        )
-                    )
-                } else {
-                    withContext(dispatcherMain) {
-                        onComplete(body.id)
-                    }
+            if (response.error == NetworkErrors.SUCCESS) {
+                withContext(dispatcherMain) {
+                    onComplete((response.response as RandomTitleResponse).id)
                 }
             } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-
                 SnackbarController.sendEvent(
                     SnackbarEvent(
-                        message = label,
+                        message = response.label!!,
                         action = SnackbarAction(
                             name = "Retry",
                             action = { fetchRandomTitle(onComplete) }

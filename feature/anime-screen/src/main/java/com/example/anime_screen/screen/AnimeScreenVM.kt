@@ -5,12 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
-import com.example.common.functions.processNetworkErrors
-import com.example.common.functions.processNetworkErrorsForUi
 import com.example.data.domain.AnimeScreenRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
+import com.example.network.anime_screen.models.anime_response.AnimeResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,36 +34,31 @@ class AnimeScreenVM @Inject constructor(
     private fun fetchAnime(id: Int) {
         viewModelScope.launch(dispatcherIo) {
             _animeScreenState.update { state ->
-                state.copy(isLoading = true)
+                state.copy(
+                    isLoading = true,
+                    isError = false
+                )
             }
 
             val response = repository.getAnime(id)
-            if (response.code() == 200) {
-                val body = response.body()
-                if (body == null) {
-                    val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
-
-                    SnackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = label,
-                            action = SnackbarAction(
-                                name = "Retry",
-                                action = { fetchAnime(id) }
-                            )
-                        )
+            if (response.error == NetworkErrors.SUCCESS) {
+                _animeScreenState.update { state ->
+                    state.copy(
+                        anime = response.response as AnimeResponse,
+                        isError = false,
+                        isLoading = false
                     )
-                } else {
-                    _animeScreenState.update { state ->
-                        state.copy(anime = body)
-                    }
                 }
             } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-
+                _animeScreenState.update { state ->
+                    state.copy(
+                        isError = true,
+                        isLoading = false
+                    )
+                }
                 SnackbarController.sendEvent(
                     SnackbarEvent(
-                        message = label,
+                        message = response.label!!,
                         action = SnackbarAction(
                             name = "Retry",
                             action = { fetchAnime(id) }
@@ -72,6 +66,17 @@ class AnimeScreenVM @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    private fun updateScreenState(state: AnimeScreenState) {
+        _animeScreenState.value = state
+    }
+
+    fun sendIntent(intent: AnimeScreenIntent) {
+        when (intent) {
+            is AnimeScreenIntent.FetchAnime -> fetchAnime(intent.id)
+            is AnimeScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
         }
     }
 }
