@@ -32,7 +32,7 @@ android {
 
 dependencies {
 
-    // Core
+    // Core modules
     implementation(project(":core:design-system"))
     implementation(project(":core:data"))
     implementation(project(":core:network"))
@@ -53,4 +53,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // Json
     implementation(libs.converter.gson)
+    // Haze
+    implementation(libs.haze.materials)
+    // Coil
+    implementation(libs.coil.compose)
 }

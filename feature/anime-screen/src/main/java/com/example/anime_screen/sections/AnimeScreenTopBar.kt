@@ -9,6 +9,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,9 +23,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.design_system.theme.CommonConstants
+import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
+import com.example.design_system.theme.mColors
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +38,8 @@ fun AnimeScreenTopBar(
     isError: Boolean,
     animeTitle: String?,
     isLoading: Boolean,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+    onArchiveClick: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -62,7 +69,9 @@ fun AnimeScreenTopBar(
                 ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
             ) {
                 Text(
-                    text = animeTitle!!
+                    text = animeTitle!!,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
@@ -78,10 +87,23 @@ fun AnimeScreenTopBar(
                 ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
             ) {
                 Text(
-                    text = "ERROR"
+                    text = "Error"
                 )
             }
         },
+        actions = {
+            IconButton(
+                onClick = onArchiveClick
+            ) {
+                Icon(
+                    painter = painterResource(LibriaNowIcons.Archive),
+                    contentDescription = null
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = mColors.surfaceContainer.copy(alpha = 0f),
+        ),
         scrollBehavior = scrollBehavior
     )
 }
@@ -134,7 +156,8 @@ fun AnimeScreenTopBaPreview() {
             animeTitle = "Death Note",
             isLoading = false,
             scrollBehavior = scrollBehavior,
-            isError = false
+            isError = false,
+            onArchiveClick = {}
         )
     }
 }

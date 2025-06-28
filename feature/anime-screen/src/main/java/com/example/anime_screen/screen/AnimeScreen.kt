@@ -1,21 +1,29 @@
 package com.example.anime_screen.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.anime_screen.sections.AnimeScreenTopBar
-import com.example.design_system.theme.mColors
+import com.example.anime_screen.sections.Header
+import com.example.design_system.snackbars.ObserveAsEvents
+import com.example.design_system.snackbars.SnackbarController
+import com.example.design_system.theme.DesignUtils
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,31 +38,59 @@ fun AnimeScreen(
         )
     }
 
+    // Snackbars stuff
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    ObserveAsEvents(flow = SnackbarController.events, snackbarHostState) { event ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+
+            val result = snackbarHostState.showSnackbar(
+                message = event.message,
+                actionLabel = event.action?.name,
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true
+            )
+
+            if(result == SnackbarResult.ActionPerformed) {
+                event.action?.action?.invoke()
+            }
+        }
+    }
+
     val screenState by viewModel.animeScreenState.collectAsStateWithLifecycle()
 
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AnimeScreenTopBar(
                 animeTitle = screenState.anime?.names?.ru,
                 isLoading = screenState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
-                isError = screenState.isError
+                isError = screenState.isError,
+                onArchiveClick = {}
             )
         },
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(mColors.background)
-                .padding(innerPadding)
-        ) {
-            Text(
-                text = animeId.toString()
-            )
+        val anime = screenState.anime
+
+        LazyColumn {
+            anime?.let {
+                item {
+                    Header(
+                        nameEnglish = anime.names.en,
+                        season = "${anime.season.string} ${anime.season.year}",
+                        type = anime.type.string,
+                        releaseState = anime.status.string,
+                        posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.original.url,
+                        topInnerPadding = innerPadding.calculateTopPadding() + 12.dp
+                    )
+                }
+            }
         }
     }
 }

@@ -54,6 +54,7 @@ class HomeScreenRepoImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
+            Log.d("CCCC", e.toString()) // TODO FIX TIMEOUT EXCEPTION
             if ((e is UnknownHostException) or (e is SocketException)) {
                 val label = processNetworkErrorsForUi(NetworkErrors.INTERNET)
                 NetworkResponse(
