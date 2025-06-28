@@ -94,7 +94,7 @@ fun AnimeScreen(
         val anime = screenState.anime
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             anime?.let {
                 item {
