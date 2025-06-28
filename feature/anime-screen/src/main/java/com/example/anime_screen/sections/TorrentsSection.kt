@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
@@ -55,7 +56,7 @@ private fun TorrentItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
         Column {
             Text(
@@ -122,8 +123,8 @@ fun TorrentsSectionPreview() {
 fun TorrentItemPreview() {
     LibriaNowTheme {
         TorrentItem(
-            quality = "1080",
-            episodes = "12",
+            quality = "1080p",
+            episodes = "12 ep.",
             size = "488kb",
             leechers = 24,
             seeders = 13,

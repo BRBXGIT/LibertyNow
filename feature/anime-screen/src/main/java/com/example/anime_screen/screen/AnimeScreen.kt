@@ -2,8 +2,11 @@ package com.example.anime_screen.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -21,10 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.anime_screen.sections.AnimeScreenTopBar
 import com.example.anime_screen.sections.DescriptionSection
+import com.example.anime_screen.sections.EpisodeItem
 import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
+import com.example.anime_screen.sections.TorrentsSection
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarController
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
 import kotlinx.coroutines.launch
 
@@ -114,6 +120,27 @@ fun AnimeScreen(
                                 )
                             )
                         }
+                    )
+                }
+
+                item {
+                    TorrentsSection(
+                        torrents = anime.torrents,
+                        onDownloadClick = {}
+                    )
+                }
+
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
+                    )
+                }
+
+                itemsIndexed(anime.player.list.values.toList()) { index, episode ->
+                    EpisodeItem(
+                        episode = episode.episode,
+                        name = episode.name ?: "Без названия",
+                        onWatchButtonClick = {},
                     )
                 }
             }
