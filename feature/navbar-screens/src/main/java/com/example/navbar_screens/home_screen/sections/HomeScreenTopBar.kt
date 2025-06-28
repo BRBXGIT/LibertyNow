@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.navbar_screens.home_screen.screen.HomeScreenState
 
@@ -95,10 +96,11 @@ fun HomeScreenTopBar(
             scrollBehavior = scrollBehavior
         )
 
+        val animationDuration = CommonConstants.ANIMATION_DURATION
         AnimatedVisibility(
             visible = screenState.isLoading,
-            enter = fadeIn(tween(300)) + expandVertically(tween(300)),
-            exit = fadeOut(tween(300)) + shrinkVertically(tween(300))
+            enter = fadeIn(tween(animationDuration)) + expandVertically(tween(animationDuration)),
+            exit = fadeOut(tween(animationDuration)) + shrinkVertically(tween(animationDuration))
         ) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }

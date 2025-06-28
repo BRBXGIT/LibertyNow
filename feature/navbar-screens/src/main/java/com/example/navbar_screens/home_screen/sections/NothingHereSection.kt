@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.design_system.theme.CommonDimens
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mTypography
 
 @Composable
@@ -18,7 +18,7 @@ fun NothingHereSection() {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = CommonDimens.HORIZONTAL_PADDING.dp)
+            .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
         Text(
             text = "Пока что ничего нет, начните вводить запрос :)",

@@ -106,7 +106,9 @@ fun HomeScreen(
     }
 
     // Check titles by query errors
-    LaunchedEffect(titlesByQuery.loadState) {
+    LaunchedEffect(titlesByQuery.loadState, screenState.isSearching, screenState.query) {
+        if (!screenState.isSearching) return@LaunchedEffect
+
         if (titlesByQuery.loadState.hasError) {
             val error = (titlesByQuery.loadState.refresh as LoadState.Error).error as NetworkException
 
@@ -121,7 +123,7 @@ fun HomeScreen(
             )
         }
 
-        if (titlesByQuery.loadState.refresh is LoadState.Loading) {
+        if ((titlesByQuery.loadState.refresh is LoadState.Loading) and (screenState.query.isNotBlank())) {
             viewModel.sendIntent(
                 HomeScreenIntent.UpdateScreenState(
                     screenState.copy(

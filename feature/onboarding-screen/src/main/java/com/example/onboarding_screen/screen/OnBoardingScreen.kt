@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.design_system.theme.CommonDimens
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.onboarding_screen.sections.AboutAppSection
@@ -42,8 +42,8 @@ fun OnBoardingScreen(
                 .padding(
                     top = innerPadding.calculateTopPadding(),
                     bottom = innerPadding.calculateBottomPadding(),
-                    start = CommonDimens.HORIZONTAL_PADDING.dp,
-                    end = CommonDimens.HORIZONTAL_PADDING.dp
+                    start = CommonConstants.HORIZONTAL_PADDING.dp,
+                    end = CommonConstants.HORIZONTAL_PADDING.dp
                 )
         ) {
             ScreenHeader()
