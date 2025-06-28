@@ -25,6 +25,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.anime_screen.sections.AddToLikesButton
 import com.example.anime_screen.sections.AnimeScreenTopBar
 import com.example.anime_screen.sections.DescriptionSection
 import com.example.anime_screen.sections.EpisodeItem
@@ -105,6 +106,22 @@ fun AnimeScreen(
                         releaseState = anime.status.string,
                         posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.original.url,
                         topInnerPadding = innerPadding.calculateTopPadding() + 12.dp
+                    )
+                }
+
+                item {
+                    AddToLikesButton(
+                        alreadyInLikes = screenState.isInLikes,
+                        onAddClick = {
+                            viewModel.sendIntent(
+                                AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = true))
+                            )
+                        },
+                        onPopClick = {
+                            viewModel.sendIntent(
+                                AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = false))
+                            )
+                        },
                     )
                 }
 

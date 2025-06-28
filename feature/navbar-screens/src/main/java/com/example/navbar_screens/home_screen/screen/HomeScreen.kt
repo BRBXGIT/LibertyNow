@@ -200,6 +200,8 @@ fun HomeScreen(
             if (screenState.isSearching) {
                 if (screenState.query == "") {
                     NothingHereSection()
+                } else if (titlesByQuery.loadState.refresh is LoadState.Error) {
+                    ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
                     TitlesListLVG(
                         titlesUpdates = titlesByQuery,
@@ -208,7 +210,7 @@ fun HomeScreen(
                             navController.navigate(
                                 AnimeScreenRoute(animeId)
                             )
-                        },
+                        }
                     )
                 }
             } else {

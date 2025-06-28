@@ -7,5 +7,7 @@ data class AnimeScreenState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
 
-    val isDescriptionExpanded: Boolean = false
+    val isDescriptionExpanded: Boolean = false,
+
+    val isInLikes: Boolean = false
 )
