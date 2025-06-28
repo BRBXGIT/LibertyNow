@@ -1,5 +1,6 @@
 package com.example.anime_screen.screen
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.anime_screen.sections.AddToLikesButton
@@ -83,7 +86,7 @@ fun AnimeScreen(
                 isLoading = screenState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
                 isError = screenState.isError,
-                onArchiveClick = {},
+                onArchiveClick = {}, // TODO
                 onNavClick = { navController.navigateUp() }
             )
         },
@@ -116,12 +119,12 @@ fun AnimeScreen(
                             viewModel.sendIntent(
                                 AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = true))
                             )
-                        },
+                        }, // TODO
                         onPopClick = {
                             viewModel.sendIntent(
                                 AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = false))
                             )
-                        },
+                        }, // TODO
                     )
                 }
 
@@ -147,9 +150,18 @@ fun AnimeScreen(
                 }
 
                 item {
+                    val context = LocalContext.current
+
                     TorrentsSection(
                         torrents = anime.torrents,
-                        onDownloadClick = {}
+                        onDownloadClick = { torrentLink ->
+                            context.startActivity(
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    (CommonConstants.BASE_TORRENTS_URL + torrentLink).toUri()
+                                )
+                            )
+                        }
                     )
                 }
 
@@ -163,7 +175,7 @@ fun AnimeScreen(
                     EpisodeItem(
                         episode = episode.episode,
                         name = episode.name ?: "Без названия",
-                        onWatchButtonClick = {},
+                        onWatchButtonClick = {}, // TODO
                     )
                 }
 
