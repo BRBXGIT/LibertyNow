@@ -9,6 +9,7 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -41,22 +42,25 @@ fun DescriptionSection(
     onExpandClick: () -> Unit
 ) {
     Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
-        Text(
-            text = "Озвучка: $voiceActors",
-            style = mTypography.bodyLarge
-        )
+        Column {
+            Text(
+                text = "Озвучка: $voiceActors",
+                style = mTypography.bodyLarge
+            )
 
-        Text(
-            text = "Тайминг: $timingWorkers",
-            style = mTypography.bodyLarge
-        )
+            Text(
+                text = "Тайминг: $timingWorkers",
+                style = mTypography.bodyLarge
+            )
 
-        Text(
-            text = "Работа над субтитрами: $subtitlesWorkers",
-            style = mTypography.bodyLarge
-        )
+            Text(
+                text = "Работа над субтитрами: $subtitlesWorkers",
+                style = mTypography.bodyLarge
+            )
+        }
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,7 +87,7 @@ fun DescriptionSection(
             } else {
                 Text(
                     text = AnnotatedString.fromHtml(description),
-                    style = mTypography.bodyMedium
+                    style = mTypography.bodyLarge
                 )
             }
 

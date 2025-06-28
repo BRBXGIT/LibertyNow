@@ -27,6 +27,7 @@ import com.example.common.CommonIntent
 import com.example.common.CommonState
 import com.example.common.CommonVM
 import com.example.common.functions.NetworkException
+import com.example.design_system.sections.ErrorSection
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
@@ -210,25 +211,29 @@ fun HomeScreen(
                     )
                 }
             } else {
-                TitlesListLVG(
-                    titlesUpdates = titlesUpdates,
-                    onAnimeClick = { animeId ->
-                        navController.navigate(
-                            AnimeScreenRoute(animeId)
-                        )
-                    },
-                    onRandomClick = {
-                        viewModel.sendIntent(
-                            HomeScreenIntent.FetchRandomTitle(
-                                onComplete = { animeId ->
-                                    navController.navigate(
-                                        AnimeScreenRoute(animeId)
-                                    )
-                                }
+                if (titlesUpdates.loadState.refresh is LoadState.Error) {
+                    ErrorSection()
+                } else {
+                    TitlesListLVG(
+                        titlesUpdates = titlesUpdates,
+                        onAnimeClick = { animeId ->
+                            navController.navigate(
+                                AnimeScreenRoute(animeId)
                             )
-                        )
-                    }
-                )
+                        },
+                        onRandomClick = {
+                            viewModel.sendIntent(
+                                HomeScreenIntent.FetchRandomTitle(
+                                    onComplete = { animeId ->
+                                        navController.navigate(
+                                            AnimeScreenRoute(animeId)
+                                        )
+                                    }
+                                )
+                            )
+                        }
+                    )
+                }
             }
         }
     }

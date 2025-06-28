@@ -37,4 +37,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     // Coil
     implementation(libs.coil.compose)
+    // Lottie
+    implementation(libs.lottie)
 }

@@ -1,7 +1,9 @@
 package com.example.anime_screen.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -142,6 +144,10 @@ fun AnimeScreen(
                         name = episode.name ?: "Без названия",
                         onWatchButtonClick = {},
                     )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding()))
                 }
             }
         }
