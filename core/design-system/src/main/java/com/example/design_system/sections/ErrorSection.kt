@@ -42,7 +42,7 @@ fun ErrorSection(
             )
 
             Text(
-                text = "Something went wrong :(",
+                text = "Что-то пошло не так :(",
                 style = mTypography.bodyLarge.copy(
                     lineBreak = LineBreak.Paragraph
                 ),
