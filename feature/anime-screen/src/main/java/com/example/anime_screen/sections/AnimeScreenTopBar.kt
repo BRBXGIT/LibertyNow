@@ -1,20 +1,30 @@
 package com.example.anime_screen.sections
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowTheme
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,9 +47,7 @@ fun AnimeScreenTopBar(
                     targetOffsetY = { -it / 2 }
                 ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
             ) {
-                Text(
-                    text = "Loading..."
-                )
+                AnimatedLoadingText()
             }
 
             AnimatedVisibility(
@@ -76,6 +84,43 @@ fun AnimeScreenTopBar(
         },
         scrollBehavior = scrollBehavior
     )
+}
+
+@Composable
+fun AnimatedLoadingText() {
+    var dotCount by rememberSaveable { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(200)
+            dotCount = (dotCount + 1) % 4
+        }
+    }
+
+    val animatedDots = List(3) { index ->
+        animateFloatAsState(
+            targetValue = if (index < dotCount) 1f else 0f,
+            animationSpec = tween(durationMillis = 150)
+        )
+    }
+
+    Row {
+        Text(text = "Loading")
+        animatedDots.forEach { alpha ->
+            Text(
+                text = ".",
+                modifier = Modifier.alpha(alpha.value),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun AnimatedLoadingTextPreview() {
+    LibriaNowTheme {
+        AnimatedLoadingText()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

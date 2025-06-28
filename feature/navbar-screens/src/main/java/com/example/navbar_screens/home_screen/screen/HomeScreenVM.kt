@@ -1,6 +1,5 @@
 package com.example.navbar_screens.home_screen.screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
