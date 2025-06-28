@@ -5,7 +5,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.anime_screen.navigation.animeScreen
 import com.example.common.CommonVM
 import com.example.navbar_screens.home_screen.navigation.homeScreen
@@ -28,7 +27,7 @@ fun NavGraph(
     val homeScreenVM = hiltViewModel<HomeScreenVM>()
     NavHost(
         navController = navController,
-        startDestination = AnimeScreenRoute(9934) // TODO change to start destination
+        startDestination = startDestination
     ) {
         onBoardingScreen()
 
@@ -57,6 +56,8 @@ fun NavGraph(
             navController = navController
         )
 
-        animeScreen()
+        animeScreen(
+            navController = navController
+        )
     }
 }

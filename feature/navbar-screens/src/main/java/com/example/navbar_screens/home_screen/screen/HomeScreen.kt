@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -212,7 +213,7 @@ fun HomeScreen(
                 }
             } else {
                 if (titlesUpdates.loadState.refresh is LoadState.Error) {
-                    ErrorSection()
+                    ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
                     TitlesListLVG(
                         titlesUpdates = titlesUpdates,

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.anime_screen.sections.AnimeScreenTopBar
 import com.example.anime_screen.sections.DescriptionSection
 import com.example.anime_screen.sections.EpisodeItem
@@ -40,7 +41,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun AnimeScreen(
     animeId: Int,
-    viewModel: AnimeScreenVM
+    viewModel: AnimeScreenVM,
+    navController: NavController
 ) {
     // Fetch anime
     LaunchedEffect(animeId) {
@@ -80,7 +82,8 @@ fun AnimeScreen(
                 isLoading = screenState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
                 isError = screenState.isError,
-                onArchiveClick = {}
+                onArchiveClick = {},
+                onNavClick = { navController.navigateUp() }
             )
         },
         modifier = Modifier
@@ -98,6 +101,7 @@ fun AnimeScreen(
                         nameEnglish = anime.names.en,
                         season = "${anime.season.string} ${anime.season.year}",
                         type = anime.type.string,
+                        episodes = anime.player.list.values.size,
                         releaseState = anime.status.string,
                         posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.original.url,
                         topInnerPadding = innerPadding.calculateTopPadding() + 12.dp

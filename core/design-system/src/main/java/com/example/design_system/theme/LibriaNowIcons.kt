@@ -8,6 +8,8 @@ object LibriaNowIcons {
     val CloseCircle = R.drawable.ic_close_circle
     val Funny = R.drawable.ic_funny
     val Archive = R.drawable.ic_archive
+    val MinusCircle = R.drawable.ic_minus_circle
+    val PlusCircle = R.drawable.ic_plus_circle
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled

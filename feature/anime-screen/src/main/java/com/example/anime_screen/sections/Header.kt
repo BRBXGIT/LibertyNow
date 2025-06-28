@@ -45,7 +45,8 @@ import dev.chrisbanes.haze.hazeSource
 fun Header(
     nameEnglish: String,
     season: String,
-    type: String,
+    type: String?,
+    episodes: Int,
     releaseState: String,
     posterPath: String,
     topInnerPadding: Dp
@@ -141,7 +142,7 @@ fun Header(
                     )
 
                     Text(
-                        text = type,
+                        text = if (type == null) "Тип не указан" else "$type $episodes эп.",
                         style = mTypography.bodyLarge
                     )
 
@@ -164,9 +165,10 @@ fun HeaderPreview() {
         Header(
             nameEnglish = "Тетрадь смерти",
             season = "2007 осень",
-            type = "ТВ 27 эпизодов",
+            type = "TV",
             releaseState = "Закончен",
             posterPath = "",
+            episodes = 12,
             topInnerPadding = 16.dp
         )
     }

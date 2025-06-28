@@ -39,7 +39,8 @@ fun AnimeScreenTopBar(
     animeTitle: String?,
     isLoading: Boolean,
     scrollBehavior: TopAppBarScrollBehavior,
-    onArchiveClick: () -> Unit
+    onArchiveClick: () -> Unit,
+    onNavClick: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -101,6 +102,16 @@ fun AnimeScreenTopBar(
                 )
             }
         },
+        navigationIcon = {
+            IconButton(
+                onClick = onNavClick
+            ) {
+                Icon(
+                    painter = painterResource(LibriaNowIcons.ArrowLeftFilled),
+                    contentDescription = null
+                )
+            }
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = mColors.surfaceContainer.copy(alpha = 0f),
         ),
@@ -157,7 +168,8 @@ fun AnimeScreenTopBaPreview() {
             isLoading = false,
             scrollBehavior = scrollBehavior,
             isError = false,
-            onArchiveClick = {}
+            onArchiveClick = {},
+            onNavClick = {}
         )
     }
 }

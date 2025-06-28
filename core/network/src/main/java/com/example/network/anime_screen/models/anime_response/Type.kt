@@ -13,5 +13,5 @@ data class Type(
     @SerializedName("length")
     val length: Int = 0,
     @SerializedName("string")
-    val string: String = ""
+    val string: String? = ""
 )
