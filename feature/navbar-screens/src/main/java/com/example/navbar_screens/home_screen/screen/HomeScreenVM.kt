@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -58,7 +59,9 @@ class HomeScreenVM @Inject constructor(
         onComplete: (Int) -> Unit
     ) {
         viewModelScope.launch(dispatcherIo) {
-            _homeScreenState.value = _homeScreenState.value.copy(isLoading = true)
+            _homeScreenState.update { state ->
+                state.copy(isLoading = true)
+            }
             val response = repository.getRandomTitle()
 
             if (response.code() == 200) {
@@ -95,7 +98,9 @@ class HomeScreenVM @Inject constructor(
                 )
             }
 
-            _homeScreenState.value = _homeScreenState.value.copy(isLoading = false)
+            _homeScreenState.update { state ->
+                state.copy(isLoading = false)
+            }
         }
     }
 

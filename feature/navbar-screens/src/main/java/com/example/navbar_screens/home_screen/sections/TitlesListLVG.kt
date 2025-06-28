@@ -15,13 +15,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.LibriaNowIcons
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mShapes
 import com.example.network.common.titles_list_response.Item0
+import kotlinx.coroutines.flow.flowOf
 
 @Composable
 fun TitlesListLVG(
@@ -76,5 +81,20 @@ fun TitlesListLVG(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun TitlesLitLVGPreview() {
+    LibriaNowTheme {
+        val emptyPagingItems = flowOf(PagingData.empty<Item0>()).collectAsLazyPagingItems()
+
+        TitlesListLVG(
+            showRandomButton = true,
+            titlesUpdates = emptyPagingItems,
+            onAnimeClick = {},
+            onRandomClick = {}
+        )
     }
 }

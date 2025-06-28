@@ -16,13 +16,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.navbar_screens.home_screen.screen.HomeScreenState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,5 +107,22 @@ fun HomeScreenTopBar(
         ) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun HomeScreenTopBarPreview() {
+    LibriaNowTheme {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+        HomeScreenTopBar(
+            screenState = HomeScreenState(),
+            scrollBehavior = scrollBehavior,
+            onSearchClick = {},
+            onQueryInput = {},
+            onClearClick = {}
+        )
     }
 }

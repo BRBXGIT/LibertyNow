@@ -14,6 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 
 @Composable
@@ -53,5 +55,18 @@ fun BottomNavBar(
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun BottomNavBarPreview() {
+    LibriaNowTheme {
+        BottomNavBar(
+            selectedItemIndex = 0,
+            onNavItemClick = { index, route ->
+
+            },
+        )
     }
 }
