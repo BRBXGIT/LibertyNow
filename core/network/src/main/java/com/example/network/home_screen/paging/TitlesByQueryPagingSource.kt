@@ -6,11 +6,10 @@ import com.example.common.functions.NetworkErrors
 import com.example.common.functions.NetworkException
 import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
-import com.example.network.home_screen.api.HomeScreenApiInstance
+import com.example.common.functions.processNetworkExceptionsForPaging
 import com.example.network.common.titles_list_response.Item0
+import com.example.network.home_screen.api.HomeScreenApiInstance
 import java.io.IOException
-import java.net.SocketException
-import java.net.UnknownHostException
 
 class TitlesByQueryPagingSource(
     private val apiInstance: HomeScreenApiInstance,
@@ -50,13 +49,7 @@ class TitlesByQueryPagingSource(
                 LoadResult.Error(NetworkException(exception, label))
             }
         } catch (e: IOException) {
-            if ((e is UnknownHostException) or (e is SocketException)) {
-                val label = processNetworkErrorsForUi(NetworkErrors.INTERNET)
-                LoadResult.Error(NetworkException(NetworkErrors.INTERNET, label))
-            } else {
-                val label = processNetworkErrorsForUi(NetworkErrors.UNKNOWN)
-                LoadResult.Error(NetworkException(NetworkErrors.UNKNOWN, label))
-            }
+            processNetworkExceptionsForPaging<Int, Item0>(e)
         }
     }
 }
