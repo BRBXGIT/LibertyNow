@@ -28,6 +28,7 @@ fun processNetworkErrorsForUi(error: NetworkError): String {
         NetworkErrors.TOO_MANY_REQUESTS -> "Too many requests, give soundcloud a little rest :)"
         NetworkErrors.SERVER_ERROR -> "Server error"
         NetworkErrors.INTERNET -> "Please connect to internet :)"
+        NetworkErrors.SERIALIZATION -> "Hmmm... Problem with serialization"
         else -> "Mystic and unknown error"
     }
 }

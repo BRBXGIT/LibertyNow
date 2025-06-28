@@ -185,7 +185,15 @@ fun HomeScreen(
                 TitlesListLVG(
                     titlesUpdates = titlesUpdates,
                     onAnimeClick = {},
-                    onRandomClick = {}
+                    onRandomClick = {
+                        viewModel.sendIntent(
+                            HomeScreenIntent.FetchRandomTitle(
+                                onComplete = {
+
+                                }
+                            )
+                        )
+                    }
                 )
             }
         }

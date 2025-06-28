@@ -4,5 +4,7 @@ data class HomeScreenState(
     val isLoading: Boolean = false,
 
     val query: String = "",
-    val isSearching: Boolean = false
+    val isSearching: Boolean = false,
+
+    val randomTitle: Int? = null
 )
