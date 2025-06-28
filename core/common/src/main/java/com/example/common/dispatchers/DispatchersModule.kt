@@ -18,4 +18,8 @@ object DispatchersModule {
     @Provides
     @Dispatcher(LibriaNowDispatchers.Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    @Dispatcher(LibriaNowDispatchers.Main)
+    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }

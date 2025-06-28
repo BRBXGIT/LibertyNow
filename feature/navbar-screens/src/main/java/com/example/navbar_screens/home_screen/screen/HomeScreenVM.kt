@@ -23,12 +23,14 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenVM @Inject constructor(
     private val repository: HomeScreenRepo,
-    @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher
+    @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher,
+    @Dispatcher(LibriaNowDispatchers.Main) private val dispatcherMain: CoroutineDispatcher
 ): ViewModel() {
     val titlesUpdates = repository.getTitlesUpdates().cachedIn(viewModelScope)
 
@@ -53,7 +55,7 @@ class HomeScreenVM @Inject constructor(
     }
 
     private fun fetchRandomTitle(
-        onComplete: () -> Unit
+        onComplete: (Int) -> Unit
     ) {
         viewModelScope.launch(dispatcherIo) {
             _homeScreenState.value = _homeScreenState.value.copy(isLoading = true)
@@ -74,7 +76,9 @@ class HomeScreenVM @Inject constructor(
                         )
                     )
                 } else {
-                    _homeScreenState.value = _homeScreenState.value.copy(randomTitle = body.id)
+                    withContext(dispatcherMain) {
+                        onComplete(body.id)
+                    }
                 }
             } else {
                 val error = processNetworkErrors(response.code())

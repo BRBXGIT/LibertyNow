@@ -9,4 +9,5 @@ annotation class Dispatcher(val libriaNowDispatcher: LibriaNowDispatchers)
 enum class LibriaNowDispatchers {
     Default,
     IO,
+    Main
 }

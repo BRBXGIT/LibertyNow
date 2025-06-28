@@ -19,8 +19,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.functions.NetworkException
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarAction
@@ -35,7 +37,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenVM
+    viewModel: HomeScreenVM,
+    navController: NavController
 ) {
     val titlesUpdates = viewModel.titlesUpdates.collectAsLazyPagingItems()
     val titlesByQuery = viewModel.titlesByQuery.collectAsLazyPagingItems()
@@ -188,8 +191,10 @@ fun HomeScreen(
                     onRandomClick = {
                         viewModel.sendIntent(
                             HomeScreenIntent.FetchRandomTitle(
-                                onComplete = {
-
+                                onComplete = { animeId ->
+                                    navController.navigate(
+                                        AnimeScreenRoute(animeId)
+                                    )
                                 }
                             )
                         )
