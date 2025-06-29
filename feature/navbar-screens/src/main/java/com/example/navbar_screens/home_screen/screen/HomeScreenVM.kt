@@ -47,8 +47,8 @@ class HomeScreenVM @Inject constructor(
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .flatMapLatest { query ->
-            repository.getTitlesByQuery(query).cachedIn(viewModelScope)
-        }
+            repository.getTitlesByQuery(query)
+        }.cachedIn(viewModelScope)
 
     private fun updateScreenState(state: HomeScreenState) {
         _homeScreenState.value = state

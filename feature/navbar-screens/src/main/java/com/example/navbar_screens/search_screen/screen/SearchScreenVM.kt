@@ -2,6 +2,7 @@ package com.example.navbar_screens.search_screen.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
@@ -35,8 +36,7 @@ class SearchScreenVM @Inject constructor(
         _searchScreenState.value = state
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val animeByFilters = _searchScreenState
+    private val _searchParams = _searchScreenState
         .map { state ->
             AnimeByFilterParams(
                 chosenAnimeYears = state.chosenAnimeYears,
@@ -47,7 +47,11 @@ class SearchScreenVM @Inject constructor(
             )
         }
         .distinctUntilChanged()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val animeByFilters = _searchParams
         .flatMapLatest { state ->
+
             val seasonCodes = state.chosenSeasons.map {
                 when (it) {
                     Season.Winter -> 1
@@ -84,11 +88,8 @@ class SearchScreenVM @Inject constructor(
                 SortedBy.Novelty -> "-updated"
             }
 
-            repository.getAnimeByFilters(
-                query = query,
-                orderBy = orderBy
-            )
-    }
+            repository.getAnimeByFilters(query, orderBy)
+        }.cachedIn(viewModelScope)
 
     private fun fetchAnimeYears() {
         viewModelScope.launch(dispatcherIo) {
