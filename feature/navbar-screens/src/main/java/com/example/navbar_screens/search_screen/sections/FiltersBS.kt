@@ -3,13 +3,18 @@ package com.example.navbar_screens.search_screen.sections
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mShapes
 import com.example.navbar_screens.search_screen.screen.SearchScreenState
 import com.example.navbar_screens.search_screen.screen.Season
@@ -19,6 +24,7 @@ import com.example.navbar_screens.search_screen.screen.SortedBy
 @Composable
 fun FiltersBS(
     screenState: SearchScreenState,
+    topInnerPadding: Dp,
     onDismissRequest: () -> Unit,
     onReleaseEndClick: () -> Unit,
     onSortClick: (SortedBy) -> Unit,
@@ -30,8 +36,11 @@ fun FiltersBS(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        shape = mShapes.small
+        shape = mShapes.small,
+        modifier = Modifier.padding(top = topInnerPadding)
     ) {
+        HorizontalDivider(modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp))
+
         LazyVerticalGrid(
             columns = GridCells.Adaptive(90.dp),
             contentPadding = PaddingValues(16.dp),

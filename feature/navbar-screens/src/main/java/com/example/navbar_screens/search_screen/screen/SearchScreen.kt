@@ -78,63 +78,6 @@ fun SearchScreen(
         }
     }
 
-    if (screenState.isFilterBSOpened) {
-        FiltersBS(
-            screenState = screenState,
-            onDismissRequest = {
-                viewModel.sendIntent(
-                    SearchScreenIntent.UpdateScreenState(screenState.copy(isFilterBSOpened = false))
-                )
-            },
-            onReleaseEndClick = {
-                viewModel.sendIntent(
-                    SearchScreenIntent.UpdateScreenState(screenState.copy(releaseEnd = !screenState.releaseEnd))
-                )
-            },
-            onSortClick = {
-                viewModel.sendIntent(
-                    SearchScreenIntent.UpdateScreenState(screenState.copy(sortedBy = it))
-                )
-            },
-            onYearClick = {
-                val currentYears = screenState.chosenAnimeYears.toMutableList()
-                viewModel.sendIntent(
-                    SearchScreenIntent.UpdateScreenState(
-                        screenState.copy(
-                            chosenAnimeYears = if (it in currentYears) currentYears - it else currentYears + it
-                        )
-                    )
-                )
-            },
-            onSeasonClick = {
-                val currentSeasons = screenState.chosenSeasons.toMutableList()
-                viewModel.sendIntent(
-                    SearchScreenIntent.UpdateScreenState(
-                        screenState.copy(
-                            chosenSeasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
-                        )
-                    )
-                )
-            },
-            onGenreClick = {
-                val currentGenres = screenState.chosenAnimeGenres.toMutableList()
-                viewModel.sendIntent(
-                    SearchScreenIntent.UpdateScreenState(
-                        screenState.copy(
-                            chosenAnimeGenres = if (it in currentGenres) currentGenres - it else currentGenres + it
-                        )
-                    )
-                )
-            },
-            onYearsRetryClick = {
-                viewModel.sendIntent(SearchScreenIntent.FetchAnimeYears)
-            },
-            onGenresRetryClick = {
-                viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres)
-            },
-        )
-    }
-
     // Snackbars stuff
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -188,6 +131,64 @@ fun SearchScreen(
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
+        if (screenState.isFilterBSOpened) {
+            FiltersBS(
+                screenState = screenState,
+                topInnerPadding = innerPadding.calculateTopPadding(),
+                onDismissRequest = {
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(screenState.copy(isFilterBSOpened = false))
+                    )
+                },
+                onReleaseEndClick = {
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(screenState.copy(releaseEnd = !screenState.releaseEnd))
+                    )
+                },
+                onSortClick = {
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(screenState.copy(sortedBy = it))
+                    )
+                },
+                onYearClick = {
+                    val currentYears = screenState.chosenAnimeYears.toMutableList()
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(
+                            screenState.copy(
+                                chosenAnimeYears = if (it in currentYears) currentYears - it else currentYears + it
+                            )
+                        )
+                    )
+                },
+                onSeasonClick = {
+                    val currentSeasons = screenState.chosenSeasons.toMutableList()
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(
+                            screenState.copy(
+                                chosenSeasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
+                            )
+                        )
+                    )
+                },
+                onGenreClick = {
+                    val currentGenres = screenState.chosenAnimeGenres.toMutableList()
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(
+                            screenState.copy(
+                                chosenAnimeGenres = if (it in currentGenres) currentGenres - it else currentGenres + it
+                            )
+                        )
+                    )
+                },
+                onYearsRetryClick = {
+                    viewModel.sendIntent(SearchScreenIntent.FetchAnimeYears)
+                },
+                onGenresRetryClick = {
+                    viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres)
+                },
+            )
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
