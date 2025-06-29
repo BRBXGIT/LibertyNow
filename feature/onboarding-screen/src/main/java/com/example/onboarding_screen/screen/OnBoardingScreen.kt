@@ -1,6 +1,5 @@
 package com.example.onboarding_screen.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,16 +7,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.design_system.theme.CommonConstants
+import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
-import com.example.design_system.theme.mColors
 import com.example.onboarding_screen.sections.AboutAppSection
-import com.example.onboarding_screen.sections.StartButton
 import com.example.onboarding_screen.sections.ScreenHeader
+import com.example.onboarding_screen.sections.StartButton
 
 @Composable
 fun OnBoardingScreen(
@@ -31,13 +32,9 @@ fun OnBoardingScreen(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            mColors.primaryContainer,
-                            mColors.secondary
-                        )
-                    )
+                .paint(
+                    painter = painterResource(LibriaNowIcons.OnBoardingBackgroundDark), // TODO
+                    contentScale = ContentScale.Crop
                 )
                 .padding(
                     top = innerPadding.calculateTopPadding(),

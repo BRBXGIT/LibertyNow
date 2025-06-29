@@ -24,4 +24,8 @@ object LibriaNowIcons {
     val MagnifierAnimated = R.drawable.ic_magnifier_animated
     val SettingsAnimated = R.drawable.ic_settings_animated
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
+
+    // Images
+    val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light
+    val OnBoardingBackgroundDark = R.drawable.on_boarding_background_dark
 }
