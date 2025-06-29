@@ -1,4 +1,4 @@
-package com.example.navbar_screens.likes_screen.sections
+package com.example.design_system.sections.auth_bs
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -35,7 +35,7 @@ fun AuthBSFooter(
     ) {
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { onAuthClick },
+            onClick = onAuthClick,
             shape = mShapes.small
         ) {
             Text(

@@ -1,4 +1,4 @@
-package com.example.navbar_screens.likes_screen.sections
+package com.example.design_system.sections.auth_bs
 
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +21,10 @@ import com.example.design_system.theme.mShapes
 fun AuthBS(
     email: String,
     password: String,
+    isPasswordVisible: Boolean,
+    incorrectEmail: Boolean,
+    incorrectPassword: Boolean,
+    onVisibleClick: () -> Unit,
     onDismissRequest: () -> Unit,
     onAuthClick: () -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -40,7 +44,11 @@ fun AuthBS(
                 email = email,
                 onEmailChange = { onEmailChange(it) },
                 password = password,
-                onPasswordChange = { onPasswordChange(it) }
+                onPasswordChange = { onPasswordChange(it) },
+                incorrectEmail = incorrectEmail,
+                isPasswordVisible = isPasswordVisible,
+                onVisibleClick = onVisibleClick,
+                incorrectPassword = incorrectPassword,
             )
 
             AuthBSFooter(
@@ -60,7 +68,11 @@ private fun AuthBSPreview() {
             onDismissRequest = {},
             onAuthClick = {},
             onPasswordChange = {},
-            onEmailChange = {}
+            onEmailChange = {},
+            isPasswordVisible = true,
+            incorrectEmail = true,
+            incorrectPassword = false,
+            onVisibleClick = {},
         )
     }
 }

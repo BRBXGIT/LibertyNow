@@ -39,4 +39,6 @@ dependencies {
     implementation(libs.coil.compose)
     // Lottie
     implementation(libs.lottie)
+    // Animated icons(compose animation graphics)
+    implementation(libs.androidx.animation.graphics)
 }

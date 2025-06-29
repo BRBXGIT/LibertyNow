@@ -1,4 +1,4 @@
-package com.example.design_system.sections
+package com.example.design_system.sections.error_section
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

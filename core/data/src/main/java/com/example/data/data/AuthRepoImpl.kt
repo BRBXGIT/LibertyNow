@@ -39,10 +39,27 @@ class AuthRepoImpl @Inject constructor(
             val response = apiInstance.getSessionToken(email, password)
 
             if (response.code() == 200) {
-                NetworkResponse(
-                    response = response.body(),
-                    error = NetworkErrors.SUCCESS
-                )
+                val key = response.body()?.key
+                when (key) {
+                    "invalidUser" -> {
+                        NetworkResponse(
+                            response = response.body(),
+                            error = NetworkErrors.INCORRECT_EMAIL
+                        )
+                    }
+                    "wrongPasswd" -> {
+                        NetworkResponse(
+                            response = response.body(),
+                            error = NetworkErrors.INCORRECT_PASSWORD
+                        )
+                    }
+                    else -> {
+                        NetworkResponse(
+                            response = response.body(),
+                            error = NetworkErrors.SUCCESS
+                        )
+                    }
+                }
             } else {
                 val error = processNetworkErrors(response.code())
                 val label = processNetworkErrorsForUi(error)

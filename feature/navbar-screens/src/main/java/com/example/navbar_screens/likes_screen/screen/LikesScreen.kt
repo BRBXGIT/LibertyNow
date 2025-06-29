@@ -5,17 +5,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.common.auth.AuthIntent
 import com.example.common.auth.AuthVM
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
+import com.example.design_system.sections.auth_bs.AuthBS
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
-import com.example.navbar_screens.likes_screen.sections.AuthBS
 import com.example.navbar_screens.likes_screen.sections.LikesScreenTopBar
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSection
 import com.example.local.datastore.auth.AuthState as UserAuthState
@@ -48,7 +50,7 @@ fun LikesScreen(
         },
         topBar = {
             LikesScreenTopBar(
-                isLoading = screenState.isLoading,
+                isLoading = screenState.isLoading or authState.isLoading,
                 onSearchClick = {}
             )
         }
@@ -59,48 +61,68 @@ fun LikesScreen(
                 .background(mColors.background)
                 .padding(innerPadding)
         ) {
-            if (screenState.isAuthBSOpened) {
+            if (authState.isAuthBSOpened) {
                 AuthBS(
-                    email = screenState.email,
-                    password = screenState.password,
+                    email = authState.email,
+                    password = authState.password,
+                    isPasswordVisible = authState.isPasswordVisible,
+                    incorrectEmail = authState.incorrectEmail,
+                    incorrectPassword = authState.incorrectPassword,
                     onDismissRequest = {
-                        viewModel.sendIntent(
-                            LikesScreenIntent.UpdateScreenState(
-                                screenState.copy(isAuthBSOpened = false)
+                        authVM.sendIntent(
+                            AuthIntent.UpdateAuthState(
+                                state = authState.copy(isAuthBSOpened = false)
                             )
                         )
                     },
                     onPasswordChange = {
-                        viewModel.sendIntent(
-                            LikesScreenIntent.UpdateScreenState(
-                                screenState.copy(password = it)
+                        authVM.sendIntent(
+                            AuthIntent.UpdateAuthState(
+                                state = authState.copy(password = it)
                             )
                         )
                     },
                     onEmailChange = {
-                        viewModel.sendIntent(
-                            LikesScreenIntent.UpdateScreenState(
-                                screenState.copy(email = it)
+                        authVM.sendIntent(
+                            AuthIntent.UpdateAuthState(
+                                state = authState.copy(email = it)
                             )
                         )
                     },
-                    onAuthClick = {},
+                    onAuthClick = {
+                        authVM.sendIntent(
+                            AuthIntent.GetSessionToken
+                        )
+                    },
+                    onVisibleClick = {
+                        authVM.sendIntent(
+                            AuthIntent.UpdateAuthState(
+                                state = authState.copy(isPasswordVisible = !authState.isPasswordVisible)
+                            )
+                        )
+                    }
                 )
             }
 
             when (authState.isLogged) {
                 UserAuthState.Loading -> {}
-                UserAuthState.LoggedIn -> {}
-                UserAuthState.LoggedOut -> {
-                    LoggedOutSection(
-                        onAuthClick = {
-                            viewModel.sendIntent(
-                                LikesScreenIntent.UpdateScreenState(
-                                    screenState.copy(isAuthBSOpened = true)
-                                )
-                            )
-                        }
+                UserAuthState.LoggedIn -> {
+                    Text(
+                        text = "Likes screen"
                     )
+                }
+                UserAuthState.LoggedOut -> {
+                    if (!authState.isLoading) {
+                        LoggedOutSection(
+                            onAuthClick = {
+                                authVM.sendIntent(
+                                    AuthIntent.UpdateAuthState(
+                                        state = authState.copy(isAuthBSOpened = true)
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.navbar_screens.likes_screen.sections
+package com.example.design_system.sections.auth_bs
 
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
@@ -12,10 +12,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -32,8 +28,12 @@ import com.example.design_system.theme.mTypography
 @Composable
 fun AuthBSHeader(
     email: String,
+    incorrectEmail: Boolean,
     onEmailChange: (String) -> Unit,
     password: String,
+    isPasswordVisible: Boolean,
+    onVisibleClick: () -> Unit,
+    incorrectPassword: Boolean,
     onPasswordChange: (String) -> Unit
 ) {
     Column(
@@ -46,11 +46,20 @@ fun AuthBSHeader(
         )
 
         TextField(
+            isError = incorrectEmail,
             value = email,
             onValueChange = { onEmailChange(it) },
             modifier = Modifier.fillMaxWidth(),
             maxLines = 1,
-            placeholder = { Text("Логин или электронная почта") },
+            label = {
+                Text(
+                    text = if (incorrectEmail) {
+                        "Неверный пользователь"
+                    } else {
+                        "Логин или электронная почта"
+                    }
+                )
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(LibriaNowIcons.User),
@@ -59,14 +68,22 @@ fun AuthBSHeader(
             }
         )
 
-        var isVisible by rememberSaveable { mutableStateOf(false) }
         TextField(
+            isError = incorrectPassword,
             value = password,
             onValueChange = { onPasswordChange(it) },
             modifier = Modifier.fillMaxWidth(),
             maxLines = 1,
-            placeholder = { Text("Пароль") },
-            visualTransformation = if(!isVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if(!isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            label = {
+                Text(
+                    text = if (incorrectPassword) {
+                        "Неверный пароль"
+                    } else {
+                        "Пароль"
+                    }
+                )
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(LibriaNowIcons.Password),
@@ -75,10 +92,10 @@ fun AuthBSHeader(
             },
             trailingIcon = {
                 IconButton(
-                    onClick = { isVisible = !isVisible }
+                    onClick = onVisibleClick
                 ) {
                     val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.EyeAnimated)
-                    val animatedPainter = rememberAnimatedVectorPainter(animatedImageVector = animatedImage, atEnd = isVisible)
+                    val animatedPainter = rememberAnimatedVectorPainter(animatedImageVector = animatedImage, atEnd = isPasswordVisible)
 
                     Image(
                         painter = animatedPainter,
@@ -99,7 +116,11 @@ private fun AuthBSHeaderPreview() {
             email = "",
             onEmailChange = {},
             password = "",
-            onPasswordChange = {}
+            onPasswordChange = {},
+            incorrectEmail = true,
+            incorrectPassword = false,
+            isPasswordVisible = true,
+            onVisibleClick = {},
         )
     }
 }
