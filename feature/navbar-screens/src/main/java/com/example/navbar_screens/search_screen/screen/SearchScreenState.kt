@@ -10,12 +10,12 @@ enum class Season {
 
 data class SearchScreenState(
     val animeYears: List<Int> = emptyList(),
-    val isAnimeYearsLoading: Boolean = false,
+    val isAnimeYearsLoading: Boolean = true,
     val isAnimeYearsError: Boolean = false,
     val chosenAnimeYears: List<Int> = emptyList(),
 
     val animeGenres: List<String> = emptyList(),
-    val isAnimeGenresLoading: Boolean = false,
+    val isAnimeGenresLoading: Boolean = true,
     val isAnimeGenresError: Boolean = false,
     val chosenAnimeGenres: List<String> = emptyList(),
 
