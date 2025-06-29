@@ -113,7 +113,7 @@ fun HomeScreenTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun HomeScreenTopBarPreview() {
+private fun HomeScreenTopBarPreview() {
     LibriaNowTheme {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 

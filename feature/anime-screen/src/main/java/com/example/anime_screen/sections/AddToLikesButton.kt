@@ -97,7 +97,7 @@ fun AddToLikesButton(
 
 @Preview
 @Composable
-fun AddToLikesButtonPreview() {
+private fun AddToLikesButtonPreview() {
     LibriaNowTheme {
         AddToLikesButton(
             alreadyInLikes = true,

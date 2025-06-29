@@ -37,7 +37,7 @@ import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.home_screen.sections.HomeScreenTopBar
 import com.example.navbar_screens.home_screen.sections.NothingHereSection
-import com.example.navbar_screens.home_screen.sections.TitlesListLVG
+import com.example.navbar_screens.home_screen.sections.TitlesUpdatesLVG
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -203,7 +203,7 @@ fun HomeScreen(
                 } else if (titlesByQuery.loadState.refresh is LoadState.Error) {
                     ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    TitlesListLVG(
+                    TitlesUpdatesLVG(
                         titlesUpdates = titlesByQuery,
                         showRandomButton = false,
                         onAnimeClick = { animeId ->
@@ -217,7 +217,7 @@ fun HomeScreen(
                 if (titlesUpdates.loadState.refresh is LoadState.Error) {
                     ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    TitlesListLVG(
+                    TitlesUpdatesLVG(
                         titlesUpdates = titlesUpdates,
                         onAnimeClick = { animeId ->
                             navController.navigate(

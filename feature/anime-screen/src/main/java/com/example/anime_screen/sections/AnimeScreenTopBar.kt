@@ -150,7 +150,7 @@ fun AnimatedLoadingText() {
 
 @Preview
 @Composable
-fun AnimatedLoadingTextPreview() {
+private fun AnimatedLoadingTextPreview() {
     LibriaNowTheme {
         AnimatedLoadingText()
     }
@@ -159,7 +159,7 @@ fun AnimatedLoadingTextPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun AnimeScreenTopBaPreview() {
+private fun AnimeScreenTopBaPreview() {
     LibriaNowTheme {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 

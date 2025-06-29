@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
@@ -60,5 +62,18 @@ fun AnimeCard(
                 overflow = TextOverflow.Ellipsis
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun AnimeCardPreview() {
+    LibriaNowTheme {
+        AnimeCard(
+            posterPath = "",
+            genresString = "Сёнен, детектив",
+            title = "Наруто",
+            onCardClick = {},
+        )
     }
 }

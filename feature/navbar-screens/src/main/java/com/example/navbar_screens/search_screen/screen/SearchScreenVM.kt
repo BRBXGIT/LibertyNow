@@ -1,14 +1,12 @@
 package com.example.navbar_screens.search_screen.screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
 import com.example.data.domain.SearchScreenRepo
-import com.example.design_system.snackbars.SnackbarAction
-import com.example.design_system.snackbars.SnackbarController
-import com.example.design_system.snackbars.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchScreenVM @Inject constructor(
     private val repository: SearchScreenRepo,
-    @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher
+    @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher,
 ): ViewModel() {
     private val _searchScreenState = MutableStateFlow(SearchScreenState())
     val searchScreenState = _searchScreenState.stateIn(
@@ -40,7 +38,15 @@ class SearchScreenVM @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val animeByFilters = _searchScreenState
-        .map { it }
+        .map { state ->
+            AnimeByFilterParams(
+                chosenAnimeYears = state.chosenAnimeYears,
+                chosenAnimeGenres = state.chosenAnimeGenres,
+                sortedBy = state.sortedBy,
+                chosenSeasons = state.chosenSeasons,
+                releaseEnd = state.releaseEnd
+            )
+        }
         .distinctUntilChanged()
         .flatMapLatest { state ->
             val seasonCodes = state.chosenSeasons.map {
@@ -110,15 +116,6 @@ class SearchScreenVM @Inject constructor(
                         isAnimeYearsError = true
                     )
                 }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = response.label!!,
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { fetchAnimeYears() }
-                        )
-                    )
-                )
             }
         }
     }
@@ -148,15 +145,6 @@ class SearchScreenVM @Inject constructor(
                         isAnimeGenresError = true
                     )
                 }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = response.label!!,
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { fetchAnimeGenres() }
-                        )
-                    )
-                )
             }
         }
     }

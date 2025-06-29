@@ -110,7 +110,7 @@ private fun TorrentItem(
 
 @Preview
 @Composable
-fun TorrentsSectionPreview() {
+private fun TorrentsSectionPreview() {
     LibriaNowTheme {
         TorrentsSection(
             torrents = Torrents(),
@@ -121,7 +121,7 @@ fun TorrentsSectionPreview() {
 
 @Preview
 @Composable
-fun TorrentItemPreview() {
+private fun TorrentItemPreview() {
     LibriaNowTheme {
         TorrentItem(
             quality = "1080p",

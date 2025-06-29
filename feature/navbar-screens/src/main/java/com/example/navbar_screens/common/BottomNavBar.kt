@@ -60,7 +60,7 @@ fun BottomNavBar(
 
 @Preview
 @Composable
-fun BottomNavBarPreview() {
+private fun BottomNavBarPreview() {
     LibriaNowTheme {
         BottomNavBar(
             selectedItemIndex = 0,

@@ -57,7 +57,7 @@ private fun GenreBox(
 
 @Preview
 @Composable
-fun GenresLRPreview() {
+private fun GenresLRPreview() {
     LibriaNowTheme {
         GenresLR(
             genres = listOf("Сёнен", "Пародия", "Комедия")
@@ -67,7 +67,7 @@ fun GenresLRPreview() {
 
 @Preview
 @Composable
-fun GenreBoxPreview() {
+private fun GenreBoxPreview() {
     LibriaNowTheme {
         GenreBox(genre = "Сёнен")
     }
