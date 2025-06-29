@@ -28,7 +28,8 @@ fun TorrentsSection(
     onDownloadClick: (String) -> Unit
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
     ) {
         torrents.list.forEach { torrent ->
             TorrentItem(

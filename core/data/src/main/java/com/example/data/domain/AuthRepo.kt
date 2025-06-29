@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepo {
 
-    val isUserAuthenticated: Flow<Boolean?>
+    val userSessionToken: Flow<String?>
 
     val authState: Flow<AuthState>
 

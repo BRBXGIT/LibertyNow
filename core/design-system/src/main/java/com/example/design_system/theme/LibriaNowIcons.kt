@@ -11,6 +11,8 @@ object LibriaNowIcons {
     val MinusCircle = R.drawable.ic_minus_circle
     val PlusCircle = R.drawable.ic_plus_circle
     val Filters = R.drawable.ic_filters
+    val User = R.drawable.ic_user
+    val Password = R.drawable.ic_password
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
@@ -24,6 +26,7 @@ object LibriaNowIcons {
     val MagnifierAnimated = R.drawable.ic_magnifier_animated
     val SettingsAnimated = R.drawable.ic_settings_animated
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
+    val EyeAnimated = R.drawable.ic_eye_animated
 
     // Images
     val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light

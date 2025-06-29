@@ -10,12 +10,14 @@ import com.example.common.CommonState
 import com.example.common.CommonVM
 import com.example.design_system.theme.CommonConstants
 import com.example.navbar_screens.likes_screen.screen.LikesScreen
+import com.example.navbar_screens.likes_screen.screen.LikesScreenVM
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object LikesScreenRoute
 
 fun NavGraphBuilder.likesScreen(
+    likesScreenVM: LikesScreenVM,
     commonVM: CommonVM,
     commonState: CommonState,
     navController: NavController
@@ -24,6 +26,7 @@ fun NavGraphBuilder.likesScreen(
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
 ) {
     LikesScreen(
+        viewModel = likesScreenVM,
         commonVM = commonVM,
         commonState = commonState,
         navController = navController

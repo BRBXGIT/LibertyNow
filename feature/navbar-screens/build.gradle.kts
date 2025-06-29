@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:network"))
     implementation(project(":core:common"))
+    implementation(project(":core:local"))
     // Feature modules
     implementation(project(":feature:anime-screen"))
     implementation(project(":feature:common"))
