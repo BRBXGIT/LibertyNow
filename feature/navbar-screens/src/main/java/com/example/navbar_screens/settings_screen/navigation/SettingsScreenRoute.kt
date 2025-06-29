@@ -6,8 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.common.CommonState
-import com.example.common.CommonVM
+import com.example.common.common.CommonVM
 import com.example.design_system.theme.CommonConstants
 import com.example.navbar_screens.settings_screen.screen.SettingsScreen
 import kotlinx.serialization.Serializable
@@ -17,7 +16,6 @@ data object SettingsScreenRoute
 
 fun NavGraphBuilder.settingsScreen(
     commonVM: CommonVM,
-    commonState: CommonState,
     navController: NavController
 ) = composable<SettingsScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
@@ -25,7 +23,6 @@ fun NavGraphBuilder.settingsScreen(
 ) {
     SettingsScreen(
         commonVM = commonVM,
-        commonState = commonState,
         navController = navController
     )
 }

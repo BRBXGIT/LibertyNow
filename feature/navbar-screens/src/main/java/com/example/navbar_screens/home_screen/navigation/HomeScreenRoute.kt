@@ -6,8 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.common.CommonState
-import com.example.common.CommonVM
+import com.example.common.common.CommonVM
 import com.example.design_system.theme.CommonConstants
 import com.example.navbar_screens.home_screen.screen.HomeScreen
 import com.example.navbar_screens.home_screen.screen.HomeScreenVM
@@ -19,7 +18,6 @@ data object HomeScreenRoute
 fun NavGraphBuilder.homeScreen(
     homeScreenVM: HomeScreenVM,
     commonVM: CommonVM,
-    commonState: CommonState,
     navController: NavController
 ) = composable<HomeScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
@@ -29,6 +27,5 @@ fun NavGraphBuilder.homeScreen(
         viewModel = homeScreenVM,
         navController = navController,
         commonVM = commonVM,
-        commonState = commonState
     )
 }

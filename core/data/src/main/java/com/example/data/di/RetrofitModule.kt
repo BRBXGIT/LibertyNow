@@ -53,7 +53,7 @@ object RetrofitModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://www.anilibria.tv")
+            .baseUrl("https://www.anilibria.tv/")
             .addConverterFactory(gson)
             .client(okHttpClient)
             .build()
