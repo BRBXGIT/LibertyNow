@@ -32,7 +32,7 @@ fun NothingHereSection() {
 
 @Preview
 @Composable
-fun NothingHereSectionPreview() {
+private fun NothingHereSectionPreview() {
     LibriaNowTheme {
         NothingHereSection()
     }

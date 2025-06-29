@@ -163,7 +163,7 @@ fun Header(
 
 @Preview
 @Composable
-fun HeaderPreview() {
+private fun HeaderPreview() {
     LibriaNowTheme {
         Header(
             nameEnglish = "Тетрадь смерти",

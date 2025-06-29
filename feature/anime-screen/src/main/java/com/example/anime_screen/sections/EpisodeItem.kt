@@ -60,7 +60,7 @@ fun EpisodeItem(
 
 @Preview
 @Composable
-fun EpisodeItemPreview() {
+private fun EpisodeItemPreview() {
     LibriaNowTheme {
         EpisodeItem(
             episode = 1,

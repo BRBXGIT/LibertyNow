@@ -54,7 +54,7 @@ fun ErrorSection(
 
 @Preview
 @Composable
-fun ErrorSectionPreview() {
+private fun ErrorSectionPreview() {
     LibriaNowTheme {
         ErrorSection()
     }

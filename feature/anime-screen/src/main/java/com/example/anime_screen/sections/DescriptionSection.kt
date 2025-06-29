@@ -119,7 +119,7 @@ fun DescriptionSection(
 
 @Preview
 @Composable
-fun DescriptionSectionPreview() {
+private fun DescriptionSectionPreview() {
     LibriaNowTheme {
         DescriptionSection(
             isExpanded = false,

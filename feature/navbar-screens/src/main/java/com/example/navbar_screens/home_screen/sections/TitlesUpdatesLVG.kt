@@ -29,7 +29,7 @@ import com.example.network.common.titles_list_response.Item0
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
-fun TitlesListLVG(
+fun TitlesUpdatesLVG(
     showRandomButton: Boolean = true,
     titlesUpdates: LazyPagingItems<Item0>,
     onAnimeClick: (Int) -> Unit,
@@ -86,11 +86,11 @@ fun TitlesListLVG(
 
 @Preview
 @Composable
-fun TitlesLitLVGPreview() {
+private fun TitlesLitLVGPreview() {
     LibriaNowTheme {
         val emptyPagingItems = flowOf(PagingData.empty<Item0>()).collectAsLazyPagingItems()
 
-        TitlesListLVG(
+        TitlesUpdatesLVG(
             showRandomButton = true,
             titlesUpdates = emptyPagingItems,
             onAnimeClick = {},
