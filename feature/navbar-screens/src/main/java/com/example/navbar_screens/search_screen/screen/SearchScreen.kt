@@ -4,25 +4,114 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.CommonIntent
 import com.example.common.CommonState
 import com.example.common.CommonVM
+import com.example.design_system.snackbars.ObserveAsEvents
+import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
+import com.example.navbar_screens.search_screen.sections.FiltersBS
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchScreen(
+    viewModel: SearchScreenVM,
     commonVM: CommonVM,
     commonState: CommonState,
     navController: NavController
 ) {
+    val screenState by viewModel.searchScreenState.collectAsStateWithLifecycle()
+    val animeByFilters = viewModel.animeByFilters.collectAsLazyPagingItems()
+
+    if (screenState.isFilterBSOpened) {
+        FiltersBS(
+            screenState = screenState,
+            onDismissRequest = {
+                viewModel.sendIntent(
+                    SearchScreenIntent.UpdateScreenState(screenState.copy(isFilterBSOpened = false))
+                )
+            },
+            onReleaseEndClick = {
+                viewModel.sendIntent(
+                    SearchScreenIntent.UpdateScreenState(screenState.copy(releaseEnd = !screenState.releaseEnd))
+                )
+            },
+            onSortClick = {
+                viewModel.sendIntent(
+                    SearchScreenIntent.UpdateScreenState(screenState.copy(sortedBy = it))
+                )
+            },
+            onYearClick = {
+                val currentYears = screenState.chosenAnimeYears.toMutableList()
+                viewModel.sendIntent(
+                    SearchScreenIntent.UpdateScreenState(
+                        screenState.copy(
+                            chosenAnimeYears = if (it in currentYears) currentYears - it else currentYears + it
+                        )
+                    )
+                )
+            },
+            onSeasonClick = {
+                val currentSeasons = screenState.chosenSeasons.toMutableList()
+                viewModel.sendIntent(
+                    SearchScreenIntent.UpdateScreenState(
+                        screenState.copy(
+                            chosenSeasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
+                        )
+                    )
+                )
+            },
+            onGenreClick = {
+                val currentGenres = screenState.chosenAnimeGenres.toMutableList()
+                viewModel.sendIntent(
+                    SearchScreenIntent.UpdateScreenState(
+                        screenState.copy(
+                            chosenAnimeGenres = if (it in currentGenres) currentGenres - it else currentGenres + it
+                        )
+                    )
+                )
+            }
+        )
+    }
+
+    // Snackbars stuff
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    ObserveAsEvents(flow = SnackbarController.events, snackbarHostState) { event ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+
+            val result = snackbarHostState.showSnackbar(
+                message = event.message,
+                actionLabel = event.action?.name,
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true
+            )
+
+            if(result == SnackbarResult.ActionPerformed) {
+                event.action?.action?.invoke()
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
             BottomNavBar(
                 selectedItemIndex = commonState.selectedNavBarIndex,
@@ -43,9 +132,15 @@ fun SearchScreen(
                 .background(mColors.background)
                 .padding(innerPadding)
         ) {
-            Text(
-                text = "Search screen"
-            )
+            Button(
+                onClick = {
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(
+                            screenState.copy(isFilterBSOpened = true)
+                        )
+                    )
+                }
+            ) { }
         }
     }
 }

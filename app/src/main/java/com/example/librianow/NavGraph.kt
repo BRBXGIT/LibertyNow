@@ -11,6 +11,7 @@ import com.example.navbar_screens.home_screen.navigation.homeScreen
 import com.example.navbar_screens.home_screen.screen.HomeScreenVM
 import com.example.navbar_screens.likes_screen.navigation.likesScreen
 import com.example.navbar_screens.search_screen.navigation.searchScreen
+import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 import com.example.navbar_screens.settings_screen.navigation.settingsScreen
 import com.example.onboarding_screen.navigation.onBoardingScreen
 
@@ -25,6 +26,7 @@ fun NavGraph(
     val commonState = commonVM.commonState.collectAsStateWithLifecycle().value
 
     val homeScreenVM = hiltViewModel<HomeScreenVM>()
+    val searchScreenVM = hiltViewModel<SearchScreenVM>()
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -45,6 +47,7 @@ fun NavGraph(
         )
 
         searchScreen(
+            searchScreenVM = searchScreenVM,
             commonVM = commonVM,
             commonState = commonState,
             navController = navController

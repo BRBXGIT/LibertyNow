@@ -14,7 +14,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -37,47 +39,50 @@ class SearchScreenVM @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val animeByFilters = _searchScreenState.flatMapLatest { state ->
-        val seasonCodes = state.chosenSeasons.map {
-            when (it) {
-                Season.Winter -> 1
-                Season.Spring -> 2
-                Season.Summer -> 3
-                Season.Autumn -> 4
+    val animeByFilters = _searchScreenState
+        .map { it }
+        .distinctUntilChanged()
+        .flatMapLatest { state ->
+            val seasonCodes = state.chosenSeasons.map {
+                when (it) {
+                    Season.Winter -> 1
+                    Season.Spring -> 2
+                    Season.Summer -> 3
+                    Season.Autumn -> 4
+                }
             }
-        }
 
-        val queryParts = mutableListOf<String>()
+            val queryParts = mutableListOf<String>()
 
-        if (state.chosenAnimeYears.isNotEmpty()) {
-            val yearsQuery = "({season.year}==${state.chosenAnimeYears.joinToString(" or {season.year}==")})"
-            queryParts += yearsQuery
-        }
+            if (state.chosenAnimeYears.isNotEmpty()) {
+                val yearsQuery = "({season.year}==${state.chosenAnimeYears.joinToString(" or {season.year}==")})"
+                queryParts += yearsQuery
+            }
 
-        if (seasonCodes.isNotEmpty()) {
-            val seasonQuery = "({season.code}==${seasonCodes.joinToString(" or {season.code}==")})"
-            queryParts += seasonQuery
-        }
+            if (seasonCodes.isNotEmpty()) {
+                val seasonQuery = "({season.code}==${seasonCodes.joinToString(" or {season.code}==")})"
+                queryParts += seasonQuery
+            }
 
-        if (state.chosenAnimeGenres.isNotEmpty()) {
-            val genresQuery = "(${state.chosenAnimeGenres.joinToString(" or ") { "\"$it\" in {genres}" }})"
-            queryParts += genresQuery
-        }
+            if (state.chosenAnimeGenres.isNotEmpty()) {
+                val genresQuery = "(${state.chosenAnimeGenres.joinToString(" or ") { "\"$it\" in {genres}" }})"
+                queryParts += genresQuery
+            }
 
-        // Always include releaseEnd
-        queryParts += "(released==${state.releaseEnd})"
+            // Always include releaseEnd
+            queryParts += "(released==${state.releaseEnd})"
 
-        val query = queryParts.joinToString(" and ")
+            val query = queryParts.joinToString(" and ")
 
-        val orderBy = when (state.sortedBy) {
-            SortedBy.Popularity -> "in_favorites"
-            SortedBy.Novelty -> "-updated"
-        }
+            val orderBy = when (state.sortedBy) {
+                SortedBy.Popularity -> "in_favorites"
+                SortedBy.Novelty -> "-updated"
+            }
 
-        repository.getAnimeByFilters(
-            query = query,
-            orderBy = orderBy
-        )
+            repository.getAnimeByFilters(
+                query = query,
+                orderBy = orderBy
+            )
     }
 
     private fun fetchAnimeYears() {
@@ -127,7 +132,7 @@ class SearchScreenVM @Inject constructor(
                 )
             }
 
-            val response = repository.getAnimeYears()
+            val response = repository.getAnimeGenres()
             if (response.error == NetworkErrors.SUCCESS) {
                 _searchScreenState.update { state ->
                     state.copy(
@@ -148,7 +153,7 @@ class SearchScreenVM @Inject constructor(
                         message = response.label!!,
                         action = SnackbarAction(
                             name = "Retry",
-                            action = { fetchAnimeYears() }
+                            action = { fetchAnimeGenres() }
                         )
                     )
                 )

@@ -21,7 +21,10 @@ data class SearchScreenState(
 
     val sortedBy: SortedBy = SortedBy.Popularity,
 
+    val animeSeasons: List<Season> = listOf(Season.Winter, Season.Spring, Season.Summer, Season.Autumn),
     val chosenSeasons: List<Season> = emptyList(),
 
-    val releaseEnd: Boolean = false
+    val releaseEnd: Boolean = false,
+
+    val isFilterBSOpened: Boolean = false
 )
