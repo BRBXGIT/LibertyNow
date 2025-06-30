@@ -37,6 +37,9 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:network"))
     implementation(project(":core:common"))
+    implementation(project(":core:local"))
+    // Feature modules
+    implementation(project(":feature:common"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

@@ -33,7 +33,7 @@ import com.example.navbar_screens.likes_screen.sections.LikesLVG
 import com.example.navbar_screens.likes_screen.sections.LikesScreenTopBar
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSection
 import kotlinx.coroutines.launch
-import com.example.local.datastore.auth.AuthState as UserAuthState
+import com.example.local.datastore.auth.LoggingState as UserAuthState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

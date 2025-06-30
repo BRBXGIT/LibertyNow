@@ -7,7 +7,7 @@ import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptions
 import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager
-import com.example.local.datastore.auth.AuthState
+import com.example.local.datastore.auth.LoggingState
 import com.example.network.auth.api.AuthApiInstance
 import com.example.network.auth.api.LikesApiInstance
 import kotlinx.coroutines.flow.map
@@ -21,8 +21,8 @@ class AuthRepoImpl @Inject constructor(
 
     override val userSessionToken = authManager.userSessionTokenFlow
 
-    override val authState = userSessionToken.map { token ->
-        if (token.isNullOrBlank()) AuthState.LoggedOut else AuthState.LoggedIn
+    override val loggingState = userSessionToken.map { token ->
+        if (token.isNullOrBlank()) LoggingState.LoggedOut else LoggingState.LoggedIn
     }
 
     override suspend fun saveUserSessionToken(token: String) {

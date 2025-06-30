@@ -37,11 +37,15 @@ import com.example.anime_screen.sections.EpisodeItem
 import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
 import com.example.anime_screen.sections.TorrentsSection
+import com.example.common.auth.AuthIntent
+import com.example.common.auth.AuthVM
+import com.example.design_system.sections.auth_bs.AuthBS
 import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
+import com.example.local.datastore.auth.LoggingState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,13 +53,33 @@ import kotlinx.coroutines.launch
 fun AnimeScreen(
     animeId: Int,
     viewModel: AnimeScreenVM,
+    authVM: AuthVM,
     navController: NavController
 ) {
+    val authState by authVM.authState.collectAsStateWithLifecycle()
+    val screenState by viewModel.animeScreenState.collectAsStateWithLifecycle()
+
     // Fetch anime
-    LaunchedEffect(animeId) {
+    LaunchedEffect(animeId, authState.likes, authState.isLogged) {
         viewModel.sendIntent(
             AnimeScreenIntent.FetchAnime(animeId)
         )
+        if (authState.isLogged is LoggingState.LoggedIn) {
+            val currentLikesIds = authState.likes.map { it.id }
+            if (animeId in currentLikesIds) {
+                viewModel.sendIntent(
+                    AnimeScreenIntent.UpdateScreenState(
+                        state = screenState.copy(isInLikes = true)
+                    )
+                )
+            } else {
+                viewModel.sendIntent(
+                    AnimeScreenIntent.UpdateScreenState(
+                        state = screenState.copy(isInLikes = false)
+                    )
+                )
+            }
+        }
     }
 
     // Snackbars stuff
@@ -78,15 +102,13 @@ fun AnimeScreen(
         }
     }
 
-    val screenState by viewModel.animeScreenState.collectAsStateWithLifecycle()
-
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AnimeScreenTopBar(
                 animeTitle = screenState.anime?.names?.ru,
-                isLoading = screenState.isLoading,
+                isLoading = screenState.isLoading or authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
                 isError = screenState.isError,
                 onArchiveClick = {}, // TODO
@@ -97,6 +119,49 @@ fun AnimeScreen(
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
+        if (authState.isAuthBSOpened) {
+            AuthBS(
+                email = authState.email,
+                password = authState.password,
+                isPasswordVisible = authState.isPasswordVisible,
+                incorrectEmail = authState.incorrectEmail,
+                incorrectPassword = authState.incorrectPassword,
+                onVisibleClick = {
+                    authVM.sendIntent(
+                        AuthIntent.UpdateAuthState(
+                            authState.copy(isPasswordVisible = !authState.isPasswordVisible)
+                        )
+                    )
+                },
+                onDismissRequest = {
+                    authVM.sendIntent(
+                        AuthIntent.UpdateAuthState(
+                            authState.copy(isAuthBSOpened = false)
+                        )
+                    )
+                },
+                onAuthClick = {
+                    authVM.sendIntent(
+                        AuthIntent.GetSessionToken
+                    )
+                },
+                onPasswordChange = {
+                    authVM.sendIntent(
+                        AuthIntent.UpdateAuthState(
+                            authState.copy(password = it)
+                        )
+                    )
+                },
+                onEmailChange = {
+                    authVM.sendIntent(
+                        AuthIntent.UpdateAuthState(
+                            authState.copy(email = it)
+                        )
+                    )
+                }
+            )
+        }
+
         val anime = screenState.anime
 
         if (screenState.isError) {
@@ -138,6 +203,17 @@ fun AnimeScreen(
                                     AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = false))
                                 )
                             }, // TODO
+                            isLogged = when (authState.isLogged) {
+                                LoggingState.LoggedIn -> true
+                                else -> false
+                            },
+                            onAuthClick = {
+                                authVM.sendIntent(
+                                    AuthIntent.UpdateAuthState(
+                                        authState.copy(isAuthBSOpened = true)
+                                    )
+                                )
+                            },
                         )
                     }
 

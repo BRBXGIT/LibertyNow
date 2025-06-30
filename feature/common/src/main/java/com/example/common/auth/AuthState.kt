@@ -1,10 +1,10 @@
 package com.example.common.auth
 
-import com.example.local.datastore.auth.AuthState
+import com.example.local.datastore.auth.LoggingState
 import com.example.network.common.titles_list_response.Item0
 
 data class AuthState(
-    val isLogged: AuthState = AuthState.Loading,
+    val isLogged: LoggingState = LoggingState.Loading,
     val sessionToken: String? = null,
     val isLoading: Boolean = false,
 

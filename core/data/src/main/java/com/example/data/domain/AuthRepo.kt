@@ -1,14 +1,14 @@
 package com.example.data.domain
 
 import com.example.common.functions.NetworkResponse
-import com.example.local.datastore.auth.AuthState
+import com.example.local.datastore.auth.LoggingState
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepo {
 
     val userSessionToken: Flow<String?>
 
-    val authState: Flow<AuthState>
+    val loggingState: Flow<LoggingState>
 
     suspend fun saveUserSessionToken(token: String)
 

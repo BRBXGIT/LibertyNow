@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.local.datastore.auth.AuthState as LoggingState
+import com.example.local.datastore.auth.LoggingState as LoggingState
 
 @HiltViewModel
 class AuthVM @Inject constructor(
@@ -44,7 +44,7 @@ class AuthVM @Inject constructor(
         viewModelScope.launch(dispatcherIo) {
             _authState.update { state ->
                 state.copy(
-                    isLogged = repository.authState.first(),
+                    isLogged = repository.loggingState.first(),
                     sessionToken = repository.userSessionToken.first()
                 )
             }

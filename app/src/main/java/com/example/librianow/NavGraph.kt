@@ -60,7 +60,8 @@ fun NavGraph(
         )
 
         animeScreen(
-            navController = navController
+            navController = navController,
+            authVM = authVM
         )
     }
 }

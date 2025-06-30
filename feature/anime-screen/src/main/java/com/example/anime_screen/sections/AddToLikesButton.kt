@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,32 +32,46 @@ fun AddToLikesButton(
     alreadyInLikes: Boolean,
     onAddClick: () -> Unit,
     onPopClick: () -> Unit,
+    onAuthClick: () -> Unit,
+    isLogged: Boolean,
     modifier: Modifier = Modifier
 ) {
     val animatedButtonColor by animateColorAsState(
-        targetValue = if (alreadyInLikes) mColors.secondary else mColors.primary,
+        targetValue = if (alreadyInLikes and isLogged) mColors.secondary else mColors.primary,
         label = "Animated color for button",
         animationSpec = tween(CommonConstants.ANIMATION_DURATION)
     )
     val animatedInLikesAlpha by animateFloatAsState(
-        targetValue = if (alreadyInLikes) 1f else 0f,
+        targetValue = if (alreadyInLikes and isLogged) 1f else 0f,
         animationSpec = tween(CommonConstants.ANIMATION_DURATION),
         label = "Animation for label if anime already in likes"
     )
     val animatedNotInLikesAlpha by animateFloatAsState(
-        targetValue = if (!alreadyInLikes) 1f else 0f,
+        targetValue = if (!alreadyInLikes and isLogged) 1f else 0f,
         animationSpec = tween(CommonConstants.ANIMATION_DURATION),
         label = "Animation for label if anime not in likes"
+    )
+    val animatedAuthAlpha by animateFloatAsState(
+        targetValue = if (!isLogged) 1f else 0f,
+        animationSpec = tween(CommonConstants.ANIMATION_DURATION),
+        label = "Animation for label if user not logged in"
     )
 
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = animatedButtonColor),
-        onClick = if (alreadyInLikes) onPopClick else onAddClick,
+        onClick = if (isLogged) {
+            if (alreadyInLikes) onPopClick else onAddClick
+        } else {
+            onAuthClick
+        },
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
-        Box {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -76,7 +91,8 @@ fun AddToLikesButton(
             }
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     painter = painterResource(LibriaNowIcons.PlusCircle),
@@ -91,6 +107,24 @@ fun AddToLikesButton(
                     modifier = Modifier.alpha(animatedNotInLikesAlpha)
                 )
             }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(LibriaNowIcons.UserCheck),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .alpha(animatedAuthAlpha)
+                )
+
+                Text(
+                    text = "Авторизация",
+                    modifier = Modifier.alpha(animatedAuthAlpha)
+                )
+            }
         }
     }
 }
@@ -102,7 +136,9 @@ private fun AddToLikesButtonPreview() {
         AddToLikesButton(
             alreadyInLikes = true,
             onAddClick = {},
-            onPopClick = {}
+            onPopClick = {},
+            isLogged = true,
+            onAuthClick = {},
         )
     }
 }
