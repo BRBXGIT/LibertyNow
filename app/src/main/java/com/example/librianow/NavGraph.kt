@@ -15,6 +15,7 @@ import com.example.navbar_screens.search_screen.navigation.searchScreen
 import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 import com.example.navbar_screens.settings_screen.navigation.settingsScreen
 import com.example.onboarding_screen.navigation.onBoardingScreen
+import com.example.player_screen.navigation.playerScreen
 
 @Composable
 fun NavGraph(
@@ -63,5 +64,7 @@ fun NavGraph(
             navController = navController,
             authVM = authVM
         )
+
+        playerScreen()
     }
 }

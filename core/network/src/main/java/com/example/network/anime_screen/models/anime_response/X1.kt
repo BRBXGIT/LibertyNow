@@ -1,6 +1,5 @@
 package com.example.network.anime_screen.models.anime_response
 
-
 import com.google.gson.annotations.SerializedName
 
 data class X1(

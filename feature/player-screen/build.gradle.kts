@@ -44,6 +44,7 @@ dependencies {
 
     // Core modules
     implementation(project(":core:design-system"))
+    implementation(project(":core:network"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -65,4 +66,6 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.hls)
     // System ui controller
     implementation(libs.accompanist.systemuicontroller)
+    // Json
+    implementation(libs.converter.gson)
 }
