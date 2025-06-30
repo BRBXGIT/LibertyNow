@@ -1,6 +1,7 @@
 package com.example.common.auth
 
 import com.example.local.datastore.auth.AuthState
+import com.example.network.common.titles_list_response.Item0
 
 data class AuthState(
     val isLogged: AuthState = AuthState.Loading,
@@ -15,5 +16,6 @@ data class AuthState(
     val isPasswordVisible: Boolean = true,
 
     val likesAmount: Int = 0,
-    val likesError: Boolean = false
+    val likesError: Boolean = false,
+    val likes: List<Item0> = emptyList()
 )

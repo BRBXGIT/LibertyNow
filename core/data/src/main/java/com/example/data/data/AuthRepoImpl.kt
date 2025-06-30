@@ -96,4 +96,29 @@ class AuthRepoImpl @Inject constructor(
             processNetworkExceptions(e)
         }
     }
+
+    override suspend fun getLikes(sessionToken: String, itemsPerPage: Int): NetworkResponse {
+        return try {
+            val response = likesApiInstance.getLikes(
+                sessionToken = sessionToken,
+                itemsPerPage = itemsPerPage
+            )
+
+            if (response.code() == 200) {
+                NetworkResponse(
+                    response = response.body(),
+                    error = NetworkErrors.SUCCESS
+                )
+            } else {
+                val error = processNetworkErrors(response.code())
+                val label = processNetworkErrorsForUi(error)
+                NetworkResponse(
+                    error = error,
+                    label = label
+                )
+            }
+        } catch (e: Exception) {
+            processNetworkExceptions(e)
+        }
+    }
 }
