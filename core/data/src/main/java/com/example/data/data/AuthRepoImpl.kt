@@ -121,4 +121,48 @@ class AuthRepoImpl @Inject constructor(
             processNetworkExceptions(e)
         }
     }
+
+    override suspend fun addLike(sessionToken: String, titleId: Int): NetworkResponse {
+        return try {
+            val response = likesApiInstance.addLike(sessionToken, titleId)
+
+            if (response.code() == 200) {
+                NetworkResponse(
+                    response = response.body(),
+                    error = NetworkErrors.SUCCESS
+                )
+            } else {
+                val error = processNetworkErrors(response.code())
+                val label = processNetworkErrorsForUi(error)
+                NetworkResponse(
+                    error = error,
+                    label = label
+                )
+            }
+        } catch (e: Exception) {
+            processNetworkExceptions(e)
+        }
+    }
+
+    override suspend fun removeLike(sessionToken: String, titleId: Int): NetworkResponse {
+        return try {
+            val response = likesApiInstance.removeLike(sessionToken, titleId)
+
+            if (response.code() == 200) {
+                NetworkResponse(
+                    response = response.body(),
+                    error = NetworkErrors.SUCCESS
+                )
+            } else {
+                val error = processNetworkErrors(response.code())
+                val label = processNetworkErrorsForUi(error)
+                NetworkResponse(
+                    error = error,
+                    label = label
+                )
+            }
+        } catch (e: Exception) {
+            processNetworkExceptions(e)
+        }
+    }
 }

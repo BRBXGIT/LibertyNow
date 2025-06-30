@@ -46,6 +46,12 @@ import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
 import com.example.local.datastore.auth.LoggingState
+import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.titles_list_response.Medium
+import com.example.network.common.titles_list_response.Names
+import com.example.network.common.titles_list_response.Original
+import com.example.network.common.titles_list_response.Posters
+import com.example.network.common.titles_list_response.Small
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,7 +169,6 @@ fun AnimeScreen(
         }
 
         val anime = screenState.anime
-
         if (screenState.isError) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -190,19 +195,45 @@ fun AnimeScreen(
                     }
 
                     item(key = "addToLikeButton") {
+                        val names = Names(
+                            alternative = anime.names.alternative,
+                            en = anime.names.en,
+                            ru = anime.names.ru
+                        )
+                        val posters = Posters(
+                            medium = Medium(
+                                rawBase64File = anime.posters.medium.rawBase64File,
+                                url = anime.posters.medium.url
+                            ),
+                            original = Original(
+                                rawBase64File = anime.posters.original.rawBase64File,
+                                url = anime.posters.original.url
+                            ),
+                            small = Small(
+                                rawBase64File = anime.posters.small.rawBase64File,
+                                url = anime.posters.small.url
+                            )
+                        )
+                        val currentAnime = Item0(
+                            id = animeId,
+                            genres = anime.genres,
+                            names = names,
+                            posters = posters
+                        )
+
                         AddToLikesButton(
                             modifier = Modifier.animateItem(),
                             alreadyInLikes = screenState.isInLikes,
                             onAddClick = {
-                                viewModel.sendIntent(
-                                    AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = true))
+                                authVM.sendIntent(
+                                    AuthIntent.AddLike(currentAnime)
                                 )
-                            }, // TODO
+                            },
                             onPopClick = {
-                                viewModel.sendIntent(
-                                    AnimeScreenIntent.UpdateScreenState(screenState.copy(isInLikes = false))
+                                authVM.sendIntent(
+                                    AuthIntent.RemoveLike(currentAnime)
                                 )
-                            }, // TODO
+                            },
                             isLogged = when (authState.isLogged) {
                                 LoggingState.LoggedIn -> true
                                 else -> false

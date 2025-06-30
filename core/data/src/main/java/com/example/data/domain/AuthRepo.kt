@@ -25,4 +25,14 @@ interface AuthRepo {
         sessionToken: String,
         itemsPerPage: Int
     ): NetworkResponse
+
+    suspend fun addLike(
+        sessionToken: String,
+        titleId: Int
+    ): NetworkResponse
+
+    suspend fun removeLike(
+        sessionToken: String,
+        titleId: Int
+    ): NetworkResponse
 }

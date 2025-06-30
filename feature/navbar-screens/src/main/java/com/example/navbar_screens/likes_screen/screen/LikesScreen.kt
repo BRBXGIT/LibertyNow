@@ -177,7 +177,7 @@ fun LikesScreen(
                         )
                     } else {
                         LikesLVG(
-                            likes = authState.likes,
+                            likes = authState.likes.reversed(),
                             onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
                         )
                     }

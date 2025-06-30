@@ -9,8 +9,10 @@ import com.example.data.domain.AuthRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
+import com.example.local.datastore.auth.LoggingState
 import com.example.network.auth.models.likes_amount_response.LikesAmountResponse
 import com.example.network.auth.models.session_token_response.SessionTokenResponse
+import com.example.network.common.titles_list_response.Item0
 import com.example.network.common.titles_list_response.TitlesListResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +23,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.local.datastore.auth.LoggingState as LoggingState
 
 @HiltViewModel
 class AuthVM @Inject constructor(
@@ -182,10 +183,92 @@ class AuthVM @Inject constructor(
         }
     }
 
+    private fun addLike(title: Item0) {
+        viewModelScope.launch(dispatcherIo) {
+            _authState.update { state ->
+                state.copy(isLoading = true)
+            }
+
+            val response = repository.addLike(
+                _authState.value.sessionToken!!,
+                title.id
+            )
+
+            if (response.error == NetworkErrors.SUCCESS) {
+                _authState.update { state ->
+                    state.copy(
+                        likes = state.likes + title,
+                        isLoading = false
+                    )
+                }
+                return@launch
+            } else {
+                _authState.update { state ->
+                    state.copy(
+                        likesError = true,
+                        isLoading = false
+                    )
+                }
+                SnackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = "Ошибка в добавлении избранного: ${response.label!!}",
+                        action = SnackbarAction(
+                            name = "Retry",
+                            action = { addLike(title) }
+                        )
+                    )
+                )
+                return@launch
+            }
+        }
+    }
+
+    private fun removeLike(title: Item0) {
+        viewModelScope.launch(dispatcherIo) {
+            _authState.update { state ->
+                state.copy(isLoading = true)
+            }
+
+            val response = repository.removeLike(
+                _authState.value.sessionToken!!,
+                title.id
+            )
+
+            if (response.error == NetworkErrors.SUCCESS) {
+                _authState.update { state ->
+                    state.copy(
+                        likes = state.likes - title,
+                        isLoading = false
+                    )
+                }
+                return@launch
+            } else {
+                _authState.update { state ->
+                    state.copy(
+                        likesError = true,
+                        isLoading = false
+                    )
+                }
+                SnackbarController.sendEvent(
+                    SnackbarEvent(
+                        message = "Ошибка в добавлении избранного: ${response.label!!}",
+                        action = SnackbarAction(
+                            name = "Retry",
+                            action = { addLike(title) }
+                        )
+                    )
+                )
+                return@launch
+            }
+        }
+    }
+
     fun sendIntent(intent: AuthIntent) {
         when (intent) {
             is AuthIntent.GetSessionToken -> getSessionToken()
             is AuthIntent.UpdateAuthState -> updateAuthState(intent.state)
+            is AuthIntent.AddLike -> addLike(intent.title)
+            is AuthIntent.RemoveLike -> removeLike(intent.title)
         }
     }
 
