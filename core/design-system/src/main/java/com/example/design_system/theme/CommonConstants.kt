@@ -5,4 +5,5 @@ object CommonConstants {
     const val ANIMATION_DURATION = 400
 
     const val BASE_TORRENTS_URL = "https://static.wwnd.space"
+    const val BASE_SCHEME = "https://"
 }

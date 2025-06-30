@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
 import com.google.common.reflect.TypeToken
@@ -15,11 +18,27 @@ import com.google.gson.Gson
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PlayerScreen(
+    host: String,
     currentAnimeId: Int,
-    gsonLinks: String
+    gsonLinks: String,
+    viewModel: PlayerScreenVM
 ) {
     val type = object : TypeToken<List<X1>>() {}.type
     val links: List<X1> = Gson().fromJson(gsonLinks, type)
+
+    val screenState by viewModel.playerScreenState.collectAsStateWithLifecycle()
+    LaunchedEffect(currentAnimeId, links, host) {
+        viewModel.sendIntent(
+            PlayerScreenIntent.UpdateScreenState(
+                screenState.copy(
+                    links = links,
+                    currentAnimeId = currentAnimeId,
+                    host = host
+                )
+            )
+        )
+        viewModel.sendIntent(PlayerScreenIntent.SetMedia)
+    }
 
     Scaffold(
         modifier = Modifier

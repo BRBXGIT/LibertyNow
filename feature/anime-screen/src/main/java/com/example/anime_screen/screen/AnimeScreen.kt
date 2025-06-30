@@ -315,7 +315,8 @@ fun AnimeScreen(
                                 navController.navigate(
                                     PlayerScreenRoute(
                                         currentItemId = index,
-                                        gsonLinks = linksString
+                                        gsonLinks = linksString,
+                                        host = anime.player.host
                                     )
                                 )
                             }
