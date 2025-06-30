@@ -64,6 +64,7 @@ dependencies {
     // Exo player
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.hls)
+    implementation(libs.androidx.media3.ui)
     // System ui controller
     implementation(libs.accompanist.systemuicontroller)
     // Json

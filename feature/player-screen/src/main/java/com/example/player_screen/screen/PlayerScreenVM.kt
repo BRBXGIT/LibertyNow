@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerScreenVM @Inject constructor(
-    private val player: ExoPlayer
+    val player: ExoPlayer
 ): ViewModel() {
     private val _playerScreenState = MutableStateFlow(PlayerScreenState())
     val playerScreenState = _playerScreenState.stateIn(
@@ -26,17 +26,19 @@ class PlayerScreenVM @Inject constructor(
         _playerScreenState.value = state
     }
 
-    private fun setMedia() {
+    private fun preparePlayer() {
         val episodeLink = CommonConstants.BASE_SCHEME + _playerScreenState.value.host + _playerScreenState.value.currentLink.hls.fhd
         val mediaItem = MediaItem.fromUri(episodeLink)
         player.setMediaItem(mediaItem)
         player.prepare()
+        player.play()
     }
 
     fun sendIntent(intent: PlayerScreenIntent) {
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
-            is PlayerScreenIntent.SetMedia -> setMedia()
+            is PlayerScreenIntent.PreparePlayer -> preparePlayer()
+            is PlayerScreenIntent.ReleasePlayer -> player.release()
         }
     }
 }

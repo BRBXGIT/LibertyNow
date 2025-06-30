@@ -4,6 +4,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
@@ -19,7 +20,9 @@ data class PlayerScreenRoute(
     val host: String
 )
 
-fun NavGraphBuilder.playerScreen() = composable<PlayerScreenRoute>(
+fun NavGraphBuilder.playerScreen(
+    navController: NavController
+) = composable<PlayerScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
 ) {
@@ -32,6 +35,7 @@ fun NavGraphBuilder.playerScreen() = composable<PlayerScreenRoute>(
         currentAnimeId = currentItemId,
         gsonLinks = gsonLinks,
         viewModel = playerScreenVM,
-        host = host
+        host = host,
+        navController = navController
     )
 }

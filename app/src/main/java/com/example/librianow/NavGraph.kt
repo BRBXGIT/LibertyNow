@@ -65,6 +65,8 @@ fun NavGraph(
             authVM = authVM
         )
 
-        playerScreen()
+        playerScreen(
+            navController = navController
+        )
     }
 }
