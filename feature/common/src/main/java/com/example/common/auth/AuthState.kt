@@ -12,5 +12,8 @@ data class AuthState(
     val password: String = "",
     val incorrectEmail: Boolean = false,
     val incorrectPassword: Boolean = false,
-    val isPasswordVisible: Boolean = true
+    val isPasswordVisible: Boolean = true,
+
+    val likesAmount: Int = 0,
+    val likesError: Boolean = false
 )

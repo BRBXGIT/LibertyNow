@@ -5,6 +5,7 @@ import com.example.data.data.AuthRepoImpl
 import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager
 import com.example.network.auth.api.AuthApiInstance
+import com.example.network.auth.api.LikesApiInstance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +35,17 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepo(authManager: AuthManager, authApiInstance: AuthApiInstance): AuthRepo {
-        return AuthRepoImpl(authManager, authApiInstance)
+    fun provideLikesApiInstance(@Named("main_api") retrofit: Retrofit): LikesApiInstance {
+        return retrofit.create(LikesApiInstance::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepo(
+        authManager: AuthManager,
+        authApiInstance: AuthApiInstance,
+        likesApiInstance: LikesApiInstance
+    ): AuthRepo {
+        return AuthRepoImpl(authManager, authApiInstance, likesApiInstance)
     }
 }

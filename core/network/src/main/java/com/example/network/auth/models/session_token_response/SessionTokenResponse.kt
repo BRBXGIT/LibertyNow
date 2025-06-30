@@ -1,4 +1,4 @@
-package com.example.network.auth.models
+package com.example.network.auth.models.session_token_response
 
 import com.google.gson.annotations.SerializedName
 

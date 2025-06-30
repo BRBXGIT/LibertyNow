@@ -9,12 +9,14 @@ import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager
 import com.example.local.datastore.auth.AuthState
 import com.example.network.auth.api.AuthApiInstance
+import com.example.network.auth.api.LikesApiInstance
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
     private val authManager: AuthManager,
-    private val apiInstance: AuthApiInstance
+    private val authApiInstance: AuthApiInstance,
+    private val likesApiInstance: LikesApiInstance
 ): AuthRepo {
 
     override val userSessionToken = authManager.userSessionTokenFlow
@@ -36,7 +38,7 @@ class AuthRepoImpl @Inject constructor(
         password: String
     ): NetworkResponse {
         return try {
-            val response = apiInstance.getSessionToken(email, password)
+            val response = authApiInstance.getSessionToken(email, password)
 
             if (response.code() == 200) {
                 val key = response.body()?.key
@@ -60,6 +62,28 @@ class AuthRepoImpl @Inject constructor(
                         )
                     }
                 }
+            } else {
+                val error = processNetworkErrors(response.code())
+                val label = processNetworkErrorsForUi(error)
+                NetworkResponse(
+                    error = error,
+                    label = label
+                )
+            }
+        } catch (e: Exception) {
+            processNetworkExceptions(e)
+        }
+    }
+
+    override suspend fun getLikesAmount(sessionToken: String): NetworkResponse {
+        return try {
+            val response = likesApiInstance.getLikesAmount(sessionToken)
+
+            if (response.code() == 200) {
+                NetworkResponse(
+                    response = response.body(),
+                    error = NetworkErrors.SUCCESS
+                )
             } else {
                 val error = processNetworkErrors(response.code())
                 val label = processNetworkErrorsForUi(error)

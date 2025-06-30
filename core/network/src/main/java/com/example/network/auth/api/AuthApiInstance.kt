@@ -1,6 +1,6 @@
 package com.example.network.auth.api
 
-import com.example.network.auth.models.SessionTokenResponse
+import com.example.network.auth.models.session_token_response.SessionTokenResponse
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
