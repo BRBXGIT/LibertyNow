@@ -99,20 +99,22 @@ fun DescriptionSection(
                 )
             }
 
-            val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.ArrowDownAnimated)
-            val animatedPainter = rememberAnimatedVectorPainter(animatedImageVector = animatedImage, atEnd = !isExpanded)
-            Image(
-                painter = animatedPainter,
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(mColors.onBackground),
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        onExpandClick()
-                    }
-            )
+            if (!description.isNullOrBlank()) {
+                val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.ArrowDownAnimated)
+                val animatedPainter = rememberAnimatedVectorPainter(animatedImageVector = animatedImage, atEnd = !isExpanded)
+                Image(
+                    painter = animatedPainter,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(mColors.onBackground),
+                    modifier = Modifier
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onExpandClick()
+                        }
+                )
+            }
         }
     }
 }
