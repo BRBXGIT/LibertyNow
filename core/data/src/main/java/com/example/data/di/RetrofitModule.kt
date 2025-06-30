@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -32,12 +33,27 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
+    @Named("main_api")
+    fun provideMainRetrofit(
         gson: GsonConverterFactory,
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://api.anilibria.tv/v3/")
+            .addConverterFactory(gson)
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("auth_api")
+    fun provideAuthRetrofit(
+        gson: GsonConverterFactory,
+        okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://www.anilibria.tv/")
             .addConverterFactory(gson)
             .client(okHttpClient)
             .build()

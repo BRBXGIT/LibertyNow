@@ -24,11 +24,10 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.anime_screen.navigation.AnimeScreenRoute
-import com.example.common.CommonIntent
-import com.example.common.CommonState
-import com.example.common.CommonVM
+import com.example.common.common.CommonIntent
+import com.example.common.common.CommonVM
 import com.example.common.functions.NetworkException
-import com.example.design_system.sections.ErrorSection
+import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
@@ -45,11 +44,12 @@ import kotlinx.coroutines.launch
 fun SearchScreen(
     viewModel: SearchScreenVM,
     commonVM: CommonVM,
-    commonState: CommonState,
     navController: NavController
 ) {
-    val screenState by viewModel.searchScreenState.collectAsStateWithLifecycle()
     val animeByFilters = viewModel.animeByFilters.collectAsLazyPagingItems()
+
+    val screenState by viewModel.searchScreenState.collectAsStateWithLifecycle()
+    val commonState by commonVM.commonState.collectAsStateWithLifecycle()
 
     // Check load state
     LaunchedEffect(animeByFilters.loadState) {

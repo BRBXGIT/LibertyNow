@@ -10,7 +10,7 @@ import com.example.data.domain.HomeScreenRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
-import com.example.network.home_screen.models.random_title_response.RandomTitleResponse
+import com.example.network.home_screen.models.RandomTitleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi

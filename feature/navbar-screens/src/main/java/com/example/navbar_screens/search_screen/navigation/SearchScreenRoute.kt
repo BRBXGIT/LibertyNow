@@ -6,8 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.common.CommonState
-import com.example.common.CommonVM
+import com.example.common.common.CommonVM
 import com.example.design_system.theme.CommonConstants
 import com.example.navbar_screens.search_screen.screen.SearchScreen
 import com.example.navbar_screens.search_screen.screen.SearchScreenVM
@@ -19,7 +18,6 @@ object SearchScreenRoute
 fun NavGraphBuilder.searchScreen(
     searchScreenVM: SearchScreenVM,
     commonVM: CommonVM,
-    commonState: CommonState,
     navController: NavController
 ) = composable<SearchScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
@@ -28,7 +26,6 @@ fun NavGraphBuilder.searchScreen(
     SearchScreen(
         viewModel = searchScreenVM,
         commonVM = commonVM,
-        commonState = commonState,
         navController = navController
     )
 }

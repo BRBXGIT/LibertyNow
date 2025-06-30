@@ -1,4 +1,4 @@
-package com.example.common
+package com.example.common.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +15,7 @@ class CommonVM @Inject constructor(
     private val _commonState = MutableStateFlow(CommonState())
     val commonState = _commonState.stateIn(
         viewModelScope,
-        SharingStarted.Lazily,
+        SharingStarted.Eagerly,
         CommonState()
     )
 

@@ -2,14 +2,15 @@ package com.example.librianow
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.anime_screen.navigation.animeScreen
-import com.example.common.CommonVM
+import com.example.common.auth.AuthVM
+import com.example.common.common.CommonVM
 import com.example.navbar_screens.home_screen.navigation.homeScreen
 import com.example.navbar_screens.home_screen.screen.HomeScreenVM
 import com.example.navbar_screens.likes_screen.navigation.likesScreen
+import com.example.navbar_screens.likes_screen.screen.LikesScreenVM
 import com.example.navbar_screens.search_screen.navigation.searchScreen
 import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 import com.example.navbar_screens.settings_screen.navigation.settingsScreen
@@ -23,10 +24,11 @@ fun NavGraph(
 
     // Initialize here to don't recompose values
     val commonVM = hiltViewModel<CommonVM>()
-    val commonState = commonVM.commonState.collectAsStateWithLifecycle().value
+    val authVM = hiltViewModel<AuthVM>()
 
     val homeScreenVM = hiltViewModel<HomeScreenVM>()
     val searchScreenVM = hiltViewModel<SearchScreenVM>()
+    val likesScreenVM = hiltViewModel<LikesScreenVM>()
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -36,26 +38,24 @@ fun NavGraph(
         homeScreen(
             homeScreenVM = homeScreenVM,
             commonVM = commonVM,
-            commonState = commonState,
             navController = navController
         )
 
         likesScreen(
+            likesScreenVM = likesScreenVM,
             commonVM = commonVM,
-            commonState = commonState,
-            navController = navController
+            navController = navController,
+            authVM = authVM
         )
 
         searchScreen(
             searchScreenVM = searchScreenVM,
             commonVM = commonVM,
-            commonState = commonState,
             navController = navController
         )
 
         settingsScreen(
             commonVM = commonVM,
-            commonState = commonState,
             navController = navController
         )
 

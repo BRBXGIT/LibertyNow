@@ -37,7 +37,7 @@ import com.example.anime_screen.sections.EpisodeItem
 import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
 import com.example.anime_screen.sections.TorrentsSection
-import com.example.design_system.sections.ErrorSection
+import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.theme.CommonConstants

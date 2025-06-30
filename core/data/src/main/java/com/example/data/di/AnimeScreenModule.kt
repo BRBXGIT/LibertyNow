@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +17,7 @@ object AnimeScreenModule {
 
     @Provides
     @Singleton
-    fun provideAnimeScreenApiInstance(retrofit: Retrofit): AnimeScreenApiInstance {
+    fun provideAnimeScreenApiInstance(@Named("main_api") retrofit: Retrofit): AnimeScreenApiInstance {
         return retrofit.create(AnimeScreenApiInstance::class.java)
     }
 

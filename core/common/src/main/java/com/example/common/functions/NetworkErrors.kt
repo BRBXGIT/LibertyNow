@@ -10,5 +10,7 @@ enum class NetworkErrors: NetworkError {
     SERVER_ERROR,
     INTERNET,
     SERIALIZATION,
+    INCORRECT_PASSWORD,
+    INCORRECT_EMAIL,
     UNKNOWN
 }

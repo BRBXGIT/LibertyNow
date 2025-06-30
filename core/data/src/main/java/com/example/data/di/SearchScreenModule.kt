@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +17,7 @@ object SearchScreenModule {
 
     @Provides
     @Singleton
-    fun provideSearchScreenApiInstance(retrofit: Retrofit): SearchScreenApiInstance {
+    fun provideSearchScreenApiInstance(@Named("main_api") retrofit: Retrofit): SearchScreenApiInstance {
         return retrofit.create(SearchScreenApiInstance::class.java)
     }
 
