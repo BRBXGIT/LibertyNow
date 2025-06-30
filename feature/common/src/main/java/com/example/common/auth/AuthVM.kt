@@ -201,7 +201,6 @@ class AuthVM @Inject constructor(
                         isLoading = false
                     )
                 }
-                return@launch
             } else {
                 _authState.update { state ->
                     state.copy(
@@ -218,7 +217,6 @@ class AuthVM @Inject constructor(
                         )
                     )
                 )
-                return@launch
             }
         }
     }
@@ -241,7 +239,6 @@ class AuthVM @Inject constructor(
                         isLoading = false
                     )
                 }
-                return@launch
             } else {
                 _authState.update { state ->
                     state.copy(
@@ -258,7 +255,6 @@ class AuthVM @Inject constructor(
                         )
                     )
                 )
-                return@launch
             }
         }
     }
