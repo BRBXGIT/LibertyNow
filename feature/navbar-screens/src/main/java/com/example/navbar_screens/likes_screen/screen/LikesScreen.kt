@@ -56,9 +56,30 @@ fun LikesScreen(
         },
         topBar = {
             LikesScreenTopBar(
-                isLoading = screenState.isLoading or authState.isLoading,
+                isLoading = authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
-                onSearchClick = {}
+                screenState = screenState,
+                onSearchClick = {
+                    viewModel.sendIntent(
+                        LikesScreenIntent.UpdateScreenState(
+                            screenState.copy(isSearching = !screenState.isSearching)
+                        )
+                    )
+                },
+                onQueryInput = {
+                    viewModel.sendIntent(
+                        LikesScreenIntent.UpdateScreenState(
+                            screenState.copy(query = it)
+                        )
+                    )
+                },
+                onClearClick = {
+                    viewModel.sendIntent(
+                        LikesScreenIntent.UpdateScreenState(
+                            screenState.copy(query = "")
+                        )
+                    )
+                },
             )
         },
         modifier = Modifier
@@ -117,10 +138,19 @@ fun LikesScreen(
             when (authState.isLogged) {
                 UserAuthState.Loading -> {}
                 UserAuthState.LoggedIn -> {
-                    LikesLVG(
-                        likes = authState.likes,
-                        onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
-                    )
+                    if (screenState.isSearching) {
+                        LikesLVG(
+                            likes = authState.likes.filter {
+                                it.names.ru.contains(screenState.query, ignoreCase = true) == true
+                            },
+                            onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
+                        )
+                    } else {
+                        LikesLVG(
+                            likes = authState.likes,
+                            onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
+                        )
+                    }
                 }
                 UserAuthState.LoggedOut -> {
                     if (!authState.isLoading) {
