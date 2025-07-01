@@ -72,8 +72,10 @@ class PlayerScreenVM @Inject constructor(
     private fun trackCurrentPosition() {
         viewModelScope.launch {
             while (true) {
-                _playerScreenState.update { state ->
-                    state.copy(currentPosition = player.currentPosition)
+                if (!_playerScreenState.value.isUserSeeking) {
+                    _playerScreenState.update { state ->
+                        state.copy(currentPosition = player.currentPosition)
+                    }
                 }
                 delay(500)
             }
