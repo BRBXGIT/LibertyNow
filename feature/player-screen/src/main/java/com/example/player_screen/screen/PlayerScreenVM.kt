@@ -34,9 +34,10 @@ class PlayerScreenVM @Inject constructor(
     }
 
     private fun preparePlayer() {
-        val episodeLink = CommonConstants.BASE_SCHEME + _playerScreenState.value.host + _playerScreenState.value.currentLink.hls.fhd
-        val mediaItem = MediaItem.fromUri(episodeLink)
-        player.setMediaItem(mediaItem)
+        val mediaItems = _playerScreenState.value.links.map {
+            MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.fhd)
+        }
+        player.setMediaItems(mediaItems, _playerScreenState.value.currentAnimeId, 0L)
         player.prepare()
         player.play()
         _playerScreenState.update { state ->
@@ -83,6 +84,27 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private fun skipEpisode(forward: Boolean) {
+        when(forward) {
+            true -> {
+                if (_playerScreenState.value.currentAnimeId < _playerScreenState.value.links.size) {
+                    player.seekToNextMediaItem()
+                    _playerScreenState.update { state ->
+                        state.copy(currentAnimeId = _playerScreenState.value.currentAnimeId + 1)
+                    }
+                }
+            }
+            false -> {
+                if (_playerScreenState.value.currentAnimeId > 0) {
+                    player.seekToPreviousMediaItem()
+                    _playerScreenState.update { state ->
+                        state.copy(currentAnimeId = _playerScreenState.value.currentAnimeId - 1)
+                    }
+                }
+            }
+        }
+    }
+
     fun sendIntent(intent: PlayerScreenIntent) {
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
@@ -91,6 +113,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.PreparePlayer -> preparePlayer()
             is PlayerScreenIntent.ReleasePlayer -> player.release()
             is PlayerScreenIntent.PausePlayer -> pausePlayer()
+            is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)
         }
     }
 }

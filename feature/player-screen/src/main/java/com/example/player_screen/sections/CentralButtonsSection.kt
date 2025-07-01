@@ -1,5 +1,6 @@
 package com.example.player_screen.sections
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -12,8 +13,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -23,6 +26,8 @@ import com.example.player_screen.screen.IsPlayingState
 
 @Composable
 fun BoxScope.CentralButtonsSection(
+    firstEpisode: Boolean,
+    lastEpisode: Boolean,
     isPlaying: IsPlayingState,
     onPreviousClick: () -> Unit,
     onPlayClick: () -> Unit,
@@ -33,14 +38,19 @@ fun BoxScope.CentralButtonsSection(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(32.dp)
     ) {
+        val animatedPreviousIconAlpha by animateFloatAsState(
+            targetValue = if (firstEpisode) 0.3f else 1f
+        )
         IconButton(
             onClick = onPreviousClick
         ) {
             Icon(
                 painter = painterResource(LibriaNowIcons.PreviousFilled),
                 contentDescription = null,
-                modifier = Modifier.size(28.dp),
-                tint = Color(0xFFFFFFFF)
+                tint = Color(0xFFFFFFFF),
+                modifier = Modifier
+                    .size(28.dp)
+                    .alpha(animatedPreviousIconAlpha),
             )
         }
 
@@ -68,14 +78,19 @@ fun BoxScope.CentralButtonsSection(
             }
         }
 
+        val animatedNextIconAlpha by animateFloatAsState(
+            targetValue = if (lastEpisode) 0.3f else 1f
+        )
         IconButton(
             onClick = onNextClick
         ) {
             Icon(
                 painter = painterResource(LibriaNowIcons.NextFilled),
                 contentDescription = null,
-                modifier = Modifier.size(28.dp),
-                tint = Color(0xFFFFFFFF)
+                tint = Color(0xFFFFFFFF),
+                modifier = Modifier
+                    .size(28.dp)
+                    .alpha(animatedNextIconAlpha),
             )
         }
     }

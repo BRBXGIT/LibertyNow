@@ -95,11 +95,17 @@ fun PlayerScreen(
                 ) {
                     CentralButtonsSection(
                         isPlaying = screenState.isPlaying,
-                        onPreviousClick = {},
+                        firstEpisode = screenState.currentAnimeId == 0,
+                        lastEpisode = screenState.currentAnimeId == screenState.links.size,
+                        onPreviousClick = {
+                            viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(false))
+                        },
                         onPlayClick = {
                             viewModel.sendIntent(PlayerScreenIntent.PausePlayer)
                         },
-                        onNextClick = {}
+                        onNextClick = {
+                            viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(true))
+                        }
                     )
                 }
             }
