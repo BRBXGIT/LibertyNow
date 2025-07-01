@@ -46,7 +46,7 @@ fun SelectEpisodeAD(
     currentAnimeId: Int,
     links: List<X1>,
     onDismissRequest: () -> Unit,
-    onConfirm: (Int) -> Unit
+    onConfirmClick: (Int) -> Unit
 ) {
     var currentSelectedEpisodeIndex by rememberSaveable { mutableIntStateOf(currentAnimeId) }
 
@@ -79,7 +79,7 @@ fun SelectEpisodeAD(
                     itemsIndexed(links) { index, episode ->
                         EpisodeItem(
                             episodeTitle = episode.name ?: "Без названия",
-                            episode = index,
+                            episode = index + 1,
                             isSelected = currentSelectedEpisodeIndex == index,
                             onClick = { currentSelectedEpisodeIndex = index },
                         )
@@ -101,7 +101,7 @@ fun SelectEpisodeAD(
 
                 TextButton(
                     onClick = {
-                        onConfirm(currentSelectedEpisodeIndex)
+                        onConfirmClick(currentSelectedEpisodeIndex)
                     }
                 ) {
                     Text(text = "Выбрать")
@@ -159,7 +159,7 @@ fun SelectEpisodeADPreview() {
             currentAnimeId = 3,
             links = emptyList(),
             onDismissRequest = {},
-            onConfirm = {}
+            onConfirmClick = {}
         )
     }
 }

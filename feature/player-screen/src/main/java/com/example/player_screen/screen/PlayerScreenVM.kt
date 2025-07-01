@@ -105,6 +105,13 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private fun setEpisode(episodeId: Int) {
+        player.seekTo(episodeId, 0L)
+        _playerScreenState.update { state ->
+            state.copy(currentAnimeId = episodeId)
+        }
+    }
+
     fun sendIntent(intent: PlayerScreenIntent) {
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
@@ -114,6 +121,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.ReleasePlayer -> player.release()
             is PlayerScreenIntent.PausePlayer -> pausePlayer()
             is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)
+            is PlayerScreenIntent.SetEpisode -> setEpisode(intent.episodeId)
         }
     }
 }

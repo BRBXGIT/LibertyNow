@@ -8,4 +8,5 @@ interface PlayerScreenIntent {
     data object ReleasePlayer: PlayerScreenIntent
     data object PausePlayer: PlayerScreenIntent
     data class SkipEpisode(val forward: Boolean): PlayerScreenIntent
+    data class SetEpisode(val episodeId: Int): PlayerScreenIntent
 }
