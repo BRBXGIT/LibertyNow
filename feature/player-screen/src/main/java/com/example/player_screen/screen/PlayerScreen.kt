@@ -99,11 +99,6 @@ fun PlayerScreen(
                     },
                     onConfirmClick = {
                         viewModel.sendIntent(PlayerScreenIntent.SetEpisode(it))
-                        viewModel.sendIntent(
-                            PlayerScreenIntent.UpdateScreenState(
-                                screenState.copy(isSelectEpisodeADVisible = false)
-                            )
-                        )
                     }
                 )
             }

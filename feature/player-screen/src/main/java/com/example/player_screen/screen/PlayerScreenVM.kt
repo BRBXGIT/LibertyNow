@@ -108,7 +108,10 @@ class PlayerScreenVM @Inject constructor(
     private fun setEpisode(episodeId: Int) {
         player.seekTo(episodeId, 0L)
         _playerScreenState.update { state ->
-            state.copy(currentAnimeId = episodeId)
+            state.copy(
+                currentAnimeId = episodeId,
+                isSelectEpisodeADVisible = false
+            )
         }
     }
 
