@@ -4,19 +4,29 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
+import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Player
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -64,9 +74,35 @@ fun PlayerScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(mColors.background)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    viewModel.sendIntent(PlayerScreenIntent.UpdateIsControllerVisible)
+                }
         ) {
             val player = viewModel.player
             Player(player)
+
+            AnimatedVisibility(
+                visible = screenState.isControllerVisible,
+                enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
+                exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CentralButtonsSection(
+                        isPlaying = screenState.isPlaying,
+                        onPreviousClick = {},
+                        onPlayClick = {
+                            viewModel.sendIntent(PlayerScreenIntent.PausePlayer)
+                        },
+                        onNextClick = {}
+                    )
+                }
+            }
         }
     }
 }

@@ -20,6 +20,8 @@ object LibriaNowIcons {
     val DoubleArrowUpFilled = R.drawable.ic_double_arrow_up_filled
     val DoubleArrowDownFilled = R.drawable.ic_double_arrow_down_filled
     val DownloadFilled = R.drawable.ic_download_filled
+    val NextFilled = R.drawable.ic_next_filled
+    val PreviousFilled = R.drawable.ic_previous_filled
 
     // Animated
     val HomeAnimated = R.drawable.ic_home_animated
@@ -28,6 +30,7 @@ object LibriaNowIcons {
     val SettingsAnimated = R.drawable.ic_settings_animated
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
     val EyeAnimated = R.drawable.ic_eye_animated
+    val PlayAnimated = R.drawable.ic_play_pause_animated
 
     // Images
     val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light

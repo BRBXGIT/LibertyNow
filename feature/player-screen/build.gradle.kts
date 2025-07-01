@@ -45,6 +45,7 @@ dependencies {
     // Core modules
     implementation(project(":core:design-system"))
     implementation(project(":core:network"))
+    implementation(project(":core:common"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

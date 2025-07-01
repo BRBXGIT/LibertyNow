@@ -14,5 +14,7 @@ data class PlayerScreenState(
     val links: List<X1> = emptyList(),
     val currentLink: X1 = X1(),
 
-    val isPlaying: IsPlayingState = IsPlayingState.Loading
+    val isPlaying: IsPlayingState = IsPlayingState.Loading,
+
+    val isControllerVisible: Boolean = false
 )
