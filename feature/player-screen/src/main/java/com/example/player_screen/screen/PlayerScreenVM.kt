@@ -158,14 +158,14 @@ class PlayerScreenVM @Inject constructor(
     ) {
         player.seekTo(
             when(quickSeek) {
-                true -> player.currentPosition + seekTo
+                true -> _playerScreenState.value.currentPosition + seekTo
                 false -> seekTo
             }
         )
         _playerScreenState.update { state ->
             state.copy(
                 currentPosition = when(quickSeek) {
-                    true -> player.currentPosition + seekTo
+                    true -> _playerScreenState.value.currentPosition + seekTo
                     false -> seekTo
                 },
                 isUserSeeking = false
@@ -183,7 +183,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.PausePlayer -> pausePlayer()
             is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)
             is PlayerScreenIntent.SetEpisode -> setEpisode(intent.episodeId)
-            is PlayerScreenIntent.SeekEpisode -> seekEpisode(intent.seekTo)
+            is PlayerScreenIntent.SeekEpisode -> seekEpisode(intent.seekTo, intent.quickSeek)
         }
     }
 }

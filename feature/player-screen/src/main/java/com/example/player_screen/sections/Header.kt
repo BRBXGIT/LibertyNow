@@ -40,7 +40,7 @@ fun BoxScope.Header(
             )
     ) {
         IconButton(
-            onClick = onBackClick
+            onClick = onBackClick,
         ) {
             Icon(
                 painter = painterResource(LibriaNowIcons.ArrowLeftFilled),
@@ -57,7 +57,7 @@ fun BoxScope.Header(
         )
 
         IconButton(
-            onClick = onPlaylistClick
+            onClick = onPlaylistClick,
         ) {
             Icon(
                 painter = painterResource(LibriaNowIcons.Playlist),

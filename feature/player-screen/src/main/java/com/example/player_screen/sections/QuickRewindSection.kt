@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
 import kotlinx.coroutines.delay
@@ -55,6 +56,7 @@ fun BoxScope.QuickRewindSection(
                     leftBoxToggled = true
                 }
             )
+            .zIndex(1f)
     ) {
         Text(
             text = "-5 секунд",
@@ -89,6 +91,7 @@ fun BoxScope.QuickRewindSection(
                     rightBoxToggled = true
                 }
             )
+            .zIndex(1f)
     ) {
         Text(
             text = "+5 секунд",
