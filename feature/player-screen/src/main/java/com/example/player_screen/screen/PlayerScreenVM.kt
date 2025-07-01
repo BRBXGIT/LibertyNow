@@ -152,11 +152,22 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
-    private fun seekEpisode(seekTo: Long) {
-        player.seekTo(seekTo)
+    private fun seekEpisode(
+        seekTo: Long,
+        quickSeek: Boolean = false
+    ) {
+        player.seekTo(
+            when(quickSeek) {
+                true -> player.currentPosition + seekTo
+                false -> seekTo
+            }
+        )
         _playerScreenState.update { state ->
             state.copy(
-                currentPosition = seekTo,
+                currentPosition = when(quickSeek) {
+                    true -> player.currentPosition + seekTo
+                    false -> seekTo
+                },
                 isUserSeeking = false
             )
         }

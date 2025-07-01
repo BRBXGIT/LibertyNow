@@ -29,6 +29,7 @@ import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Footer
 import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
+import com.example.player_screen.sections.QuickRewindSection
 import com.example.player_screen.sections.SelectEpisodeAD
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -167,6 +168,19 @@ fun PlayerScreen(
                     )
                 }
             }
+
+            QuickRewindSection(
+                onLeftClick = {
+                    viewModel.sendIntent(
+                        PlayerScreenIntent.SeekEpisode(-5000, true)
+                    )
+                },
+                onRightClick = {
+                    viewModel.sendIntent(
+                        PlayerScreenIntent.SeekEpisode(5000, true)
+                    )
+                }
+            )
         }
     }
 }

@@ -9,5 +9,8 @@ interface PlayerScreenIntent {
     data object PausePlayer: PlayerScreenIntent
     data class SkipEpisode(val forward: Boolean): PlayerScreenIntent
     data class SetEpisode(val episodeId: Int): PlayerScreenIntent
-    data class SeekEpisode(val seekTo: Long): PlayerScreenIntent
+    data class SeekEpisode(
+        val seekTo: Long,
+        val quickSeek: Boolean = false
+    ): PlayerScreenIntent
 }
