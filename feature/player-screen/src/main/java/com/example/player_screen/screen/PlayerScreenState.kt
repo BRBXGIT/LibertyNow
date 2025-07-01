@@ -16,5 +16,7 @@ data class PlayerScreenState(
 
     val isPlaying: IsPlayingState = IsPlayingState.Loading,
 
-    val isControllerVisible: Boolean = false
+    val isControllerVisible: Boolean = false,
+
+    val isSelectEpisodeADVisible: Boolean = false,
 )

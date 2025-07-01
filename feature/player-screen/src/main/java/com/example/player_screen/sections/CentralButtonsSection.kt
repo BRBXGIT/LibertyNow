@@ -6,6 +6,7 @@ import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -20,8 +21,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.LibriaNowIcons
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.player_screen.screen.IsPlayingState
 
 @Composable
@@ -91,6 +94,23 @@ fun BoxScope.CentralButtonsSection(
                 modifier = Modifier
                     .size(28.dp)
                     .alpha(animatedNextIconAlpha),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun CentralButtonsSectionPreview() {
+    LibriaNowTheme {
+        Box {
+            CentralButtonsSection(
+                firstEpisode = false,
+                lastEpisode = false,
+                isPlaying = IsPlayingState.Playing,
+                onPreviousClick = {},
+                onPlayClick = {},
+                onNextClick = {}
             )
         }
     }

@@ -29,6 +29,7 @@ import com.example.network.anime_screen.models.anime_response.X1
 import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
+import com.example.player_screen.sections.SelectEpisodeAD
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 
@@ -85,6 +86,27 @@ fun PlayerScreen(
             val player = viewModel.player
             Player(player)
 
+            if (screenState.isSelectEpisodeADVisible) {
+                SelectEpisodeAD(
+                    currentAnimeId = screenState.currentAnimeId,
+                    links = screenState.links,
+                    onDismissRequest = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isSelectEpisodeADVisible = false)
+                            )
+                        )
+                    },
+                    onConfirm = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isSelectEpisodeADVisible = false)
+                            )
+                        )
+                    }
+                )
+            }
+
             AnimatedVisibility(
                 visible = screenState.isControllerVisible,
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
@@ -99,7 +121,13 @@ fun PlayerScreen(
                         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                         navController.navigateUp()
                     },
-                    onPlaylistClick = {}
+                    onPlaylistClick = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isSelectEpisodeADVisible = true)
+                            )
+                        )
+                    }
                 )
 
                 Box(

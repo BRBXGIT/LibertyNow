@@ -23,6 +23,7 @@ object LibriaNowIcons {
     val DownloadFilled = R.drawable.ic_download_filled
     val NextFilled = R.drawable.ic_next_filled
     val PreviousFilled = R.drawable.ic_previous_filled
+    val CheckFilled = R.drawable.ic_check_filled
 
     // Animated
     val HomeAnimated = R.drawable.ic_home_animated
