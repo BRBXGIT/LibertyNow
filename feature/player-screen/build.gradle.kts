@@ -70,4 +70,6 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     // Json
     implementation(libs.converter.gson)
+    // Material
+    implementation(libs.androidx.material)
 }

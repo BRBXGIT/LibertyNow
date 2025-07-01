@@ -63,6 +63,10 @@ media3Ui = "1.7.1"
 #System Ui controller
 accompanistSystemuicontroller = "0.31.2-alpha"
 
+# Material
+material = "1.8.3"
+
+
 [libraries]
 # Basic libraries
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -131,6 +135,9 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 
 # System Ui controller
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+
+# Material
+androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
 
 
 [plugins]

@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +26,7 @@ import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
 import com.example.player_screen.sections.CentralButtonsSection
+import com.example.player_screen.sections.Footer
 import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
 import com.example.player_screen.sections.SelectEpisodeAD
@@ -47,7 +47,7 @@ fun PlayerScreen(
     val context = LocalContext.current
 
     val screenState by viewModel.playerScreenState.collectAsStateWithLifecycle()
-    LaunchedEffect(currentAnimeId, links, host) {
+    LaunchedEffect(Unit) {
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         viewModel.sendIntent(
             PlayerScreenIntent.UpdateScreenState(
@@ -104,32 +104,31 @@ fun PlayerScreen(
             }
 
             AnimatedVisibility(
-                visible = screenState.isControllerVisible,
+                visible = screenState.isControllerVisible or screenState.isUserSeeking,
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
                 exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
             ) {
-                Header(
-                    episode = screenState.currentAnimeId,
-                    episodeTitle = screenState.links[screenState.currentAnimeId].name ?: "Без названия",
-                    topPadding = innerPadding.calculateTopPadding(),
-                    onBackClick = {
-                        viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
-                        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-                        navController.navigateUp()
-                    },
-                    onPlaylistClick = {
-                        viewModel.sendIntent(
-                            PlayerScreenIntent.UpdateScreenState(
-                                screenState.copy(isSelectEpisodeADVisible = true)
-                            )
-                        )
-                    }
-                )
-
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
                 ) {
+                    Header(
+                        episode = screenState.currentAnimeId,
+                        episodeTitle = screenState.links[screenState.currentAnimeId].name ?: "Без названия",
+                        topPadding = innerPadding.calculateTopPadding(),
+                        onBackClick = {
+                            viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
+                            (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                            navController.navigateUp()
+                        },
+                        onPlaylistClick = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.UpdateScreenState(
+                                    screenState.copy(isSelectEpisodeADVisible = true)
+                                )
+                            )
+                        }
+                    )
+
                     CentralButtonsSection(
                         isPlaying = screenState.isPlaying,
                         firstEpisode = screenState.currentAnimeId == 0,
@@ -143,6 +142,28 @@ fun PlayerScreen(
                         onNextClick = {
                             viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(true))
                         }
+                    )
+
+                    Footer(
+                        duration = screenState.duration,
+                        currentPosition = screenState.currentPosition,
+                        bottomPadding = innerPadding.calculateBottomPadding(),
+                        isSeeking = screenState.isUserSeeking,
+                        onValueChange = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.UpdateScreenState(
+                                    screenState.copy(
+                                        isUserSeeking = true,
+                                        currentPosition = it
+                                    )
+                                )
+                            )
+                        },
+                        onValueChangeFinished = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.SeekEpisode(it)
+                            )
+                        },
                     )
                 }
             }

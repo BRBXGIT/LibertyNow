@@ -2,7 +2,10 @@ package com.example.player_screen.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
@@ -20,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerScreenVM @Inject constructor(
     val player: ExoPlayer,
-    @Dispatcher(LibriaNowDispatchers.Default) private val dispatcherDefault: CoroutineDispatcher
+    @Dispatcher(LibriaNowDispatchers.Default) private val dispatcherDefault: CoroutineDispatcher,
 ): ViewModel() {
     private val _playerScreenState = MutableStateFlow(PlayerScreenState())
     val playerScreenState = _playerScreenState.stateIn(
@@ -39,9 +42,41 @@ class PlayerScreenVM @Inject constructor(
         }
         player.setMediaItems(mediaItems, _playerScreenState.value.currentAnimeId, 0L)
         player.prepare()
+
+        player.addListener(object : Player.Listener {
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                _playerScreenState.update { state ->
+                    state.copy(
+                        isPlaying = IsPlayingState.Playing,
+                        duration = player.contentDuration
+                    )
+                }
+            }
+
+            override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+                if (player.contentDuration != C.TIME_UNSET) {
+                    _playerScreenState.update { state ->
+                        state.copy(
+                            duration = player.contentDuration,
+                            isPlaying = IsPlayingState.Playing
+                        )
+                    }
+                }
+            }
+        })
+
         player.play()
-        _playerScreenState.update { state ->
-            state.copy(isPlaying = IsPlayingState.Playing)
+        trackCurrentPosition()
+    }
+
+    private fun trackCurrentPosition() {
+        viewModelScope.launch {
+            while (true) {
+                _playerScreenState.update { state ->
+                    state.copy(currentPosition = player.currentPosition)
+                }
+                delay(500)
+            }
         }
     }
 
@@ -57,7 +92,7 @@ class PlayerScreenVM @Inject constructor(
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = true)
                     }
-                    delay(4000)
+                    delay(5000)
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
@@ -115,6 +150,16 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private fun seekEpisode(seekTo: Long) {
+        player.seekTo(seekTo)
+        _playerScreenState.update { state ->
+            state.copy(
+                currentPosition = seekTo,
+                isUserSeeking = false
+            )
+        }
+    }
+
     fun sendIntent(intent: PlayerScreenIntent) {
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
@@ -125,6 +170,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.PausePlayer -> pausePlayer()
             is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)
             is PlayerScreenIntent.SetEpisode -> setEpisode(intent.episodeId)
+            is PlayerScreenIntent.SeekEpisode -> seekEpisode(intent.seekTo)
         }
     }
 }
