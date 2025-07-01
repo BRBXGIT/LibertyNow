@@ -27,6 +27,7 @@ import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
 import com.example.player_screen.sections.CentralButtonsSection
+import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -89,6 +90,18 @@ fun PlayerScreen(
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
                 exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
             ) {
+                Header(
+                    episode = screenState.currentAnimeId,
+                    episodeTitle = screenState.links[screenState.currentAnimeId].name ?: "Без названия",
+                    topPadding = innerPadding.calculateTopPadding(),
+                    onBackClick = {
+                        viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
+                        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                        navController.navigateUp()
+                    },
+                    onPlaylistClick = {}
+                )
+
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center

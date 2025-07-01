@@ -10,7 +10,7 @@ data class X1(
     @SerializedName("hls")
     val hls: Hls = Hls(),
     @SerializedName("name")
-    val name: String? = "",
+    val name: String? = null,
     @SerializedName("preview")
     val preview: String = "",
     @SerializedName("skips")

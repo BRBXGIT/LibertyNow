@@ -14,6 +14,7 @@ object LibriaNowIcons {
     val User = R.drawable.ic_user
     val Password = R.drawable.ic_password
     val UserCheck = R.drawable.ic_user_check
+    val Playlist = R.drawable.ic_playlist
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
