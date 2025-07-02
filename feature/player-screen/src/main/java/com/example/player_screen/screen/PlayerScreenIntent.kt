@@ -2,7 +2,10 @@ package com.example.player_screen.screen
 
 interface PlayerScreenIntent {
     data class UpdateScreenState(val state: PlayerScreenState): PlayerScreenIntent
-    data object UpdateIsControllerVisible: PlayerScreenIntent
+    data class UpdateIsControllerVisible(
+        val onStart: () -> Unit,
+        val onFinish: () -> Unit
+    ): PlayerScreenIntent
 
     data object PreparePlayer: PlayerScreenIntent
     data object ReleasePlayer: PlayerScreenIntent

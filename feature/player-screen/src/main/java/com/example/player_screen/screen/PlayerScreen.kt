@@ -31,6 +31,7 @@ import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
 import com.example.player_screen.sections.QuickRewindSection
 import com.example.player_screen.sections.SelectEpisodeAD
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 
@@ -69,6 +70,7 @@ fun PlayerScreen(
         navController.navigateUp()
     }
 
+    val systemUiController = rememberSystemUiController()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +83,12 @@ fun PlayerScreen(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) {
-                    viewModel.sendIntent(PlayerScreenIntent.UpdateIsControllerVisible)
+                    viewModel.sendIntent(
+                        PlayerScreenIntent.UpdateIsControllerVisible(
+                            onStart = { systemUiController.isSystemBarsVisible = false },
+                            onFinish = { systemUiController.isSystemBarsVisible = true }
+                        )
+                    )
                 }
         ) {
             val player = viewModel.player
@@ -150,6 +157,7 @@ fun PlayerScreen(
                         currentPosition = screenState.currentPosition,
                         bottomPadding = innerPadding.calculateBottomPadding(),
                         isSeeking = screenState.isUserSeeking,
+                        isCropped = false,
                         onValueChange = {
                             viewModel.sendIntent(
                                 PlayerScreenIntent.UpdateScreenState(
@@ -165,6 +173,9 @@ fun PlayerScreen(
                                 PlayerScreenIntent.SeekEpisode(it)
                             )
                         },
+                        onLockClick = {},
+                        onSettingsClick = {},
+                        onCropClick = {},
                     )
                 }
             }
@@ -181,7 +192,12 @@ fun PlayerScreen(
                     )
                 },
                 onSingleClick = {
-                    viewModel.sendIntent(PlayerScreenIntent.UpdateIsControllerVisible)
+                    viewModel.sendIntent(
+                        PlayerScreenIntent.UpdateIsControllerVisible(
+                            onStart = { systemUiController.isSystemBarsVisible = false },
+                            onFinish = { systemUiController.isSystemBarsVisible = true }
+                        )
+                    )
                 }
             )
         }

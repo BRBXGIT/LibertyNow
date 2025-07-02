@@ -15,6 +15,9 @@ object LibriaNowIcons {
     val Password = R.drawable.ic_password
     val UserCheck = R.drawable.ic_user_check
     val Playlist = R.drawable.ic_playlist
+    val Settings = R.drawable.ic_settings
+    val Unlock = R.drawable.ic_unlock
+    val Lock = R.drawable.ic_lock
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
@@ -33,6 +36,7 @@ object LibriaNowIcons {
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
     val EyeAnimated = R.drawable.ic_eye_animated
     val PlayAnimated = R.drawable.ic_play_pause_animated
+    val CropAnimated = R.drawable.ic_crop_animated
 
     // Images
     val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light

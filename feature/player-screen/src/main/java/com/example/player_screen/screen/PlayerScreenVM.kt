@@ -82,22 +82,28 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
-    private fun updateIsControllerVisible() {
+    private fun updateIsControllerVisible(
+        onStart: () -> Unit,
+        onFinish: () -> Unit
+    ) {
         viewModelScope.launch(dispatcherDefault) {
             when(_playerScreenState.value.isControllerVisible) {
                 true -> {
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
+                    onFinish
                 }
                 false -> {
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = true)
                     }
+                    onStart
                     delay(5000)
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
+                    onFinish
                 }
             }
         }
@@ -176,7 +182,7 @@ class PlayerScreenVM @Inject constructor(
     fun sendIntent(intent: PlayerScreenIntent) {
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
-            is PlayerScreenIntent.UpdateIsControllerVisible -> updateIsControllerVisible()
+            is PlayerScreenIntent.UpdateIsControllerVisible -> updateIsControllerVisible(intent.onStart, intent.onFinish)
 
             is PlayerScreenIntent.PreparePlayer -> preparePlayer()
             is PlayerScreenIntent.ReleasePlayer -> player.release()
