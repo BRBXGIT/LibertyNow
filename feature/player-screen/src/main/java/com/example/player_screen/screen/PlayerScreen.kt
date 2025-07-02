@@ -48,9 +48,11 @@ fun PlayerScreen(
     val links: List<X1> = Gson().fromJson(gsonLinks, type)
     val context = LocalContext.current
 
+    val systemUiController = rememberSystemUiController()
     val screenState by viewModel.playerScreenState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        systemUiController.isSystemBarsVisible = false
         viewModel.sendIntent(
             PlayerScreenIntent.UpdateScreenState(
                 screenState.copy(
@@ -70,7 +72,6 @@ fun PlayerScreen(
         navController.navigateUp()
     }
 
-    val systemUiController = rememberSystemUiController()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -85,8 +86,8 @@ fun PlayerScreen(
                 ) {
                     viewModel.sendIntent(
                         PlayerScreenIntent.UpdateIsControllerVisible(
-                            onStart = { systemUiController.isSystemBarsVisible = false },
-                            onFinish = { systemUiController.isSystemBarsVisible = true }
+                            onStart = { systemUiController.isSystemBarsVisible = true },
+                            onFinish = { systemUiController.isSystemBarsVisible = false }
                         )
                     )
                 }
@@ -194,8 +195,8 @@ fun PlayerScreen(
                 onSingleClick = {
                     viewModel.sendIntent(
                         PlayerScreenIntent.UpdateIsControllerVisible(
-                            onStart = { systemUiController.isSystemBarsVisible = false },
-                            onFinish = { systemUiController.isSystemBarsVisible = true }
+                            onStart = { systemUiController.isSystemBarsVisible = true },
+                            onFinish = { systemUiController.isSystemBarsVisible = false }
                         )
                     )
                 }

@@ -1,5 +1,7 @@
 package com.example.player_screen.sections
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -110,6 +112,16 @@ fun BoxScope.Footer(
                 ) {
                     Icon(
                         painter = painterResource(LibriaNowIcons.Lock),
+                        contentDescription = null,
+                        tint = Color(0xFFFFFFFF)
+                    )
+                }
+
+                IconButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        painter = painterResource(LibriaNowIcons.PictureInPicture),
                         contentDescription = null,
                         tint = Color(0xFFFFFFFF)
                     )

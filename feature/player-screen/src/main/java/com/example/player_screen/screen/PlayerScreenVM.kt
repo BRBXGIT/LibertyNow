@@ -18,12 +18,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class PlayerScreenVM @Inject constructor(
     val player: ExoPlayer,
     @Dispatcher(LibriaNowDispatchers.Default) private val dispatcherDefault: CoroutineDispatcher,
+    @Dispatcher(LibriaNowDispatchers.Main) private val dispatcherMain: CoroutineDispatcher
 ): ViewModel() {
     private val _playerScreenState = MutableStateFlow(PlayerScreenState())
     val playerScreenState = _playerScreenState.stateIn(
@@ -92,18 +94,24 @@ class PlayerScreenVM @Inject constructor(
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
-                    onFinish
+                    withContext(dispatcherMain) {
+                        onFinish()
+                    }
                 }
                 false -> {
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = true)
                     }
-                    onStart
+                    withContext(dispatcherMain) {
+                        onStart()
+                    }
                     delay(5000)
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
-                    onFinish
+                    withContext(dispatcherMain) {
+                        onFinish()
+                    }
                 }
             }
         }

@@ -45,7 +45,7 @@ fun BoxScope.QuickRewindSection(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .align(Alignment.CenterStart)
-            .fillMaxHeight()
+            .fillMaxHeight(0.5f)
             .fillMaxWidth(0.2f)
             .combinedClickable(
                 indication = null,
@@ -79,7 +79,7 @@ fun BoxScope.QuickRewindSection(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .align(Alignment.CenterEnd)
-            .fillMaxHeight()
+            .fillMaxHeight(0.5f)
             .fillMaxWidth(0.2f)
             .combinedClickable(
                 indication = null,

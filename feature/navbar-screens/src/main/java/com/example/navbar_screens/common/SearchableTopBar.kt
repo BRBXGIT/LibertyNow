@@ -1,4 +1,4 @@
-package com.example.navbar_screens.likes_screen.sections
+package com.example.navbar_screens.common
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -16,24 +16,23 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
-import com.example.design_system.theme.LibriaNowTheme
-import com.example.navbar_screens.likes_screen.screen.LikesScreenState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LikesScreenTopBar(
+fun SearchableTopBar(
+    title: String,
+    query: String,
+    isSearching: Boolean,
     isLoading: Boolean,
-    screenState: LikesScreenState,
     scrollBehavior: TopAppBarScrollBehavior,
+    placeholder: String = "Поиск",
     onSearchClick: () -> Unit,
     onQueryInput: (String) -> Unit,
     onClearClick: () -> Unit
@@ -41,59 +40,41 @@ fun LikesScreenTopBar(
     Column {
         TopAppBar(
             title = {
-                if(screenState.isSearching) {
+                if (isSearching) {
                     TextField(
+                        value = query,
+                        onValueChange = onQueryInput,
+                        singleLine = true,
+                        placeholder = { Text(placeholder) },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        singleLine = true,
-                        value = screenState.query,
-                        onValueChange = { onQueryInput(it) },
-                        placeholder = {
-                            Text(
-                                text = "Поиск"
-                            )
-                        }
+                        )
                     )
                 } else {
-                    Text(text = "Избранное")
+                    Text(title)
                 }
             },
             actions = {
-                if (screenState.isSearching) {
-                    if (screenState.query != "") {
-                        IconButton(
-                            onClick = onClearClick
-                        ) {
-                            Icon(
-                                painter = painterResource(LibriaNowIcons.CloseCircle),
-                                contentDescription = null
-                            )
+                when {
+                    isSearching && query.isNotEmpty() -> {
+                        IconButton(onClick = onClearClick) {
+                            Icon(painterResource(LibriaNowIcons.CloseCircle), contentDescription = null)
                         }
                     }
-                } else {
-                    IconButton(
-                        onClick = onSearchClick
-                    ) {
-                        Icon(
-                            painter = painterResource(LibriaNowIcons.Magnifier),
-                            contentDescription = null
-                        )
+                    !isSearching -> {
+                        IconButton(onClick = onSearchClick) {
+                            Icon(painterResource(LibriaNowIcons.Magnifier), contentDescription = null)
+                        }
                     }
                 }
             },
             navigationIcon = {
-                if (screenState.isSearching) {
-                    IconButton(
-                        onClick = onSearchClick
-                    ) {
-                        Icon(
-                            painter = painterResource(LibriaNowIcons.ArrowLeftFilled),
-                            contentDescription = null
-                        )
+                if (isSearching) {
+                    IconButton(onClick = onSearchClick) {
+                        Icon(painterResource(LibriaNowIcons.ArrowLeftFilled), contentDescription = null)
                     }
                 }
             },
@@ -108,23 +89,5 @@ fun LikesScreenTopBar(
         ) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun LikesScreenTopBarPreview() {
-    LibriaNowTheme {
-        val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
-        LikesScreenTopBar(
-            isLoading = false,
-            onSearchClick = {},
-            scrollBehavior = topBarScrollBehavior,
-            screenState = LikesScreenState(),
-            onQueryInput = {},
-            onClearClick = {},
-        )
     }
 }

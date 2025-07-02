@@ -45,7 +45,7 @@ fun BoxScope.Header(
             Icon(
                 painter = painterResource(LibriaNowIcons.ArrowLeftFilled),
                 contentDescription = null,
-                tint = Color(0xFFFFFFFF)
+                tint = Color(0xFFFFFFFF),
             )
         }
 

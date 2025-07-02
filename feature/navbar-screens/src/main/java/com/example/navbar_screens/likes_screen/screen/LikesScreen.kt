@@ -29,8 +29,8 @@ import com.example.design_system.snackbars.ObserveAsEvents
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
+import com.example.navbar_screens.common.SearchableTopBar
 import com.example.navbar_screens.likes_screen.sections.LikesLVG
-import com.example.navbar_screens.likes_screen.sections.LikesScreenTopBar
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSection
 import kotlinx.coroutines.launch
 import com.example.local.datastore.auth.LoggingState as UserAuthState
@@ -85,10 +85,12 @@ fun LikesScreen(
             )
         },
         topBar = {
-            LikesScreenTopBar(
+            SearchableTopBar(
+                title = "Избранное",
+                query = screenState.query,
+                isSearching = screenState.isSearching,
                 isLoading = authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
-                screenState = screenState,
                 onSearchClick = {
                     viewModel.sendIntent(
                         LikesScreenIntent.UpdateScreenState(
@@ -109,7 +111,7 @@ fun LikesScreen(
                             screenState.copy(query = "")
                         )
                     )
-                },
+                }
             )
         },
         modifier = Modifier

@@ -18,6 +18,7 @@ object LibriaNowIcons {
     val Settings = R.drawable.ic_settings
     val Unlock = R.drawable.ic_unlock
     val Lock = R.drawable.ic_lock
+    val PictureInPicture = R.drawable.ic_picture_in_picture
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
