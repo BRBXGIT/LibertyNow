@@ -90,7 +90,11 @@ fun PlayerScreen(
                         viewModel.sendIntent(
                             PlayerScreenIntent.UpdateIsControllerVisible(
                                 onStart = { systemUiController.isSystemBarsVisible = true },
-                                onFinish = { systemUiController.isSystemBarsVisible = false }
+                                onFinish = {
+                                    if (!screenState.isSelectEpisodeADVisible) {
+                                        systemUiController.isSystemBarsVisible = false
+                                    }
+                                }
                             )
                         )
                     } else {
@@ -111,6 +115,7 @@ fun PlayerScreen(
                                 screenState.copy(isSelectEpisodeADVisible = false)
                             )
                         )
+                        systemUiController.isSystemBarsVisible = false
                     },
                     onConfirmClick = {
                         viewModel.sendIntent(PlayerScreenIntent.SetEpisode(it))
