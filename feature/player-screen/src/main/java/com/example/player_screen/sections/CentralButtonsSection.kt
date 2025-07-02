@@ -37,9 +37,10 @@ fun BoxScope.CentralButtonsSection(
     onNextClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.align(Alignment.Center),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(32.dp)
+        horizontalArrangement = Arrangement.spacedBy(32.dp),
+        modifier = Modifier
+            .align(Alignment.Center)
     ) {
         val animatedPreviousIconAlpha by animateFloatAsState(
             targetValue = if (firstEpisode) 0.3f else 1f

@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.zIndex
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
 import kotlinx.coroutines.delay
@@ -29,7 +28,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun BoxScope.QuickRewindSection(
     onLeftClick: () -> Unit,
-    onRightClick: () -> Unit
+    onRightClick: () -> Unit,
+    onSingleClick: () -> Unit
 ) {
     var leftBoxToggled by rememberSaveable { mutableStateOf(false) }
     val leftLabelAlpha by animateFloatAsState(
@@ -50,13 +50,12 @@ fun BoxScope.QuickRewindSection(
             .combinedClickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
-                onClick = {},
+                onClick = onSingleClick,
                 onDoubleClick = {
                     onLeftClick()
                     leftBoxToggled = true
                 }
             )
-            .zIndex(1f)
     ) {
         Text(
             text = "-5 секунд",
@@ -72,7 +71,7 @@ fun BoxScope.QuickRewindSection(
     )
     LaunchedEffect(rightBoxToggled) {
         if (rightBoxToggled) {
-            delay(150)
+            delay(300)
             rightBoxToggled = false
         }
     }
@@ -85,13 +84,12 @@ fun BoxScope.QuickRewindSection(
             .combinedClickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
-                onClick = {},
+                onClick = onSingleClick,
                 onDoubleClick = {
                     onRightClick()
                     rightBoxToggled = true
                 }
             )
-            .zIndex(1f)
     ) {
         Text(
             text = "+5 секунд",
@@ -111,7 +109,8 @@ fun QuickRewindSectionPreview() {
         ) {
             QuickRewindSection(
                 onLeftClick = {},
-                onRightClick = {}
+                onRightClick = {},
+                onSingleClick = {}
             )
         }
     }

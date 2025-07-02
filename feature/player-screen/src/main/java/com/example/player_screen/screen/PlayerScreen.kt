@@ -179,6 +179,9 @@ fun PlayerScreen(
                     viewModel.sendIntent(
                         PlayerScreenIntent.SeekEpisode(5000, true)
                     )
+                },
+                onSingleClick = {
+                    viewModel.sendIntent(PlayerScreenIntent.UpdateIsControllerVisible)
                 }
             )
         }

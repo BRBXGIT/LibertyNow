@@ -1,14 +1,14 @@
 package com.example.player_screen.sections
 
+// noinspection UsingMaterialAndMaterial3Libraries
+// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Slider
-// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
