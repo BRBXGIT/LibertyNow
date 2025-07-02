@@ -17,6 +17,7 @@ data class PlayerScreenState(
     val isPlaying: IsPlayingState = IsPlayingState.Loading,
     val duration: Long = 0L,
     val currentPosition: Long = 0L,
+    val isCropped: Boolean = true,
 
     val isControllerVisible: Boolean = false,
     val isSelectEpisodeADVisible: Boolean = false,

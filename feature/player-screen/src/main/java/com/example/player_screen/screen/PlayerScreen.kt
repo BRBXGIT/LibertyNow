@@ -93,7 +93,7 @@ fun PlayerScreen(
                 }
         ) {
             val player = viewModel.player
-            Player(player)
+            Player(player, screenState.isCropped)
 
             if (screenState.isSelectEpisodeADVisible) {
                 SelectEpisodeAD(
@@ -158,7 +158,7 @@ fun PlayerScreen(
                         currentPosition = screenState.currentPosition,
                         bottomPadding = innerPadding.calculateBottomPadding(),
                         isSeeking = screenState.isUserSeeking,
-                        isCropped = false,
+                        isCropped = screenState.isCropped,
                         onValueChange = {
                             viewModel.sendIntent(
                                 PlayerScreenIntent.UpdateScreenState(
@@ -176,7 +176,13 @@ fun PlayerScreen(
                         },
                         onLockClick = {},
                         onSettingsClick = {},
-                        onCropClick = {},
+                        onCropClick = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.UpdateScreenState(
+                                    screenState.copy(isCropped = !screenState.isCropped)
+                                )
+                            )
+                        },
                     )
                 }
             }
