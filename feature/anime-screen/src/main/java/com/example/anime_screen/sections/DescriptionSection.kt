@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
@@ -42,25 +43,16 @@ fun DescriptionSection(
     modifier: Modifier = Modifier,
     onExpandClick: () -> Unit
 ) {
+    val parsedDescription = description?.let { AnnotatedString.fromHtml(it) }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
         Column {
-            Text(
-                text = "Озвучка: $voiceActors",
-                style = mTypography.bodyLarge
-            )
-
-            Text(
-                text = "Тайминг: $timingWorkers",
-                style = mTypography.bodyLarge
-            )
-
-            Text(
-                text = "Работа над субтитрами: $subtitlesWorkers",
-                style = mTypography.bodyLarge
-            )
+            Text("Озвучка: $voiceActors", style = mTypography.bodyLarge)
+            Text("Тайминг: $timingWorkers", style = mTypography.bodyLarge)
+            Text("Работа над субтитрами: $subtitlesWorkers", style = mTypography.bodyLarge)
         }
 
         Column(
@@ -68,55 +60,61 @@ fun DescriptionSection(
             modifier = Modifier.animateContentSize()
         ) {
             val animatedColor by animateColorAsState(
-                targetValue = if(isExpanded) mColors.onBackground else mColors.background,
+                targetValue = if (isExpanded) mColors.onBackground else mColors.background,
                 label = "Animated color"
             )
-            if (description != null) {
-                if (!isExpanded) {
-                    Text(
-                        text = AnnotatedString.fromHtml(description),
-                        style = mTypography.bodyLarge.copy(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    mColors.onBackground,
-                                    animatedColor
-                                )
-                            )
-                        ),
-                        maxLines = 5,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                } else {
-                    Text(
-                        text = AnnotatedString.fromHtml(description),
-                        style = mTypography.bodyLarge
-                    )
-                }
-            } else {
-                Text(
-                    text = "Описания нет",
-                    style = mTypography.bodyLarge
+
+            parsedDescription?.let {
+                ExpandableText(
+                    text = it,
+                    isExpanded = isExpanded,
+                    animatedColor = animatedColor
                 )
-            }
+            } ?: Text("Описания нет", style = mTypography.bodyLarge)
 
             if (!description.isNullOrBlank()) {
                 val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.ArrowDownAnimated)
-                val animatedPainter = rememberAnimatedVectorPainter(animatedImageVector = animatedImage, atEnd = !isExpanded)
+                val animatedPainter = rememberAnimatedVectorPainter(
+                    animatedImageVector = animatedImage,
+                    atEnd = !isExpanded
+                )
+
                 Image(
                     painter = animatedPainter,
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(mColors.onBackground),
-                    modifier = Modifier
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            onExpandClick()
-                        }
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        onExpandClick()
+                    }
                 )
             }
         }
     }
+}
+
+@Composable
+private fun ExpandableText(
+    text: AnnotatedString,
+    isExpanded: Boolean,
+    animatedColor: Color
+) {
+    Text(
+        text = text,
+        style = if (!isExpanded) {
+            mTypography.bodyLarge.copy(
+                brush = Brush.verticalGradient(
+                    listOf(mColors.onBackground, animatedColor)
+                )
+            )
+        } else {
+            mTypography.bodyLarge
+        },
+        maxLines = if (!isExpanded) 5 else Int.MAX_VALUE,
+        overflow = if (!isExpanded) TextOverflow.Ellipsis else TextOverflow.Clip
+    )
 }
 
 @Preview

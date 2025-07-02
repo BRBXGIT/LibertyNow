@@ -40,47 +40,23 @@ fun HomeScreenTopBar(
     Column {
         TopAppBar(
             title = {
-                if(screenState.isSearching) {
-                    TextField(
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        singleLine = true,
-                        value = screenState.query,
-                        onValueChange = { onQueryInput(it) },
-                        placeholder = {
-                            Text(
-                                text = "Поиск"
-                            )
-                        }
-                    )
+                if (screenState.isSearching) {
+                    SearchTextField(screenState.query, onQueryInput)
                 } else {
                     Text(text = "Последние обновления")
                 }
             },
             actions = {
-                if (screenState.isSearching) {
-                    if (screenState.query != "") {
-                        IconButton(
-                            onClick = onClearClick
-                        ) {
-                            Icon(
-                                painter = painterResource(LibriaNowIcons.CloseCircle),
-                                contentDescription = null
-                            )
+                when {
+                    screenState.isSearching && screenState.query.isNotEmpty() -> {
+                        IconButton(onClick = onClearClick) {
+                            Icon(painterResource(LibriaNowIcons.CloseCircle), contentDescription = null)
                         }
                     }
-                } else {
-                    IconButton(
-                        onClick = onSearchClick
-                    ) {
-                        Icon(
-                            painter = painterResource(LibriaNowIcons.Magnifier),
-                            contentDescription = null
-                        )
+                    !screenState.isSearching -> {
+                        IconButton(onClick = onSearchClick) {
+                            Icon(painterResource(LibriaNowIcons.Magnifier), contentDescription = null)
+                        }
                     }
                 }
             },
@@ -107,6 +83,36 @@ fun HomeScreenTopBar(
         ) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
+    }
+}
+
+@Composable
+private fun SearchTextField(
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
+    TextField(
+        value = query,
+        onValueChange = onQueryChange,
+        singleLine = true,
+        placeholder = { Text(text = "Поиск") },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
+}
+
+@Preview
+@Composable
+fun SearchTextFiledPreview() {
+    LibriaNowTheme {
+        SearchTextField(
+            query = "",
+            onQueryChange = {},
+        )
     }
 }
 

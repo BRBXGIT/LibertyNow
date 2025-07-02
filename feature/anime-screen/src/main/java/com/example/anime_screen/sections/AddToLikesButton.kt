@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,34 +37,23 @@ fun AddToLikesButton(
     isLogged: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val animatedButtonColor by animateColorAsState(
-        targetValue = if (alreadyInLikes and isLogged) mColors.secondary else mColors.primary,
-        label = "Animated color for button",
-        animationSpec = tween(CommonConstants.ANIMATION_DURATION)
-    )
-    val animatedInLikesAlpha by animateFloatAsState(
-        targetValue = if (alreadyInLikes and isLogged) 1f else 0f,
-        animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-        label = "Animation for label if anime already in likes"
-    )
-    val animatedNotInLikesAlpha by animateFloatAsState(
-        targetValue = if (!alreadyInLikes and isLogged) 1f else 0f,
-        animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-        label = "Animation for label if anime not in likes"
-    )
+    val (animatedButtonColor, animatedInLikesAlpha, animatedNotInLikesAlpha) =
+        rememberLikeButtonAnimations(alreadyInLikes, isLogged)
+
     val animatedAuthAlpha by animateFloatAsState(
         targetValue = if (!isLogged) 1f else 0f,
-        animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-        label = "Animation for label if user not logged in"
+        animationSpec = tween(CommonConstants.ANIMATION_DURATION)
     )
+
+    val onClick = when {
+        isLogged && alreadyInLikes -> onPopClick
+        isLogged -> onAddClick
+        else -> onAuthClick
+    }
 
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = animatedButtonColor),
-        onClick = if (isLogged) {
-            if (alreadyInLikes) onPopClick else onAddClick
-        } else {
-            onAuthClick
-        },
+        onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
@@ -72,60 +62,72 @@ fun AddToLikesButton(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(LibriaNowIcons.MinusCircle),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .alpha(animatedInLikesAlpha)
-                )
-
-                Text(
-                    text = "Удалить из избранного",
-                    modifier = Modifier.alpha(animatedInLikesAlpha)
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(LibriaNowIcons.PlusCircle),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .alpha(animatedNotInLikesAlpha)
-                )
-
-                Text(
-                    text = "Добавить в избранное",
-                    modifier = Modifier.alpha(animatedNotInLikesAlpha)
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(LibriaNowIcons.UserCheck),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .alpha(animatedAuthAlpha)
-                )
-
-                Text(
-                    text = "Авторизация",
-                    modifier = Modifier.alpha(animatedAuthAlpha)
-                )
-            }
+            LikeButtonContent(
+                icon = LibriaNowIcons.MinusCircle,
+                text = "Удалить из избранного",
+                alpha = animatedInLikesAlpha
+            )
+            LikeButtonContent(
+                icon = LibriaNowIcons.PlusCircle,
+                text = "Добавить в избранное",
+                alpha = animatedNotInLikesAlpha
+            )
+            LikeButtonContent(
+                icon = LibriaNowIcons.UserCheck,
+                text = "Авторизация",
+                alpha = animatedAuthAlpha
+            )
         }
+    }
+}
+
+@Composable
+private fun LikeButtonContent(
+    icon: Int,
+    text: String,
+    alpha: Float
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.alpha(alpha)
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(text)
+    }
+}
+
+@Composable
+private fun rememberLikeButtonAnimations(alreadyInLikes: Boolean, isLogged: Boolean): Triple<Color, Float, Float> {
+    val animatedButtonColor by animateColorAsState(
+        targetValue = if (alreadyInLikes && isLogged) mColors.secondary else mColors.primary,
+        label = "Animated color for button",
+        animationSpec = tween(CommonConstants.ANIMATION_DURATION)
+    )
+    val animatedInLikesAlpha by animateFloatAsState(
+        targetValue = if (alreadyInLikes && isLogged) 1f else 0f,
+        animationSpec = tween(CommonConstants.ANIMATION_DURATION)
+    )
+    val animatedNotInLikesAlpha by animateFloatAsState(
+        targetValue = if (!alreadyInLikes && isLogged) 1f else 0f,
+        animationSpec = tween(CommonConstants.ANIMATION_DURATION)
+    )
+    return Triple(animatedButtonColor, animatedInLikesAlpha, animatedNotInLikesAlpha)
+}
+
+@Preview
+@Composable
+private fun LikeButtonContentPreview() {
+    LibriaNowTheme {
+        LikeButtonContent(
+            icon = LibriaNowIcons.UserCheck,
+            text = "Авторизация",
+            alpha = 1f
+        )
     }
 }
 

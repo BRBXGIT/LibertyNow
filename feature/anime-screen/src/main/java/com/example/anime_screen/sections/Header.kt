@@ -53,10 +53,19 @@ fun Header(
     modifier: Modifier = Modifier
 ) {
     val hazeState = remember { HazeState() }
+    val posterHeight = 140.dp
+    val typeText = type?.let { "$it $episodes эп." } ?: "Тип не указан"
 
-    Box(
-        modifier = modifier
-    ) {
+    val hazeStyle = HazeStyle(
+        backgroundColor = mColors.background,
+        blurRadius = 8.dp,
+        tint = HazeTint(
+            color = mColors.background.copy(alpha = 0.5f),
+            blendMode = BlendMode.SrcOver
+        )
+    )
+
+    Box(modifier = modifier) {
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(posterPath)
@@ -74,17 +83,7 @@ fun Header(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .hazeEffect(
-                    state = hazeState,
-                    style = HazeStyle(
-                        backgroundColor = mColors.background,
-                        blurRadius = 8.dp,
-                        tint = HazeTint(
-                            color = mColors.background.copy(alpha = 0.5f),
-                            blendMode = BlendMode.SrcOver
-                        )
-                    ),
-                ),
+                .hazeEffect(state = hazeState, style = hazeStyle),
             contentAlignment = Alignment.BottomCenter
         ) {
             Box(
@@ -92,11 +91,8 @@ fun Header(
                     .fillMaxWidth()
                     .fillMaxHeight(0.7f)
                     .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                mColors.background
-                            )
+                        Brush.verticalGradient(
+                            listOf(Color.Transparent, mColors.background)
                         )
                     )
             )
@@ -113,17 +109,8 @@ fun Header(
                     end = CommonConstants.HORIZONTAL_PADDING.dp,
                     bottom = 16.dp
                 )
-
         ) {
-            val posterHeight = 140.dp
-
-            Box(
-                modifier = Modifier
-                    .size(100.dp, posterHeight)
-                    .clip(mShapes.small)
-            ) {
-                LibriaNowAsyncImage(posterPath)
-            }
+            PosterImage(posterPath, posterHeight)
 
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -136,28 +123,27 @@ fun Header(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(season, style = mTypography.bodyLarge)
+                    Text(typeText, style = mTypography.bodyLarge)
                     Text(
-                        text = season,
-                        style = mTypography.bodyLarge
-                    )
-
-                    Text(
-                        text = if (type == null) "Тип не указан" else "$type $episodes эп.",
-                        style = mTypography.bodyLarge
-                    )
-
-                    Text(
-                        text = releaseState,
-                        style = mTypography.bodyLarge.copy(
-                            color = mColors.primary
-                        )
+                        releaseState,
+                        style = mTypography.bodyLarge.copy(color = mColors.primary)
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PosterImage(path: String, height: Dp) {
+    Box(
+        modifier = Modifier
+            .size(100.dp, height)
+            .clip(mShapes.small)
+    ) {
+        LibriaNowAsyncImage(path)
     }
 }
 

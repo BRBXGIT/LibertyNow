@@ -42,33 +42,17 @@ fun AnimeScreenTopBar(
     onArchiveClick: () -> Unit,
     onNavClick: () -> Unit
 ) {
+    val showLoading = isLoading
+    val showTitle = !isLoading && animeTitle != null && !isError
+    val showError = isError
+
     TopAppBar(
         title = {
-            AnimatedVisibility(
-                visible = isLoading,
-                enter = slideInVertically(
-                    animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-                    initialOffsetY = { it / 2 }
-                ) + fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                exit = slideOutVertically(
-                    animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-                    targetOffsetY = { -it / 2 }
-                ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
-            ) {
+            AnimatedTopBarContent(visible = showLoading) {
                 AnimatedLoadingText()
             }
 
-            AnimatedVisibility(
-                visible = ((!isLoading) and (animeTitle != null) and (!isError)),
-                enter = slideInVertically(
-                    animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-                    initialOffsetY = { it / 2 }
-                ) + fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                exit = slideOutVertically(
-                    animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-                    targetOffsetY = { -it / 2 }
-                ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
-            ) {
+            AnimatedTopBarContent(visible = showTitle) {
                 Text(
                     text = animeTitle!!,
                     maxLines = 1,
@@ -76,26 +60,12 @@ fun AnimeScreenTopBar(
                 )
             }
 
-            AnimatedVisibility(
-                visible = isError,
-                enter = slideInVertically(
-                    animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-                    initialOffsetY = { it / 2 }
-                ) + fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                exit = slideOutVertically(
-                    animationSpec = tween(CommonConstants.ANIMATION_DURATION),
-                    targetOffsetY = { -it / 2 }
-                ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
-            ) {
-                Text(
-                    text = "Error"
-                )
+            AnimatedTopBarContent(visible = showError) {
+                Text("Error")
             }
         },
         actions = {
-            IconButton(
-                onClick = onArchiveClick
-            ) {
+            IconButton(onClick = onArchiveClick) {
                 Icon(
                     painter = painterResource(LibriaNowIcons.Archive),
                     contentDescription = null
@@ -103,9 +73,7 @@ fun AnimeScreenTopBar(
             }
         },
         navigationIcon = {
-            IconButton(
-                onClick = onNavClick
-            ) {
+            IconButton(onClick = onNavClick) {
                 Icon(
                     painter = painterResource(LibriaNowIcons.ArrowLeftFilled),
                     contentDescription = null
@@ -120,7 +88,27 @@ fun AnimeScreenTopBar(
 }
 
 @Composable
-fun AnimatedLoadingText() {
+private fun AnimatedTopBarContent(
+    visible: Boolean,
+    content: @Composable () -> Unit
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically(
+            animationSpec = tween(CommonConstants.ANIMATION_DURATION),
+            initialOffsetY = { it / 2 }
+        ) + fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
+        exit = slideOutVertically(
+            animationSpec = tween(CommonConstants.ANIMATION_DURATION),
+            targetOffsetY = { -it / 2 }
+        ) + fadeOut(tween(CommonConstants.ANIMATION_DURATION))
+    ) {
+        content()
+    }
+}
+
+@Composable
+private fun AnimatedLoadingText() {
     var dotCount by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
