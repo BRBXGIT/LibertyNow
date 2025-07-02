@@ -6,6 +6,7 @@ interface PlayerScreenIntent {
         val onStart: () -> Unit,
         val onFinish: () -> Unit
     ): PlayerScreenIntent
+    data object UpdateIsUnlockButtonVisible: PlayerScreenIntent
 
     data object PreparePlayer: PlayerScreenIntent
     data object ReleasePlayer: PlayerScreenIntent

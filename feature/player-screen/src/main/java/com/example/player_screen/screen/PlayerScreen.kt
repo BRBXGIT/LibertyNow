@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.CommonConstants
@@ -31,6 +32,7 @@ import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
 import com.example.player_screen.sections.QuickRewindSection
 import com.example.player_screen.sections.SelectEpisodeAD
+import com.example.player_screen.sections.UnlockButton
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
@@ -84,12 +86,16 @@ fun PlayerScreen(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) {
-                    viewModel.sendIntent(
-                        PlayerScreenIntent.UpdateIsControllerVisible(
-                            onStart = { systemUiController.isSystemBarsVisible = true },
-                            onFinish = { systemUiController.isSystemBarsVisible = false }
+                    if (!screenState.isLocked) {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateIsControllerVisible(
+                                onStart = { systemUiController.isSystemBarsVisible = true },
+                                onFinish = { systemUiController.isSystemBarsVisible = false }
+                            )
                         )
-                    )
+                    } else {
+                        viewModel.sendIntent(PlayerScreenIntent.UpdateIsUnlockButtonVisible)
+                    }
                 }
         ) {
             val player = viewModel.player
@@ -113,7 +119,7 @@ fun PlayerScreen(
             }
 
             AnimatedVisibility(
-                visible = screenState.isControllerVisible or screenState.isUserSeeking,
+                visible = (screenState.isControllerVisible or screenState.isUserSeeking) and !screenState.isLocked,
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
                 exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
             ) {
@@ -174,7 +180,17 @@ fun PlayerScreen(
                                 PlayerScreenIntent.SeekEpisode(it)
                             )
                         },
-                        onLockClick = {},
+                        onLockClick = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.UpdateScreenState(
+                                    screenState.copy(
+                                        isLocked = true,
+                                        isControllerVisible = false
+                                    )
+                                )
+                            )
+                            systemUiController.isSystemBarsVisible = false
+                        },
                         onSettingsClick = {},
                         onCropClick = {
                             viewModel.sendIntent(
@@ -184,6 +200,32 @@ fun PlayerScreen(
                             )
                         },
                     )
+                }
+            }
+
+            if (screenState.isLocked) {
+                AnimatedVisibility(
+                    visible = screenState.isUnlockButtonVisible,
+                    enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
+                    exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        UnlockButton(
+                            onClick = {
+                                viewModel.sendIntent(
+                                    PlayerScreenIntent.UpdateScreenState(
+                                        screenState.copy(
+                                            isLocked = false,
+                                            isUnlockButtonVisible = false
+                                        )
+                                    )
+                                )
+                            },
+                            bottomPadding = innerPadding.calculateBottomPadding() + 12.dp
+                        )
+                    }
                 }
             }
 
@@ -199,12 +241,16 @@ fun PlayerScreen(
                     )
                 },
                 onSingleClick = {
-                    viewModel.sendIntent(
-                        PlayerScreenIntent.UpdateIsControllerVisible(
-                            onStart = { systemUiController.isSystemBarsVisible = true },
-                            onFinish = { systemUiController.isSystemBarsVisible = false }
+                    if (!screenState.isLocked) {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateIsControllerVisible(
+                                onStart = { systemUiController.isSystemBarsVisible = true },
+                                onFinish = { systemUiController.isSystemBarsVisible = false }
+                            )
                         )
-                    )
+                    } else {
+                        viewModel.sendIntent(PlayerScreenIntent.UpdateIsUnlockButtonVisible)
+                    }
                 }
             )
         }

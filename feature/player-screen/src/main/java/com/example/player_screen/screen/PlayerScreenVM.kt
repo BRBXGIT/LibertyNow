@@ -117,6 +117,18 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private fun updateIsUnlockButtonVisible() {
+        viewModelScope.launch(dispatcherDefault) {
+            _playerScreenState.update { state ->
+                state.copy(isUnlockButtonVisible = true)
+            }
+            delay(3000)
+            _playerScreenState.update { state ->
+                state.copy(isUnlockButtonVisible = false)
+            }
+        }
+    }
+
     private fun pausePlayer() {
         when(_playerScreenState.value.isPlaying) {
             IsPlayingState.Loading -> {}
@@ -191,6 +203,7 @@ class PlayerScreenVM @Inject constructor(
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
             is PlayerScreenIntent.UpdateIsControllerVisible -> updateIsControllerVisible(intent.onStart, intent.onFinish)
+            is PlayerScreenIntent.UpdateIsUnlockButtonVisible -> updateIsUnlockButtonVisible()
 
             is PlayerScreenIntent.PreparePlayer -> preparePlayer()
             is PlayerScreenIntent.ReleasePlayer -> player.release()

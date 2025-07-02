@@ -18,8 +18,10 @@ data class PlayerScreenState(
     val duration: Long = 0L,
     val currentPosition: Long = 0L,
     val isCropped: Boolean = true,
+    val isLocked: Boolean = false,
 
     val isControllerVisible: Boolean = false,
     val isSelectEpisodeADVisible: Boolean = false,
-    val isUserSeeking: Boolean = false
+    val isUserSeeking: Boolean = false,
+    val isUnlockButtonVisible: Boolean = false
 )
