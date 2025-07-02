@@ -6,6 +6,7 @@ import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
 import com.example.data.domain.AuthRepo
+import com.example.data.domain.LikesRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
@@ -26,7 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthVM @Inject constructor(
-    private val repository: AuthRepo,
+    private val authRepository: AuthRepo,
+    private val likesRepository: LikesRepo,
     @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher
 ): ViewModel() {
 
@@ -45,8 +47,8 @@ class AuthVM @Inject constructor(
         viewModelScope.launch(dispatcherIo) {
             _authState.update { state ->
                 state.copy(
-                    isLogged = repository.loggingState.first(),
-                    sessionToken = repository.userSessionToken.first()
+                    isLogged = authRepository.loggingState.first(),
+                    sessionToken = authRepository.userSessionToken.first()
                 )
             }
             if (_authState.value.isLogged is LoggingState.LoggedIn) {
@@ -66,10 +68,10 @@ class AuthVM @Inject constructor(
                 )
             }
 
-            val response = repository.getSessionToken(_authState.value.email, _authState.value.password)
+            val response = authRepository.getSessionToken(_authState.value.email, _authState.value.password)
             when (response.error) {
                 NetworkErrors.SUCCESS -> {
-                    repository.saveUserSessionToken((response.response as SessionTokenResponse).sessionId)
+                    authRepository.saveUserSessionToken((response.response as SessionTokenResponse).sessionId)
                     fetchSessionToken()
                 }
                 NetworkErrors.INCORRECT_PASSWORD -> {
@@ -109,7 +111,7 @@ class AuthVM @Inject constructor(
 
     private fun fetchLikesAmount() {
         viewModelScope.launch(dispatcherIo) {
-            val response = repository.getLikesAmount(_authState.value.sessionToken!!)
+            val response = likesRepository.getLikesAmount(_authState.value.sessionToken!!)
             _authState.update { state ->
                 state.copy(
                     likesError = false,
@@ -151,7 +153,7 @@ class AuthVM @Inject constructor(
                 state.copy(isLoading = true)
             }
 
-            val response = repository.getLikes(
+            val response = likesRepository.getLikes(
                 _authState.value.sessionToken!!,
                 _authState.value.likesAmount
             )
@@ -189,7 +191,7 @@ class AuthVM @Inject constructor(
                 state.copy(isLoading = true)
             }
 
-            val response = repository.addLike(
+            val response = likesRepository.addLike(
                 _authState.value.sessionToken!!,
                 title.id
             )
@@ -227,7 +229,7 @@ class AuthVM @Inject constructor(
                 state.copy(isLoading = true)
             }
 
-            val response = repository.removeLike(
+            val response = likesRepository.removeLike(
                 _authState.value.sessionToken!!,
                 title.id
             )
