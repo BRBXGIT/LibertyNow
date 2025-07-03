@@ -50,7 +50,8 @@ fun BoxScope.Footer(
     onValueChangeFinished: (Long) -> Unit,
     onLockClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onCropClick: () -> Unit
+    onCropClick: () -> Unit,
+    onPipClick: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -85,7 +86,8 @@ fun BoxScope.Footer(
                 isCropped = isCropped,
                 onLockClick = onLockClick,
                 onSettingsClick = onSettingsClick,
-                onCropClick = onCropClick
+                onCropClick = onCropClick,
+                onPipClick = onPipClick
             )
         }
     }
@@ -141,14 +143,15 @@ private fun FooterControlsRow(
     isCropped: Boolean,
     onLockClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onCropClick: () -> Unit
+    onCropClick: () -> Unit,
+    onPipClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         SimpleIconButton(iconRes = LibriaNowIcons.Lock, onClick = onLockClick)
-        SimpleIconButton(iconRes = LibriaNowIcons.PictureInPicture, onClick = {}) // Empty handler?
+        SimpleIconButton(iconRes = LibriaNowIcons.PictureInPicture, onClick = onPipClick)
         SimpleIconButton(iconRes = LibriaNowIcons.Settings, onClick = onSettingsClick)
         AnimatedCropButton(isCropped = isCropped, onClick = onCropClick)
     }
@@ -208,6 +211,7 @@ fun FooterPreview() {
                 onLockClick = {},
                 onSettingsClick = {},
                 onCropClick = {},
+                onPipClick = {}
             )
         }
     }

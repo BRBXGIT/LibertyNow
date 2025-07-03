@@ -1,7 +1,11 @@
 package com.example.player_screen.screen
 
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.graphics.Rect
+import android.util.Rational
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -40,6 +44,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 
+var videoViewBounds = Rect()
+
 @Composable
 fun PlayerScreen(
     host: String,
@@ -52,10 +58,17 @@ fun PlayerScreen(
     val links: List<X1> = Gson().fromJson(gsonLinks, type)
     val context = LocalContext.current
 
+    val activity = context as Activity
+    val isPipSupported by lazy {
+        activity.packageManager.hasSystemFeature(
+            PackageManager.FEATURE_PICTURE_IN_PICTURE
+        )
+    }
+
     val systemUiController = rememberSystemUiController()
     val screenState by viewModel.playerScreenState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
-        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         systemUiController.isSystemBarsVisible = false
         viewModel.sendIntent(
             PlayerScreenIntent.UpdateScreenState(
@@ -72,7 +85,7 @@ fun PlayerScreen(
 
     BackHandler {
         viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
-        (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         navController.navigateUp()
     }
 
@@ -206,7 +219,7 @@ fun PlayerScreen(
                         topPadding = innerPadding.calculateTopPadding(),
                         onBackClick = {
                             viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
-                            (context as? Activity)?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                            context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             navController.navigateUp()
                         },
                         onPlaylistClick = {
@@ -279,6 +292,18 @@ fun PlayerScreen(
                                 )
                             )
                         },
+                        onPipClick = {
+                            if (isPipSupported) {
+                                viewModel.sendIntent(
+                                    PlayerScreenIntent.UpdateScreenState(
+                                        screenState.copy(isControllerVisible = false)
+                                    )
+                                )
+                                updatedPipParams()?.let { params ->
+                                    activity.enterPictureInPictureMode(params)
+                                }
+                            }
+                        }
                     )
                 }
             }
@@ -310,7 +335,7 @@ fun PlayerScreen(
             }
 
             AnimatedVisibility(
-                visible = screenState.isSkipOpeningButtonVisible,
+                visible = screenState.isSkipOpeningButtonVisible and screenState.showSkipOpeningButton,
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
                 exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
                 modifier = Modifier.zIndex(2f)
@@ -351,4 +376,11 @@ fun PlayerScreen(
             )
         }
     }
+}
+
+fun updatedPipParams(): PictureInPictureParams? {
+    return PictureInPictureParams.Builder()
+        .setSourceRectHint(videoViewBounds)
+        .setAspectRatio(Rational(16, 9))
+        .build()
 }
