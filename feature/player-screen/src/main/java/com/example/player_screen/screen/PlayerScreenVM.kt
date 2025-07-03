@@ -43,6 +43,37 @@ class PlayerScreenVM @Inject constructor(
         _playerScreenState.value = state
     }
 
+    private val playerListener = object : Player.Listener {
+        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+            if (player.contentDuration != C.TIME_UNSET) {
+                _playerScreenState.update { state ->
+                    state.copy(
+                        duration = player.contentDuration,
+                        isPlaying = IsPlayingState.Playing,
+                    )
+                }
+            }
+        }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                _playerScreenState.update { state ->
+                    val nextId = state.currentAnimeId + 1
+                    if (nextId < state.links.size) {
+                        state.copy(
+                            currentAnimeId = nextId,
+                            currentLink = state.links[nextId],
+                            isPlaying = IsPlayingState.Playing,
+                            duration = player.contentDuration
+                        )
+                    } else {
+                        state
+                    }
+                }
+            }
+        }
+    }
+
     private fun preparePlayer() {
         viewModelScope.launch(dispatcherIo) {
             combine(
@@ -58,43 +89,25 @@ class PlayerScreenVM @Inject constructor(
                     )
                 }
 
-                val mediaItems = _playerScreenState.value.links.map {
-                    when(videoQuality) {
-                        480 -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.sd)
-                        720 -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.hd)
-                        else -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.fhd)
+                val state = _playerScreenState.value
+                val mediaItems = state.links.map {
+                    val base = CommonConstants.BASE_SCHEME + state.host
+                    when (videoQuality) {
+                        480 -> MediaItem.fromUri(base + it.hls.sd)
+                        720 -> MediaItem.fromUri(base + it.hls.hd)
+                        else -> MediaItem.fromUri(base + it.hls.fhd)
                     }
                 }
+
                 withContext(dispatcherMain) {
-                    player.setMediaItems(mediaItems, _playerScreenState.value.currentAnimeId, _playerScreenState.value.currentPosition)
+                    player.clearMediaItems()
+                    player.removeListener(playerListener)
+
+                    player.setMediaItems(mediaItems, state.currentAnimeId, state.currentPosition)
                     player.playWhenReady = autoPlay != false
                     player.prepare()
 
-                    player.addListener(object : Player.Listener {
-                        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                                _playerScreenState.value = PlayerScreenState(
-                                    currentAnimeId = _playerScreenState.value.currentAnimeId + 1,
-                                    currentLink = _playerScreenState.value.links[_playerScreenState.value.currentAnimeId + 1],
-                                    host = _playerScreenState.value.host,
-                                    links = _playerScreenState.value.links,
-                                    isPlaying = IsPlayingState.Playing,
-                                    duration = player.contentDuration
-                                )
-                            }
-                        }
-
-                        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-                            if (player.contentDuration != C.TIME_UNSET) {
-                                _playerScreenState.update { state ->
-                                    state.copy(
-                                        duration = player.contentDuration,
-                                        isPlaying = IsPlayingState.Playing
-                                    )
-                                }
-                            }
-                        }
-                    })
+                    player.addListener(playerListener)
                 }
 
                 trackCurrentPosition()
