@@ -85,6 +85,7 @@ fun PlayerScreen(
 
     BackHandler {
         viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
+        systemUiController.isSystemBarsVisible = true
         context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         navController.navigateUp()
     }
@@ -204,10 +205,8 @@ fun PlayerScreen(
                 )
             }
 
-            AnimatedVisibility(
+            AnimatedVisibilityContent(
                 visible = (screenState.isControllerVisible or screenState.isUserSeeking) and !screenState.isLocked,
-                enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
                 modifier = Modifier.zIndex(2f)
             ) {
                 Box(
@@ -219,6 +218,7 @@ fun PlayerScreen(
                         topPadding = innerPadding.calculateTopPadding(),
                         onBackClick = {
                             viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
+                            systemUiController.isSystemBarsVisible = true
                             context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                             navController.navigateUp()
                         },
@@ -309,10 +309,8 @@ fun PlayerScreen(
             }
 
             if (screenState.isLocked) {
-                AnimatedVisibility(
-                    visible = screenState.isUnlockButtonVisible,
-                    enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                    exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
+                AnimatedVisibilityContent(
+                    visible = screenState.isUnlockButtonVisible
                 ) {
                     Box(
                         modifier = Modifier.fillMaxSize()
@@ -334,10 +332,8 @@ fun PlayerScreen(
                 }
             }
 
-            AnimatedVisibility(
+            AnimatedVisibilityContent(
                 visible = screenState.isSkipOpeningButtonVisible and screenState.showSkipOpeningButton,
-                enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
                 modifier = Modifier.zIndex(2f)
             ) {
                 Box(
@@ -378,7 +374,24 @@ fun PlayerScreen(
     }
 }
 
-fun updatedPipParams(): PictureInPictureParams? {
+@Composable
+private fun AnimatedVisibilityContent(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
+        exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
+        modifier = modifier
+    ) {
+        content()
+    }
+}
+
+
+private fun updatedPipParams(): PictureInPictureParams? {
     return PictureInPictureParams.Builder()
         .setSourceRectHint(videoViewBounds)
         .setAspectRatio(Rational(16, 9))
