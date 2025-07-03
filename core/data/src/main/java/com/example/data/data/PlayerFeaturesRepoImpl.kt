@@ -22,7 +22,7 @@ class PlayerFeaturesRepoImpl @Inject constructor(
         playerFeaturesManager.saveVideoQuality(quality)
     }
 
-    override suspend fun saveShowOpeningButton(show: Boolean) {
+    override suspend fun saveShowSkipOpeningButton(show: Boolean) {
         playerFeaturesManager.saveShowOpeningButton(show)
     }
 }

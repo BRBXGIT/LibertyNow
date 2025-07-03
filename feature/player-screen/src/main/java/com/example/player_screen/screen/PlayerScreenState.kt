@@ -25,6 +25,12 @@ data class PlayerScreenState(
     val isUserSeeking: Boolean = false,
     val isUnlockButtonVisible: Boolean = false,
     val isSkipOpeningButtonVisible: Boolean = false,
+    val isSettingsBSVisible: Boolean = false,
+    val isQualityBSVisible: Boolean = false,
 
-    val skipOpeningButtonTimer: Int = 5
+    val skipOpeningButtonTimer: Int = 5,
+
+    val autoPlay: Boolean = true,
+    val videoQuality: Int = 1080,
+    val showSkipOpeningButton: Boolean = true
 )

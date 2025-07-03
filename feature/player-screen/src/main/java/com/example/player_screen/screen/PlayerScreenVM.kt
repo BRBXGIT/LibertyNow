@@ -51,6 +51,13 @@ class PlayerScreenVM @Inject constructor(
             ) { autoPlay, videoQuality ->
                 autoPlay to videoQuality
             }.collect { (autoPlay, videoQuality) ->
+                _playerScreenState.update { state ->
+                    state.copy(
+                        autoPlay = autoPlay != false,
+                        videoQuality = videoQuality ?: 1080
+                    )
+                }
+
                 val mediaItems = _playerScreenState.value.links.map {
                     when(videoQuality) {
                         480 -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.sd)
@@ -225,6 +232,18 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private fun changePlayerFeature(featureType: FeatureType) {
+        viewModelScope.launch(dispatcherIo) {
+            when(featureType) {
+                is FeatureType.AutoPlay -> playerFeaturesRepository.saveAutoplay(!_playerScreenState.value.autoPlay)
+                is FeatureType.VideoQuality -> playerFeaturesRepository.saveVideoQuality(featureType.quality)
+                is FeatureType.ShowSkipOpeningButton -> {
+                    playerFeaturesRepository.saveShowSkipOpeningButton(!_playerScreenState.value.showSkipOpeningButton)
+                }
+            }
+        }
+    }
+
     fun sendIntent(intent: PlayerScreenIntent) {
         when(intent) {
             is PlayerScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
@@ -237,6 +256,8 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)
             is PlayerScreenIntent.SetEpisode -> setEpisode(intent.episodeId)
             is PlayerScreenIntent.SeekEpisode -> seekEpisode(intent.seekTo, intent.quickSeek)
+
+            is PlayerScreenIntent.ChangePlayerFeature -> changePlayerFeature(intent.feature)
         }
     }
 }

@@ -17,4 +17,6 @@ interface PlayerScreenIntent {
         val seekTo: Long,
         val quickSeek: Boolean = false
     ): PlayerScreenIntent
+
+    data class ChangePlayerFeature(val feature: FeatureType): PlayerScreenIntent
 }

@@ -12,7 +12,7 @@ interface PlayerFeaturesRepo {
 
     suspend fun saveVideoQuality(quality: Int)
 
-    suspend fun saveShowOpeningButton(show: Boolean)
+    suspend fun saveShowSkipOpeningButton(show: Boolean)
 
     suspend fun saveAutoplay(autoplay: Boolean)
 }

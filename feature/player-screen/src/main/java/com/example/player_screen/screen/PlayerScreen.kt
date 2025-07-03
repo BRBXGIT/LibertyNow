@@ -30,6 +30,8 @@ import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Footer
 import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
+import com.example.player_screen.sections.PlayerSettingsBS
+import com.example.player_screen.sections.QualityBS
 import com.example.player_screen.sections.QuickRewindSection
 import com.example.player_screen.sections.SelectEpisodeAD
 import com.example.player_screen.sections.SkipOpeningButton
@@ -122,6 +124,55 @@ fun PlayerScreen(
                 )
             }
 
+            if (screenState.isSettingsBSVisible) {
+                PlayerSettingsBS(
+                    autoPlay = screenState.autoPlay,
+                    quality = screenState.videoQuality,
+                    showSkipOpeningButton = screenState.showSkipOpeningButton,
+                    onDismissRequest = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isSettingsBSVisible = false)
+                            )
+                        )
+                    },
+                    onQualityClick = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isQualityBSVisible = true)
+                            )
+                        )
+                    },
+                    onAutoPlayClick = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.ChangePlayerFeature(FeatureType.AutoPlay)
+                        )
+                    },
+                    onShowSkipOpeningButtonClick = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.ChangePlayerFeature(FeatureType.ShowSkipOpeningButton)
+                        )
+                    }
+                )
+            }
+
+            if (screenState.isQualityBSVisible) {
+                QualityBS(
+                    onClick = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.ChangePlayerFeature(FeatureType.VideoQuality(it))
+                        )
+                    },
+                    onDismissRequest = {
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isQualityBSVisible = false)
+                            )
+                        )
+                    }
+                )
+            }
+
             AnimatedVisibility(
                 visible = (screenState.isControllerVisible or screenState.isUserSeeking) and !screenState.isLocked,
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
@@ -196,7 +247,13 @@ fun PlayerScreen(
                             )
                             systemUiController.isSystemBarsVisible = false
                         },
-                        onSettingsClick = {},
+                        onSettingsClick = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.UpdateScreenState(
+                                    screenState.copy(isSettingsBSVisible = true)
+                                )
+                            )
+                        },
                         onCropClick = {
                             viewModel.sendIntent(
                                 PlayerScreenIntent.UpdateScreenState(
