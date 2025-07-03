@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,39 +44,55 @@ class PlayerScreenVM @Inject constructor(
     }
 
     private fun preparePlayer() {
-        val mediaItems = _playerScreenState.value.links.map {
-            MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.fhd)
-        }
-        player.setMediaItems(mediaItems, _playerScreenState.value.currentAnimeId, 0L)
-        player.prepare()
-
-        player.addListener(object : Player.Listener {
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                    _playerScreenState.value = PlayerScreenState(
-                        currentAnimeId = _playerScreenState.value.currentAnimeId + 1,
-                        currentLink = _playerScreenState.value.links[_playerScreenState.value.currentAnimeId + 1],
-                        host = _playerScreenState.value.host,
-                        links = _playerScreenState.value.links,
-                        isPlaying = IsPlayingState.Playing,
-                        duration = player.contentDuration
-                    )
-                }
-            }
-
-            override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-                if (player.contentDuration != C.TIME_UNSET) {
-                    _playerScreenState.update { state ->
-                        state.copy(
-                            duration = player.contentDuration,
-                            isPlaying = IsPlayingState.Playing
-                        )
+        viewModelScope.launch(dispatcherIo) {
+            combine(
+                playerFeaturesRepository.autoPlay,
+                playerFeaturesRepository.videoQuality
+            ) { autoPlay, videoQuality ->
+                autoPlay to videoQuality
+            }.collect { (autoPlay, videoQuality) ->
+                val mediaItems = _playerScreenState.value.links.map {
+                    when(videoQuality) {
+                        480 -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.sd)
+                        720 -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.hd)
+                        else -> MediaItem.fromUri(CommonConstants.BASE_SCHEME + _playerScreenState.value.host + it.hls.fhd)
                     }
                 }
-            }
-        })
+                withContext(dispatcherMain) {
+                    player.setMediaItems(mediaItems, _playerScreenState.value.currentAnimeId, _playerScreenState.value.currentPosition)
+                    player.playWhenReady = autoPlay != false
+                    player.prepare()
 
-        trackCurrentPosition()
+                    player.addListener(object : Player.Listener {
+                        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                                _playerScreenState.value = PlayerScreenState(
+                                    currentAnimeId = _playerScreenState.value.currentAnimeId + 1,
+                                    currentLink = _playerScreenState.value.links[_playerScreenState.value.currentAnimeId + 1],
+                                    host = _playerScreenState.value.host,
+                                    links = _playerScreenState.value.links,
+                                    isPlaying = IsPlayingState.Playing,
+                                    duration = player.contentDuration
+                                )
+                            }
+                        }
+
+                        override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+                            if (player.contentDuration != C.TIME_UNSET) {
+                                _playerScreenState.update { state ->
+                                    state.copy(
+                                        duration = player.contentDuration,
+                                        isPlaying = IsPlayingState.Playing
+                                    )
+                                }
+                            }
+                        }
+                    })
+                }
+
+                trackCurrentPosition()
+            }
+        }
     }
 
     private fun trackCurrentPosition() {
