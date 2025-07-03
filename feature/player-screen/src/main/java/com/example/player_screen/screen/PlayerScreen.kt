@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.CommonConstants
@@ -125,6 +126,7 @@ fun PlayerScreen(
                 visible = (screenState.isControllerVisible or screenState.isUserSeeking) and !screenState.isLocked,
                 enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
                 exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
+                modifier = Modifier.zIndex(2f)
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),

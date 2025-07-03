@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
 import kotlinx.coroutines.delay
@@ -45,7 +46,8 @@ fun BoxScope.QuickRewindSection(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .align(Alignment.CenterStart)
-            .fillMaxHeight(0.5f)
+            .zIndex(1f)
+            .fillMaxHeight()
             .fillMaxWidth(0.2f)
             .combinedClickable(
                 indication = null,
@@ -79,7 +81,8 @@ fun BoxScope.QuickRewindSection(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .align(Alignment.CenterEnd)
-            .fillMaxHeight(0.5f)
+            .zIndex(1f)
+            .fillMaxHeight()
             .fillMaxWidth(0.2f)
             .combinedClickable(
                 indication = null,
