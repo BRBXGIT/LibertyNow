@@ -12,6 +12,7 @@ import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.design_system.theme.CommonConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -84,41 +85,43 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
-    private fun updateIsControllerVisible(
+    private var controllerVisibilityJob: Job? = null
+    fun updateIsControllerVisible(
         onStart: () -> Unit,
         onFinish: () -> Unit
     ) {
-        viewModelScope.launch(dispatcherDefault) {
-            when(_playerScreenState.value.isControllerVisible) {
+        controllerVisibilityJob?.cancel()
+
+        controllerVisibilityJob = viewModelScope.launch(dispatcherDefault) {
+            when (_playerScreenState.value.isControllerVisible) {
                 true -> {
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
-                    withContext(dispatcherMain) {
-                        onFinish()
-                    }
+                    withContext(dispatcherMain) { onFinish() }
                 }
                 false -> {
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = true)
                     }
-                    withContext(dispatcherMain) {
-                        onStart()
-                    }
+                    withContext(dispatcherMain) { onStart() }
+
                     delay(5000)
+
                     _playerScreenState.update { state ->
                         state.copy(isControllerVisible = false)
                     }
-                    withContext(dispatcherMain) {
-                        onFinish()
-                    }
+                    withContext(dispatcherMain) { onFinish() }
                 }
             }
         }
     }
 
+    private var unlockButtonVisibilityJob: Job? = null
     private fun updateIsUnlockButtonVisible() {
-        viewModelScope.launch(dispatcherDefault) {
+        unlockButtonVisibilityJob?.cancel()
+
+        unlockButtonVisibilityJob = viewModelScope.launch(dispatcherDefault) {
             _playerScreenState.update { state ->
                 state.copy(isUnlockButtonVisible = true)
             }
