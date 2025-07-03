@@ -1,7 +1,5 @@
 package com.example.player_screen.sections
 
-//noinspection UsingMaterialAndMaterial3Libraries
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -13,7 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Slider
+// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -63,30 +63,12 @@ fun BoxScope.Footer(
                 bottom = bottomPadding
             )
     ) {
-        var sliderPosition by rememberSaveable { mutableFloatStateOf(0f) }
-        LaunchedEffect(currentPosition, duration) {
-            if ((duration > 0) and (!isSeeking)) {
-                sliderPosition = currentPosition.toFloat() / duration
-            }
-        }
-
-        Slider(
-            modifier = Modifier.fillMaxWidth(),
-            colors = SliderDefaults.colors(
-                thumbColor = mColors.secondary,
-                activeTrackColor = mColors.secondary,
-                inactiveTrackColor = mColors.secondaryContainer,
-            ),
-            value = sliderPosition,
-            onValueChange = {
-                sliderPosition = it
-                val newPosition = (sliderPosition * duration).toLong()
-                onValueChange(newPosition)
-            },
-            onValueChangeFinished = {
-                val newPosition = (sliderPosition * duration).toLong()
-                onValueChangeFinished(newPosition)
-            }
+        PlaybackSlider(
+            duration = duration,
+            currentPosition = currentPosition,
+            isSeeking = isSeeking,
+            onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished
         )
 
         Row(
@@ -94,63 +76,112 @@ fun BoxScope.Footer(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            val formattedCurrentPosition = formatMS(currentPosition)
-            val formattedDuration = formatMS(duration)
-            Text(
-                text = "$formattedCurrentPosition / $formattedDuration",
-                style = mTypography.bodyLarge.copy(
-                    color = Color(0xFFFFFFFF)
-                )
+            TimeLabel(
+                currentPosition = currentPosition,
+                duration = duration
             )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                IconButton(
-                    onClick = onLockClick
-                ) {
-                    Icon(
-                        painter = painterResource(LibriaNowIcons.Lock),
-                        contentDescription = null,
-                        tint = Color(0xFFFFFFFF)
-                    )
-                }
-
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        painter = painterResource(LibriaNowIcons.PictureInPicture),
-                        contentDescription = null,
-                        tint = Color(0xFFFFFFFF)
-                    )
-                }
-
-                IconButton(
-                    onClick = onSettingsClick
-                ) {
-                    Icon(
-                        painter = painterResource(LibriaNowIcons.Settings),
-                        contentDescription = null,
-                        tint = Color(0xFFFFFFFF)
-                    )
-                }
-
-                IconButton(
-                    onClick = onCropClick
-                ) {
-                    val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.CropAnimated)
-                    val animatedPainter = rememberAnimatedVectorPainter(animatedImageVector = animatedImage, atEnd = !isCropped)
-
-                    Image(
-                        painter = animatedPainter,
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color(0xFFFFFFFF))
-                    )
-                }
-            }
+            FooterControlsRow(
+                isCropped = isCropped,
+                onLockClick = onLockClick,
+                onSettingsClick = onSettingsClick,
+                onCropClick = onCropClick
+            )
         }
+    }
+}
+
+@Composable
+private fun PlaybackSlider(
+    duration: Long,
+    currentPosition: Long,
+    isSeeking: Boolean,
+    onValueChange: (Long) -> Unit,
+    onValueChangeFinished: (Long) -> Unit
+) {
+    var sliderPosition by rememberSaveable { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(currentPosition, duration) {
+        if (duration > 0 && !isSeeking) {
+            sliderPosition = currentPosition.toFloat() / duration
+        }
+    }
+
+    Slider(
+        modifier = Modifier.fillMaxWidth(),
+        colors = SliderDefaults.colors(
+            thumbColor = mColors.secondary,
+            activeTrackColor = mColors.secondary,
+            inactiveTrackColor = mColors.secondaryContainer,
+        ),
+        value = sliderPosition,
+        onValueChange = {
+            sliderPosition = it
+            onValueChange((it * duration).toLong())
+        },
+        onValueChangeFinished = {
+            onValueChangeFinished((sliderPosition * duration).toLong())
+        }
+    )
+}
+
+@Composable
+private fun TimeLabel(currentPosition: Long, duration: Long) {
+    val formattedCurrent = formatMS(currentPosition)
+    val formattedDuration = formatMS(duration)
+
+    Text(
+        text = "$formattedCurrent / $formattedDuration",
+        style = mTypography.bodyLarge.copy(color = Color.White)
+    )
+}
+
+@Composable
+private fun FooterControlsRow(
+    isCropped: Boolean,
+    onLockClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onCropClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        SimpleIconButton(iconRes = LibriaNowIcons.Lock, onClick = onLockClick)
+        SimpleIconButton(iconRes = LibriaNowIcons.PictureInPicture, onClick = {}) // Empty handler?
+        SimpleIconButton(iconRes = LibriaNowIcons.Settings, onClick = onSettingsClick)
+        AnimatedCropButton(isCropped = isCropped, onClick = onCropClick)
+    }
+}
+
+@Composable
+private fun SimpleIconButton(iconRes: Int, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            tint = Color.White
+        )
+    }
+}
+
+@Composable
+private fun AnimatedCropButton(
+    isCropped: Boolean,
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.CropAnimated)
+        val animatedPainter = rememberAnimatedVectorPainter(
+            animatedImageVector = animatedImage,
+            atEnd = !isCropped
+        )
+
+        Image(
+            painter = animatedPainter,
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(Color.White)
+        )
     }
 }
 

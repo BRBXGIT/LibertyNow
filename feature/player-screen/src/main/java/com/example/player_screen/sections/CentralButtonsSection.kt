@@ -39,62 +39,70 @@ fun BoxScope.CentralButtonsSection(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(32.dp),
-        modifier = Modifier
-            .align(Alignment.Center)
+        modifier = Modifier.align(Alignment.Center)
     ) {
-        val animatedPreviousIconAlpha by animateFloatAsState(
-            targetValue = if (firstEpisode) 0.3f else 1f
-        )
-        IconButton(
+        EpisodeIconButton(
+            enabled = !firstEpisode,
+            iconRes = LibriaNowIcons.PreviousFilled,
             onClick = onPreviousClick
-        ) {
-            Icon(
-                painter = painterResource(LibriaNowIcons.PreviousFilled),
-                contentDescription = null,
-                tint = Color(0xFFFFFFFF),
-                modifier = Modifier
-                    .size(28.dp)
-                    .alpha(animatedPreviousIconAlpha),
-            )
-        }
-
-        if (isPlaying is IsPlayingState.Loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(32.dp),
-                color = Color(0xffffffff)
-            )
-        } else {
-            IconButton(
-                onClick = onPlayClick
-            ) {
-                val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.PlayAnimated)
-                val animatedPainter = rememberAnimatedVectorPainter(
-                    animatedImageVector = animatedImage,
-                    atEnd = isPlaying is IsPlayingState.Playing
-                )
-
-                Image(
-                    painter = animatedPainter,
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-        }
-
-        val animatedNextIconAlpha by animateFloatAsState(
-            targetValue = if (lastEpisode) 0.3f else 1f
         )
-        IconButton(
+
+        PlayPauseButton(
+            isPlaying = isPlaying,
+            onClick = onPlayClick
+        )
+
+        EpisodeIconButton(
+            enabled = !lastEpisode,
+            iconRes = LibriaNowIcons.NextFilled,
             onClick = onNextClick
-        ) {
-            Icon(
-                painter = painterResource(LibriaNowIcons.NextFilled),
+        )
+    }
+}
+
+@Composable
+private fun EpisodeIconButton(
+    enabled: Boolean,
+    iconRes: Int,
+    onClick: () -> Unit
+) {
+    val alpha by animateFloatAsState(if (enabled) 1f else 0.3f)
+
+    IconButton(onClick = onClick, enabled = enabled) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = null,
+            tint = Color.White,
+            modifier = Modifier
+                .size(28.dp)
+                .alpha(alpha)
+        )
+    }
+}
+
+@Composable
+private fun PlayPauseButton(
+    isPlaying: IsPlayingState,
+    onClick: () -> Unit
+) {
+    if (isPlaying is IsPlayingState.Loading) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(32.dp),
+            color = Color.White
+        )
+    } else {
+        IconButton(onClick = onClick) {
+            val animatedImage = AnimatedImageVector.animatedVectorResource(LibriaNowIcons.PlayAnimated)
+            val animatedPainter = rememberAnimatedVectorPainter(
+                animatedImageVector = animatedImage,
+                atEnd = isPlaying is IsPlayingState.Playing
+            )
+
+            Image(
+                painter = animatedPainter,
                 contentDescription = null,
-                tint = Color(0xFFFFFFFF),
-                modifier = Modifier
-                    .size(28.dp)
-                    .alpha(animatedNextIconAlpha),
+                colorFilter = ColorFilter.tint(Color.White),
+                modifier = Modifier.size(32.dp)
             )
         }
     }

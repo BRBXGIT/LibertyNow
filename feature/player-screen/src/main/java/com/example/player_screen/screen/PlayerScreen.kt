@@ -30,7 +30,7 @@ import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Footer
 import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
-import com.example.player_screen.sections.PlayerSettingsBS
+import com.example.player_screen.sections.PlayerSettingSheet
 import com.example.player_screen.sections.QualityBS
 import com.example.player_screen.sections.QuickRewindSection
 import com.example.player_screen.sections.SelectEpisodeAD
@@ -125,7 +125,7 @@ fun PlayerScreen(
             }
 
             if (screenState.isSettingsBSVisible) {
-                PlayerSettingsBS(
+                PlayerSettingSheet(
                     autoPlay = screenState.autoPlay,
                     quality = screenState.videoQuality,
                     showSkipOpeningButton = screenState.showSkipOpeningButton,

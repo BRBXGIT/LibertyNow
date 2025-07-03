@@ -32,73 +32,65 @@ fun BoxScope.QuickRewindSection(
     onRightClick: () -> Unit,
     onSingleClick: () -> Unit
 ) {
-    var leftBoxToggled by rememberSaveable { mutableStateOf(false) }
-    val leftLabelAlpha by animateFloatAsState(
-        targetValue = if (leftBoxToggled) 1f else 0f
-    )
-    LaunchedEffect(leftBoxToggled) {
-        if (leftBoxToggled) {
-            delay(300)
-            leftBoxToggled = false
-        }
-    }
-    Box(
-        contentAlignment = Alignment.Center,
+    QuickRewindBox(
         modifier = Modifier
             .align(Alignment.CenterStart)
-            .zIndex(1f)
-            .fillMaxHeight()
-            .fillMaxWidth(0.2f)
-            .combinedClickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onSingleClick,
-                onDoubleClick = {
-                    onLeftClick()
-                    leftBoxToggled = true
-                }
-            )
-    ) {
-        Text(
-            text = "-5 секунд",
-            style = mTypography.bodyLarge,
-            modifier = Modifier.alpha(leftLabelAlpha),
-            color = Color(0xFFFFFFFF)
-        )
-    }
-
-    var rightBoxToggled by rememberSaveable { mutableStateOf(false) }
-    val rightLabelAlpha by animateFloatAsState(
-        targetValue = if (rightBoxToggled) 1f else 0f
+            .fillMaxWidth(0.2f),
+        label = "-5 секунд",
+        onDoubleClick = onLeftClick,
+        onSingleClick = onSingleClick
     )
-    LaunchedEffect(rightBoxToggled) {
-        if (rightBoxToggled) {
-            delay(300)
-            rightBoxToggled = false
-        }
-    }
-    Box(
-        contentAlignment = Alignment.Center,
+
+    QuickRewindBox(
         modifier = Modifier
             .align(Alignment.CenterEnd)
+            .fillMaxWidth(0.2f),
+        label = "+5 секунд",
+        onDoubleClick = onRightClick,
+        onSingleClick = onSingleClick
+    )
+}
+
+@Composable
+private fun QuickRewindBox(
+    modifier: Modifier,
+    label: String,
+    onDoubleClick: () -> Unit,
+    onSingleClick: () -> Unit
+) {
+    var toggled by rememberSaveable { mutableStateOf(false) }
+
+    val labelAlpha by animateFloatAsState(
+        targetValue = if (toggled) 1f else 0f
+    )
+
+    LaunchedEffect(toggled) {
+        if (toggled) {
+            delay(300)
+            toggled = false
+        }
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
             .zIndex(1f)
             .fillMaxHeight()
-            .fillMaxWidth(0.2f)
             .combinedClickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onSingleClick,
                 onDoubleClick = {
-                    onRightClick()
-                    rightBoxToggled = true
+                    onDoubleClick()
+                    toggled = true
                 }
             )
     ) {
         Text(
-            text = "+5 секунд",
+            text = label,
             style = mTypography.bodyLarge,
-            modifier = Modifier.alpha(rightLabelAlpha),
-            color = Color(0xFFFFFFFF)
+            modifier = Modifier.alpha(labelAlpha),
+            color = Color.White
         )
     }
 }
