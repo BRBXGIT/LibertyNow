@@ -32,6 +32,7 @@ import com.example.player_screen.sections.Header
 import com.example.player_screen.sections.Player
 import com.example.player_screen.sections.QuickRewindSection
 import com.example.player_screen.sections.SelectEpisodeAD
+import com.example.player_screen.sections.SkipOpeningButton
 import com.example.player_screen.sections.UnlockButton
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.common.reflect.TypeToken
@@ -230,6 +231,22 @@ fun PlayerScreen(
                             bottomPadding = innerPadding.calculateBottomPadding() + 12.dp
                         )
                     }
+                }
+            }
+
+            AnimatedVisibility(
+                visible = screenState.isSkipOpeningButtonVisible,
+                enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
+                exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION)),
+                modifier = Modifier.zIndex(2f)
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    SkipOpeningButton(
+                        onClick = {},
+                        secondsLeft = screenState.skipOpeningButtonTimer
+                    )
                 }
             }
 

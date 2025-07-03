@@ -24,5 +24,7 @@ data class PlayerScreenState(
     val isSelectEpisodeADVisible: Boolean = false,
     val isUserSeeking: Boolean = false,
     val isUnlockButtonVisible: Boolean = false,
-    val isSkipOpeningButtonVisible: Boolean = false
+    val isSkipOpeningButtonVisible: Boolean = false,
+
+    val skipOpeningButtonTimer: Int = 5
 )

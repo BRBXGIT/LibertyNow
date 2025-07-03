@@ -48,8 +48,12 @@ class PlayerScreenVM @Inject constructor(
 
         player.addListener(object : Player.Listener {
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                _playerScreenState.update { state ->
-                    state.copy(
+                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                    _playerScreenState.value = PlayerScreenState(
+                        currentAnimeId = _playerScreenState.value.currentAnimeId + 1,
+                        currentLink = _playerScreenState.value.links[_playerScreenState.value.currentAnimeId + 1],
+                        host = _playerScreenState.value.host,
+                        links = _playerScreenState.value.links,
                         isPlaying = IsPlayingState.Playing,
                         duration = player.contentDuration
                     )
