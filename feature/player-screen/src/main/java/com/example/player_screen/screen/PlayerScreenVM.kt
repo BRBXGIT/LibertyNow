@@ -232,6 +232,16 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    fun observeShowSkipOpeningButton() {
+        viewModelScope.launch(dispatcherIo) {
+            playerFeaturesRepository.showSkipOpeningButton.collect { show ->
+                _playerScreenState.update { state ->
+                    state.copy(showSkipOpeningButton = show != false)
+                }
+            }
+        }
+    }
+
     private fun changePlayerFeature(featureType: FeatureType) {
         viewModelScope.launch(dispatcherIo) {
             when(featureType) {
@@ -259,5 +269,9 @@ class PlayerScreenVM @Inject constructor(
 
             is PlayerScreenIntent.ChangePlayerFeature -> changePlayerFeature(intent.feature)
         }
+    }
+
+    init {
+        observeShowSkipOpeningButton()
     }
 }

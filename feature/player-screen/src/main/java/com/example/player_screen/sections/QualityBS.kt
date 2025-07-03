@@ -42,7 +42,7 @@ fun QualityBS(
         HorizontalDivider(modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp))
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(16.dp)
         ) {
             items(qualityItems) { item ->

@@ -139,7 +139,10 @@ fun PlayerScreen(
                     onQualityClick = {
                         viewModel.sendIntent(
                             PlayerScreenIntent.UpdateScreenState(
-                                screenState.copy(isQualityBSVisible = true)
+                                screenState.copy(
+                                    isQualityBSVisible = true,
+                                    isSettingsBSVisible = false
+                                )
                             )
                         )
                     },
@@ -147,10 +150,20 @@ fun PlayerScreen(
                         viewModel.sendIntent(
                             PlayerScreenIntent.ChangePlayerFeature(FeatureType.AutoPlay)
                         )
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isSettingsBSVisible = false)
+                            )
+                        )
                     },
                     onShowSkipOpeningButtonClick = {
                         viewModel.sendIntent(
                             PlayerScreenIntent.ChangePlayerFeature(FeatureType.ShowSkipOpeningButton)
+                        )
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isSettingsBSVisible = false)
+                            )
                         )
                     }
                 )
@@ -161,6 +174,11 @@ fun PlayerScreen(
                     onClick = {
                         viewModel.sendIntent(
                             PlayerScreenIntent.ChangePlayerFeature(FeatureType.VideoQuality(it))
+                        )
+                        viewModel.sendIntent(
+                            PlayerScreenIntent.UpdateScreenState(
+                                screenState.copy(isQualityBSVisible = false)
+                            )
                         )
                     },
                     onDismissRequest = {
