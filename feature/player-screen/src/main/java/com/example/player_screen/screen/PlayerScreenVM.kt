@@ -9,6 +9,7 @@ import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
+import com.example.data.domain.PlayerFeaturesRepo
 import com.example.design_system.theme.CommonConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,6 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerScreenVM @Inject constructor(
     val player: ExoPlayer,
+    private val playerFeaturesRepository: PlayerFeaturesRepo,
+    @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher,
     @Dispatcher(LibriaNowDispatchers.Default) private val dispatcherDefault: CoroutineDispatcher,
     @Dispatcher(LibriaNowDispatchers.Main) private val dispatcherMain: CoroutineDispatcher
 ): ViewModel() {
@@ -72,7 +75,6 @@ class PlayerScreenVM @Inject constructor(
             }
         })
 
-        player.play()
         trackCurrentPosition()
     }
 
