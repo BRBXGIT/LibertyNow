@@ -63,7 +63,7 @@ fun BottomNavBar(
 private fun BottomNavBarPreview() {
     LibriaNowTheme {
         BottomNavBar(
-            selectedItemIndex = 0,
+            selectedItemIndex = 3,
             onNavItemClick = { index, route ->
 
             },

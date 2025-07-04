@@ -19,7 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,16 +43,23 @@ class AuthVM @Inject constructor(
         _authState.value = state
     }
 
-    private fun fetchSessionToken() {
+    private fun observeSessionToken() {
         viewModelScope.launch(dispatcherIo) {
-            _authState.update { state ->
-                state.copy(
-                    isLogged = authRepository.loggingState.first(),
-                    sessionToken = authRepository.userSessionToken.first()
-                )
-            }
-            if (_authState.value.isLogged is LoggingState.LoggedIn) {
-                fetchLikesAmount()
+            combine(
+                authRepository.loggingState,
+                authRepository.userSessionToken
+            ) { loggingState, token ->
+                loggingState to token
+            }.collect { (loggingState, token) ->
+                _authState.update { state ->
+                    state.copy(
+                        isLogged = loggingState,
+                        sessionToken = token
+                    )
+                }
+                if (loggingState is LoggingState.LoggedIn) {
+                    fetchLikesAmount()
+                }
             }
         }
     }
@@ -72,7 +79,7 @@ class AuthVM @Inject constructor(
             when (response.error) {
                 NetworkErrors.SUCCESS -> {
                     authRepository.saveUserSessionToken((response.response as SessionTokenResponse).sessionId)
-                    fetchSessionToken()
+                    observeSessionToken()
                 }
                 NetworkErrors.INCORRECT_PASSWORD -> {
                     _authState.update { state ->
@@ -261,16 +268,25 @@ class AuthVM @Inject constructor(
         }
     }
 
+    private fun clearSessionToken() {
+        viewModelScope.launch(dispatcherIo) {
+            authRepository.clearUserSessionToken()
+        }
+    }
+
     fun sendIntent(intent: AuthIntent) {
         when (intent) {
             is AuthIntent.GetSessionToken -> getSessionToken()
+            is AuthIntent.ClearSessionToken -> clearSessionToken()
+
             is AuthIntent.UpdateAuthState -> updateAuthState(intent.state)
+
             is AuthIntent.AddLike -> addLike(intent.title)
             is AuthIntent.RemoveLike -> removeLike(intent.title)
         }
     }
 
     init {
-        fetchSessionToken()
+        observeSessionToken()
     }
 }

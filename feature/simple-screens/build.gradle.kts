@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.navbar_screens"
+    namespace = "com.example.simple_screens"
     compileSdk = 35
 
     defaultConfig {
@@ -34,14 +34,6 @@ dependencies {
 
     // Core modules
     implementation(project(":core:design-system"))
-    implementation(project(":core:data"))
-    implementation(project(":core:network"))
-    implementation(project(":core:common"))
-    implementation(project(":core:local"))
-    // Feature modules
-    implementation(project(":feature:anime-screen"))
-    implementation(project(":feature:simple-screens"))
-    implementation(project(":feature:common"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -56,11 +48,4 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    // Paging
-    implementation(libs.androidx.paging.compose)
-    implementation(libs.androidx.paging.runtime.ktx)
-    // Json
-    implementation(libs.converter.gson)
-    // Animated icons(compose animation graphics)
-    implementation(libs.androidx.animation.graphics)
 }

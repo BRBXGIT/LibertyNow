@@ -54,6 +54,7 @@ dependencies {
     implementation(project(":feature:navbar-screens"))
     implementation(project(":feature:anime-screen"))
     implementation(project(":feature:player-screen"))
+    implementation(project(":feature:simple-screens"))
     implementation(project(":feature:common"))
 
     // Hilt

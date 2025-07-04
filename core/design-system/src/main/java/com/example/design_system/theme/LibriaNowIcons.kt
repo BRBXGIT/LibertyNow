@@ -19,6 +19,9 @@ object LibriaNowIcons {
     val Unlock = R.drawable.ic_unlock
     val Lock = R.drawable.ic_lock
     val PictureInPicture = R.drawable.ic_picture_in_picture
+    val Exit = R.drawable.ic_exit
+    val Group = R.drawable.ic_group
+    val Gift = R.drawable.ic_gift
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
@@ -36,11 +39,19 @@ object LibriaNowIcons {
     val HomeAnimated = R.drawable.ic_home_animated
     val HeartAnimated = R.drawable.ic_heart_animated
     val MagnifierAnimated = R.drawable.ic_magnifier_animated
-    val SettingsAnimated = R.drawable.ic_settings_animated
+    val MoreAnimated = R.drawable.ic_more_animated
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
     val EyeAnimated = R.drawable.ic_eye_animated
     val PlayAnimated = R.drawable.ic_play_pause_animated
     val CropAnimated = R.drawable.ic_crop_animated
+
+    // Multicolored
+    val AniLiberty = R.drawable.ic_aniliberty_multicolored
+    val VKMulticolored = R.drawable.ic_vk_multicolored
+    val YouTubeMulticolored = R.drawable.ic_youtube_multicolored
+    val PatreonMulticolored = R.drawable.ic_patreon_multicolored
+    val TelegramMulticolored = R.drawable.ic_telegram_multicolored
+    val DiscordMulticolored = R.drawable.ic_discord_multicolored
 
     // Images
     val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light
