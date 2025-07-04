@@ -92,6 +92,18 @@ fun PlayerScreen(
         navController.navigateUp()
     }
 
+    LaunchedEffect(screenState.isPlaying) {
+        if (activity.isInPictureInPictureMode) {
+            val isPlayingNow = when (screenState.isPlaying) {
+                IsPlayingState.Paused -> false
+                else -> true
+            }
+            updatedPipParams(context, isPlayingNow)?.let { params ->
+                activity.setPictureInPictureParams(params)
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -301,7 +313,13 @@ fun PlayerScreen(
                                         screenState.copy(isControllerVisible = false)
                                     )
                                 )
-                                updatedPipParams(context)?.let { params ->
+                                updatedPipParams(
+                                    context = context,
+                                    isPlaying = when(screenState.isPlaying) {
+                                        IsPlayingState.Paused -> false
+                                        else -> true
+                                    }
+                                )?.let { params ->
                                     activity.enterPictureInPictureMode(params)
                                 }
                             }
@@ -417,13 +435,14 @@ private fun AnimatedVisibilityContent(
     }
 }
 
-private fun updatedPipParams(context: Context): PictureInPictureParams? {
+private fun updatedPipParams(context: Context, isPlaying: Boolean): PictureInPictureParams? {
     return PictureInPictureParams.Builder()
         .setSourceRectHint(videoViewBounds)
         .setAspectRatio(Rational(16, 9))
         .setActions(
             listOf(
                 createSkipEpisodeRemoteAction(context, false),
+                createPlayPauseRemoteAction(context, isPlaying),
                 createSkipEpisodeRemoteAction(context, true)
             )
         )
