@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/feature/navbar-screens" />
             <option value="$PROJECT_DIR$/feature/onboarding-screen" />
             <option value="$PROJECT_DIR$/feature/player-screen" />
+            <option value="$PROJECT_DIR$/feature/simple-screens" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -22,6 +22,9 @@ import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.more_screen.sections.MoreLC
 import com.example.navbar_screens.more_screen.sections.MoreScreenTopBar
 import com.example.navbar_screens.more_screen.sections.QuitAccountAD
+import com.example.simple_screens.project_team_screen.navigation.ProjectTeamScreenRoute
+import com.example.simple_screens.settings_screen.navigation.SettingsScreenRoute
+import com.example.simple_screens.support_screen.navigation.SupportScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,9 +90,9 @@ fun MoreScreen(
             }
 
             MoreLC(
-                onProjectTeamClick = {},
-                onSupportClick = {},
-                onSettingsClick = {}
+                onProjectTeamClick = { navController.navigate(ProjectTeamScreenRoute) },
+                onSupportClick = { navController.navigate(SupportScreenRoute) },
+                onSettingsClick = { navController.navigate(SettingsScreenRoute) }
             )
         }
     }
