@@ -22,6 +22,7 @@ object LibriaNowIcons {
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
+    val ArrowRightFilled = R.drawable.ic_arrow_right_filled
     val DoubleArrowUpFilled = R.drawable.ic_double_arrow_up_filled
     val DoubleArrowDownFilled = R.drawable.ic_double_arrow_down_filled
     val DownloadFilled = R.drawable.ic_download_filled

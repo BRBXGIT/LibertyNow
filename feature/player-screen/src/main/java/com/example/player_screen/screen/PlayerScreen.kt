@@ -1,10 +1,15 @@
 package com.example.player_screen.screen
 
 import android.app.Activity
+import android.app.PendingIntent
 import android.app.PictureInPictureParams
+import android.app.RemoteAction
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.graphics.drawable.Icon
 import android.util.Rational
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -28,6 +33,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.CommonConstants
+import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
 import com.example.player_screen.sections.CentralButtonsSection
@@ -299,7 +305,7 @@ fun PlayerScreen(
                                         screenState.copy(isControllerVisible = false)
                                     )
                                 )
-                                updatedPipParams()?.let { params ->
+                                updatedPipParams(context)?.let { params ->
                                     activity.enterPictureInPictureMode(params)
                                 }
                             }
@@ -416,9 +422,41 @@ private fun AnimatedVisibilityContent(
 }
 
 
-private fun updatedPipParams(): PictureInPictureParams? {
+private fun updatedPipParams(context: Context): PictureInPictureParams? {
     return PictureInPictureParams.Builder()
         .setSourceRectHint(videoViewBounds)
         .setAspectRatio(Rational(16, 9))
+        .setActions(
+            listOf(
+                RemoteAction(
+                    Icon.createWithResource(
+                        context,
+                        LibriaNowIcons.ArrowLeftFilled
+                    ),
+                    "Change episode to previous",
+                    "Skip to the previous episode",
+                    PendingIntent.getBroadcast(
+                        context,
+                        0,
+                        Intent(context, SkipEpisodeReceiver::class.java),
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                ),
+                RemoteAction(
+                    Icon.createWithResource(
+                        context,
+                        LibriaNowIcons.ArrowRightFilled
+                    ),
+                    "Change episode to next",
+                    "Skip to the next episode",
+                    PendingIntent.getBroadcast(
+                        context,
+                        0,
+                        Intent(context, SkipEpisodeReceiver::class.java),
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                ),
+            )
+        )
         .build()
 }
