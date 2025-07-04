@@ -12,13 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,10 +47,28 @@ data class ColorSystemPreviewColors(
     val secondary: Color,
     val onSecondaryContainer: Color,
     val primary: Color,
+    val tertiary: Color,
     val name: String,
     val previewName: String,
-    val tertiary: Color,
 )
+
+fun colorSystemFromScheme(
+    scheme: ColorScheme,
+    name: String,
+    previewName: String
+): ColorSystemPreviewColors {
+    return ColorSystemPreviewColors(
+        secondaryContainer = scheme.secondaryContainer,
+        background = scheme.background,
+        surfaceContainerHighest = scheme.surfaceContainerHighest,
+        secondary = scheme.secondary,
+        onSecondaryContainer = scheme.onSecondaryContainer,
+        primary = scheme.primary,
+        tertiary = scheme.tertiary,
+        name = name,
+        previewName = previewName
+    )
+}
 
 @Composable
 fun ColorSystemElements(
@@ -59,238 +77,65 @@ fun ColorSystemElements(
     onColorSystemClick: (String) -> Unit
 ) {
     val darkColorSystems = listOf(
-        ColorSystemPreviewColors(
-            secondaryContainer = DarkColorScheme.secondaryContainer,
-            background = DarkColorScheme.background,
-            surfaceContainerHighest = DarkColorScheme.surfaceContainerHighest,
-            secondary = DarkColorScheme.secondary,
-            onSecondaryContainer = DarkColorScheme.onSecondaryContainer,
-            primary = DarkColorScheme.primary,
-            name = "darkScheme",
-            previewName = "Default",
-            tertiary = DarkColorScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = darkGreenAppleScheme.secondaryContainer,
-            background = darkGreenAppleScheme.background,
-            surfaceContainerHighest = darkGreenAppleScheme.surfaceContainerHighest,
-            secondary = darkGreenAppleScheme.secondary,
-            onSecondaryContainer = darkGreenAppleScheme.onSecondaryContainer,
-            primary = darkGreenAppleScheme.primary,
-            name = "darkGreenApple",
-            previewName = "Green apple",
-            tertiary = darkGreenAppleScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = darkSakuraScheme.secondaryContainer,
-            background = darkSakuraScheme.background,
-            surfaceContainerHighest = darkSakuraScheme.surfaceContainerHighest,
-            secondary = darkSakuraScheme.secondary,
-            onSecondaryContainer = darkSakuraScheme.onSecondaryContainer,
-            primary = darkSakuraScheme.primary,
-            name = "darkSakura",
-            previewName = "Sakura",
-            tertiary = darkSakuraScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = darkTacosScheme.secondaryContainer,
-            background = darkTacosScheme.background,
-            surfaceContainerHighest = darkTacosScheme.surfaceContainerHighest,
-            secondary = darkTacosScheme.secondary,
-            onSecondaryContainer = darkTacosScheme.onSecondaryContainer,
-            primary = darkTacosScheme.primary,
-            name = "darkTacos",
-            previewName = "Tacos",
-            tertiary = darkTacosScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = darkLavenderScheme.secondaryContainer,
-            background = darkLavenderScheme.background,
-            surfaceContainerHighest = darkLavenderScheme.surfaceContainerHighest,
-            secondary = darkLavenderScheme.secondary,
-            onSecondaryContainer = darkLavenderScheme.onSecondaryContainer,
-            primary = darkLavenderScheme.primary,
-            name = "darkLavender",
-            previewName = "Lavender",
-            tertiary = darkLavenderScheme.tertiary
-        ),
+        colorSystemFromScheme(DarkColorScheme, "darkScheme", "AniLiberty"),
+        colorSystemFromScheme(darkGreenAppleScheme, "darkGreenApple", "Яблоко"),
+        colorSystemFromScheme(darkSakuraScheme, "darkSakura", "Сакура"),
+        colorSystemFromScheme(darkTacosScheme, "darkTacos", "Тако"),
+        colorSystemFromScheme(darkLavenderScheme, "darkLavender", "Лаванда")
     )
 
     val lightColorSystems = listOf(
-        ColorSystemPreviewColors(
-            secondaryContainer = LightColorScheme.secondaryContainer,
-            background = LightColorScheme.background,
-            surfaceContainerHighest = LightColorScheme.surfaceContainerHighest,
-            secondary = LightColorScheme.secondary,
-            onSecondaryContainer = LightColorScheme.onSecondaryContainer,
-            primary = LightColorScheme.primary,
-            name = "light",
-            previewName = "Default",
-            tertiary = LightColorScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = lightGreenAppleScheme.secondaryContainer,
-            background = lightGreenAppleScheme.background,
-            surfaceContainerHighest = lightGreenAppleScheme.surfaceContainerHighest,
-            secondary = lightGreenAppleScheme.secondary,
-            onSecondaryContainer = lightGreenAppleScheme.onSecondaryContainer,
-            primary = lightGreenAppleScheme.primary,
-            name = "lightGreenApple",
-            previewName = "Green apple",
-            tertiary = lightGreenAppleScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = lightSakuraScheme.secondaryContainer,
-            background = lightSakuraScheme.background,
-            surfaceContainerHighest = lightSakuraScheme.surfaceContainerHighest,
-            secondary = lightSakuraScheme.secondary,
-            onSecondaryContainer = lightSakuraScheme.onSecondaryContainer,
-            primary = lightSakuraScheme.primary,
-            name = "lightSakura",
-            previewName = "Sakura",
-            tertiary = lightSakuraScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = lightTacosScheme.secondaryContainer,
-            background = lightTacosScheme.background,
-            surfaceContainerHighest = lightTacosScheme.surfaceContainerHighest,
-            secondary = lightTacosScheme.secondary,
-            onSecondaryContainer = lightTacosScheme.onSecondaryContainer,
-            primary = lightTacosScheme.primary,
-            name = "lightTacos",
-            previewName = "Tacos",
-            tertiary = lightTacosScheme.tertiary
-        ),
-        ColorSystemPreviewColors(
-            secondaryContainer = lightLavenderScheme.secondaryContainer,
-            background = lightLavenderScheme.background,
-            surfaceContainerHighest = lightLavenderScheme.surfaceContainerHighest,
-            secondary = lightLavenderScheme.secondary,
-            onSecondaryContainer = lightLavenderScheme.onSecondaryContainer,
-            primary = lightLavenderScheme.primary,
-            name = "lightLavender",
-            previewName = "Lavender",
-            tertiary = lightLavenderScheme.tertiary
-        ),
+        colorSystemFromScheme(LightColorScheme, "light", "AniLiberty"),
+        colorSystemFromScheme(lightGreenAppleScheme, "lightGreenApple", "Яблоко"),
+        colorSystemFromScheme(lightSakuraScheme, "lightSakura", "Сакура"),
+        colorSystemFromScheme(lightTacosScheme, "lightTacos", "Тако"),
+        colorSystemFromScheme(lightLavenderScheme, "lightLavender", "Лаванда")
     )
 
-    val darkThemeBySystem = isSystemInDarkTheme()
+    val isDark = isSystemInDarkTheme()
+    val colorSystems = when (chosenTheme) {
+        "dark" -> darkColorSystems
+        "light" -> lightColorSystems
+        "default" -> if (isDark) darkColorSystems else lightColorSystems
+        else -> lightColorSystems
+    }
+
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(
-            horizontal = 16.dp
-        )
+        contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        when(chosenTheme) {
-            "default" -> if(darkThemeBySystem) {
-                items(darkColorSystems) { colorSystem ->
-                    ColorSystemPreview(
-                        tertiary = colorSystem.tertiary,
-                        secondaryContainer = colorSystem.secondaryContainer,
-                        background = colorSystem.background,
-                        surfaceContainerHighest = colorSystem.surfaceContainerHighest,
-                        secondary = colorSystem.secondary,
-                        onSecondaryContainer = colorSystem.onSecondaryContainer,
-                        primary = colorSystem.primary,
-                        chosenColorSystem = chosenColorSystem,
-                        name = colorSystem.name,
-                        previewName = colorSystem.previewName,
-                        onClick = { onColorSystemClick(colorSystem.name) }
-                    )
-                }
-            } else {
-                items(lightColorSystems) { colorSystem ->
-                    ColorSystemPreview(
-                        tertiary = colorSystem.tertiary,
-                        secondaryContainer = colorSystem.secondaryContainer,
-                        background = colorSystem.background,
-                        surfaceContainerHighest = colorSystem.surfaceContainerHighest,
-                        secondary = colorSystem.secondary,
-                        onSecondaryContainer = colorSystem.onSecondaryContainer,
-                        primary = colorSystem.primary,
-                        chosenColorSystem = chosenColorSystem,
-                        name = colorSystem.name,
-                        previewName = colorSystem.previewName,
-                        onClick = { onColorSystemClick(colorSystem.name) }
-                    )
-                }
-            }
-            "light" -> {
-                items(lightColorSystems) { colorSystem ->
-                    ColorSystemPreview(
-                        tertiary = colorSystem.tertiary,
-                        secondaryContainer = colorSystem.secondaryContainer,
-                        background = colorSystem.background,
-                        surfaceContainerHighest = colorSystem.surfaceContainerHighest,
-                        secondary = colorSystem.secondary,
-                        onSecondaryContainer = colorSystem.onSecondaryContainer,
-                        primary = colorSystem.primary,
-                        chosenColorSystem = chosenColorSystem,
-                        name = colorSystem.name,
-                        previewName = colorSystem.previewName,
-                        onClick = { onColorSystemClick(colorSystem.name) }
-                    )
-                }
-            }
-            "dark" -> {
-                items(darkColorSystems) { colorSystem ->
-                    ColorSystemPreview(
-                        tertiary = colorSystem.tertiary,
-                        secondaryContainer = colorSystem.secondaryContainer,
-                        background = colorSystem.background,
-                        surfaceContainerHighest = colorSystem.surfaceContainerHighest,
-                        secondary = colorSystem.secondary,
-                        onSecondaryContainer = colorSystem.onSecondaryContainer,
-                        primary = colorSystem.primary,
-                        chosenColorSystem = chosenColorSystem,
-                        name = colorSystem.name,
-                        previewName = colorSystem.previewName,
-                        onClick = { onColorSystemClick(colorSystem.name) }
-                    )
-                }
-            }
+        items(colorSystems) { colorSystem ->
+            ColorSystemPreview(
+                colorSystem = colorSystem,
+                isChosen = colorSystem.name == chosenColorSystem,
+                onClick = { onColorSystemClick(colorSystem.name) }
+            )
         }
     }
 }
 
 @Composable
 private fun ColorSystemPreview(
-    tertiary: Color,
-    secondaryContainer: Color,
-    background: Color,
-    surfaceContainerHighest: Color,
-    secondary: Color,
-    onSecondaryContainer: Color,
-    primary: Color,
-    chosenColorSystem: String,
-    name: String,
-    previewName: String,
+    colorSystem: ColorSystemPreviewColors,
+    isChosen: Boolean,
     onClick: () -> Unit
 ) {
-    val chosen = chosenColorSystem == name
-
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .width(110.dp)
-                .height(180.dp)
-                .background(
-                    shape = mShapes.small,
-                    color = background
-                )
+                .size(width = 110.dp, height = 180.dp)
+                .background(color = colorSystem.background, shape = mShapes.small)
                 .border(
-                    width = if(chosen) 2.dp else 1.dp,
-                    color = if(chosen) mColors.primary else mColors.secondary,
+                    width = if (isChosen) 2.dp else 1.dp,
+                    color = if (isChosen) mColors.primary else mColors.secondary,
                     shape = mShapes.small
                 )
                 .clip(mShapes.small)
-                .clickable {
-                    onClick()
-                }
+                .clickable { onClick() }
         ) {
             Box(
                 modifier = Modifier
@@ -298,10 +143,10 @@ private fun ColorSystemPreview(
                     .fillMaxWidth()
                     .height(20.dp)
                     .background(
-                        color = surfaceContainerHighest,
+                        color = colorSystem.surfaceContainerHighest,
                         shape = mShapes.small.copy(
-                            bottomEnd = CornerSize(0.dp),
-                            bottomStart = CornerSize(0.dp)
+                            bottomStart = CornerSize(0.dp),
+                            bottomEnd = CornerSize(0.dp)
                         )
                     )
             )
@@ -316,44 +161,40 @@ private fun ColorSystemPreview(
                 items(3) {
                     Box(
                         modifier = Modifier
-                            .size(1.dp, 60.dp)
+                            .size(width = 1.dp, height = 60.dp)
                             .background(
-                                color = surfaceContainerHighest,
+                                color = colorSystem.surfaceContainerHighest,
                                 shape = mShapes.extraSmall
                             )
                     ) {
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
                                 .height(15.dp)
                                 .background(
-                                    color = secondaryContainer,
+                                    color = colorSystem.secondaryContainer,
                                     shape = mShapes.extraSmall.copy(
-                                        topEnd = CornerSize(0.dp),
                                         topStart = CornerSize(0.dp),
+                                        topEnd = CornerSize(0.dp)
                                     )
-                                )
+                                ),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Box(
                                 modifier = Modifier
                                     .padding(start = 4.dp, top = 2.dp)
-                                    .size(30.dp, 3.dp)
+                                    .size(width = 30.dp, height = 3.dp)
                                     .background(
-                                        color = onSecondaryContainer,
+                                        colorSystem.onSecondaryContainer,
                                         shape = mShapes.extraSmall
                                     )
                             )
-
                             Box(
                                 modifier = Modifier
                                     .padding(start = 4.dp, bottom = 2.dp)
-                                    .size(20.dp, 3.dp)
-                                    .background(
-                                        color = secondary,
-                                        shape = mShapes.extraSmall
-                                    )
+                                    .size(width = 20.dp, height = 3.dp)
+                                    .background(colorSystem.secondary, shape = mShapes.extraSmall)
                             )
                         }
                     }
@@ -361,48 +202,39 @@ private fun ColorSystemPreview(
             }
 
             Box(
-                contentAlignment = Alignment.CenterStart,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height(20.dp)
                     .background(
-                        color = surfaceContainerHighest,
+                        color = colorSystem.surfaceContainerHighest,
                         shape = mShapes.small.copy(
-                            topEnd = CornerSize(0.dp),
-                            topStart = CornerSize(0.dp)
+                            topStart = CornerSize(0.dp),
+                            topEnd = CornerSize(0.dp)
                         )
                     )
-                    .padding(end = 4.dp)
+                    .padding(horizontal = 4.dp),
+                contentAlignment = Alignment.CenterStart
             ) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    contentPadding = PaddingValues(
-                        horizontal = 4.dp
-                    )
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     items(4) {
                         Box(
                             modifier = Modifier
-                                .size(
-                                    height = 8.dp,
-                                    width = 12.dp
-                                )
-                                .background(
-                                    shape = CircleShape,
-                                    color = secondaryContainer
-                                ),
+                                .size(width = 12.dp, height = 8.dp)
+                                .background(colorSystem.secondaryContainer, shape = CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Box(
                                 modifier = Modifier
                                     .size(2.dp)
                                     .background(
-                                        color = onSecondaryContainer,
+                                        colorSystem.onSecondaryContainer,
                                         shape = CircleShape
-                                    ),
+                                    )
                             )
                         }
                     }
@@ -411,7 +243,7 @@ private fun ColorSystemPreview(
         }
 
         Text(
-            text = previewName,
+            text = colorSystem.previewName,
             style = mTypography.labelMedium
         )
     }

@@ -16,7 +16,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mShapes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,5 +59,16 @@ fun VideoQualityBS(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun VideoQualityBSPreview() {
+    LibriaNowTheme {
+        VideoQualityBS(
+            onDismissRequest = {},
+            onSetQualityClick = {},
+        )
     }
 }
