@@ -354,7 +354,18 @@ fun PlayerScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     SkipOpeningButton(
-                        onClick = {},
+                        onClick = {
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.SeekEpisode(
+                                    seekTo = (screenState.links[screenState.currentAnimeId].skips.opening[1]!! * 1000).toLong()
+                                )
+                            )
+                            viewModel.sendIntent(
+                                PlayerScreenIntent.UpdateScreenState(
+                                    screenState.copy(isSkipOpeningButtonVisible = false)
+                                )
+                            )
+                        },
                         secondsLeft = screenState.skipOpeningButtonTimer
                     )
                 }
