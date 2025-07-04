@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 class AppThemeManager(
     private val context: Context
 ) {
-    private val Context.dataStore by preferencesDataStore(name = "libria_now_auth_prefs")
+    private val Context.dataStore by preferencesDataStore(name = "libria_now_theme_prefs")
 
     // Keys
     companion object {
