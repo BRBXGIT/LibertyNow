@@ -79,7 +79,7 @@ val LightColorScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight,
 )
 
-val lightTacosScheme = lightColorScheme(
+val LightTacosScheme = lightColorScheme(
     primary = primaryTacosLight,
     onPrimary = onPrimaryTacosLight,
     primaryContainer = primaryContainerTacosLight,
@@ -117,7 +117,7 @@ val lightTacosScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestTacosLight,
 )
 
-val darkTacosScheme = darkColorScheme(
+val DarkTacosScheme = darkColorScheme(
     primary = primaryTacosDark,
     onPrimary = onPrimaryTacosDark,
     primaryContainer = primaryContainerTacosDark,
@@ -155,7 +155,7 @@ val darkTacosScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestTacosDark,
 )
 
-val lightLavenderScheme = lightColorScheme(
+val LightLavenderScheme = lightColorScheme(
     primary = primaryLavenderLight,
     onPrimary = onPrimaryLavenderLight,
     primaryContainer = primaryContainerLavenderLight,
@@ -193,7 +193,7 @@ val lightLavenderScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLavenderLight,
 )
 
-val darkLavenderScheme = darkColorScheme(
+val DarkLavenderScheme = darkColorScheme(
     primary = primaryLavenderDark,
     onPrimary = onPrimaryLavenderDark,
     primaryContainer = primaryContainerLavenderDark,
@@ -231,7 +231,7 @@ val darkLavenderScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLavenderDark,
 )
 
-val lightGreenAppleScheme = lightColorScheme(
+val LightGreenAppleScheme = lightColorScheme(
     primary = primaryGreenAppleLight,
     onPrimary = onPrimaryGreenAppleLight,
     primaryContainer = primaryContainerGreenAppleLight,
@@ -269,7 +269,7 @@ val lightGreenAppleScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestGreenAppleLight,
 )
 
-val darkGreenAppleScheme = darkColorScheme(
+val DarkGreenAppleScheme = darkColorScheme(
     primary = primaryGreenAppleDark,
     onPrimary = onPrimaryGreenAppleDark,
     primaryContainer = primaryContainerGreenAppleDark,
@@ -307,7 +307,7 @@ val darkGreenAppleScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestGreenAppleDark,
 )
 
-val lightSakuraScheme = lightColorScheme(
+val LightSakuraScheme = lightColorScheme(
     primary = primarySakuraLight,
     onPrimary = onPrimarySakuraLight,
     primaryContainer = primaryContainerSakuraLight,
@@ -345,7 +345,7 @@ val lightSakuraScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestSakuraLight
 )
 
-val darkSakuraScheme = darkColorScheme(
+val DarkSakuraScheme = darkColorScheme(
     primary = primarySakuraDark,
     onPrimary = onPrimarySakuraDark,
     primaryContainer = primaryContainerSakuraDark,
@@ -381,4 +381,80 @@ val darkSakuraScheme = darkColorScheme(
     surfaceContainer = surfaceContainerSakuraDark,
     surfaceContainerHigh = surfaceContainerHighSakuraDark,
     surfaceContainerHighest = surfaceContainerHighestSakuraDark,
+)
+
+val LightSeaScheme = lightColorScheme(
+    primary = primarySeaLight,
+    onPrimary = onPrimarySeaLight,
+    primaryContainer = primaryContainerSeaLight,
+    onPrimaryContainer = onPrimaryContainerSeaLight,
+    secondary = secondarySeaLight,
+    onSecondary = onSecondarySeaLight,
+    secondaryContainer = secondaryContainerSeaLight,
+    onSecondaryContainer = onSecondaryContainerSeaLight,
+    tertiary = tertiarySeaLight,
+    onTertiary = onTertiarySeaLight,
+    tertiaryContainer = tertiaryContainerSeaLight,
+    onTertiaryContainer = onTertiaryContainerSeaLight,
+    error = errorSeaLight,
+    onError = onErrorSeaLight,
+    errorContainer = errorContainerSeaLight,
+    onErrorContainer = onErrorContainerSeaLight,
+    background = backgroundSeaLight,
+    onBackground = onBackgroundSeaLight,
+    surface = surfaceSeaLight,
+    onSurface = onSurfaceSeaLight,
+    surfaceVariant = surfaceVariantSeaLight,
+    onSurfaceVariant = onSurfaceVariantSeaLight,
+    outline = outlineSeaLight,
+    outlineVariant = outlineVariantSeaLight,
+    scrim = scrimSeaLight,
+    inverseSurface = inverseSurfaceSeaLight,
+    inverseOnSurface = inverseOnSurfaceSeaLight,
+    inversePrimary = inversePrimarySeaLight,
+    surfaceDim = surfaceDimSeaLight,
+    surfaceBright = surfaceBrightSeaLight,
+    surfaceContainerLowest = surfaceContainerLowestSeaLight,
+    surfaceContainerLow = surfaceContainerLowSeaLight,
+    surfaceContainer = surfaceContainerSeaLight,
+    surfaceContainerHigh = surfaceContainerHighSeaLight,
+    surfaceContainerHighest = surfaceContainerHighestSeaLight,
+)
+
+val DarkSeaScheme = darkColorScheme(
+    primary = primarySeaDark,
+    onPrimary = onPrimarySeaDark,
+    primaryContainer = primaryContainerSeaDark,
+    onPrimaryContainer = onPrimaryContainerSeaDark,
+    secondary = secondarySeaDark,
+    onSecondary = onSecondarySeaDark,
+    secondaryContainer = secondaryContainerSeaDark,
+    onSecondaryContainer = onSecondaryContainerSeaDark,
+    tertiary = tertiarySeaDark,
+    onTertiary = onTertiarySeaDark,
+    tertiaryContainer = tertiaryContainerSeaDark,
+    onTertiaryContainer = onTertiaryContainerSeaDark,
+    error = errorSeaDark,
+    onError = onErrorSeaDark,
+    errorContainer = errorContainerSeaDark,
+    onErrorContainer = onErrorContainerSeaDark,
+    background = backgroundSeaDark,
+    onBackground = onBackgroundSeaDark,
+    surface = surfaceSeaDark,
+    onSurface = onSurfaceSeaDark,
+    surfaceVariant = surfaceVariantSeaDark,
+    onSurfaceVariant = onSurfaceVariantSeaDark,
+    outline = outlineSeaDark,
+    outlineVariant = outlineVariantSeaDark,
+    scrim = scrimSeaDark,
+    inverseSurface = inverseSurfaceSeaDark,
+    inverseOnSurface = inverseOnSurfaceSeaDark,
+    inversePrimary = inversePrimarySeaDark,
+    surfaceDim = surfaceDimSeaDark,
+    surfaceBright = surfaceBrightSeaDark,
+    surfaceContainerLowest = surfaceContainerLowestSeaDark,
+    surfaceContainerLow = surfaceContainerLowSeaDark,
+    surfaceContainer = surfaceContainerSeaDark,
+    surfaceContainerHigh = surfaceContainerHighSeaDark,
+    surfaceContainerHighest = surfaceContainerHighestSeaDark,
 )

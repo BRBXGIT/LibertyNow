@@ -27,15 +27,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.DarkColorScheme
+import com.example.design_system.theme.DarkGreenAppleScheme
+import com.example.design_system.theme.DarkLavenderScheme
+import com.example.design_system.theme.DarkSakuraScheme
+import com.example.design_system.theme.DarkSeaScheme
+import com.example.design_system.theme.DarkTacosScheme
 import com.example.design_system.theme.LightColorScheme
-import com.example.design_system.theme.darkGreenAppleScheme
-import com.example.design_system.theme.darkLavenderScheme
-import com.example.design_system.theme.darkSakuraScheme
-import com.example.design_system.theme.darkTacosScheme
-import com.example.design_system.theme.lightGreenAppleScheme
-import com.example.design_system.theme.lightLavenderScheme
-import com.example.design_system.theme.lightSakuraScheme
-import com.example.design_system.theme.lightTacosScheme
+import com.example.design_system.theme.LightGreenAppleScheme
+import com.example.design_system.theme.LightLavenderScheme
+import com.example.design_system.theme.LightSakuraScheme
+import com.example.design_system.theme.LightSeaScheme
+import com.example.design_system.theme.LightTacosScheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
@@ -78,18 +80,20 @@ fun ColorSystemElements(
 ) {
     val darkColorSystems = listOf(
         colorSystemFromScheme(DarkColorScheme, "darkScheme", "AniLiberty"),
-        colorSystemFromScheme(darkGreenAppleScheme, "darkGreenApple", "Яблоко"),
-        colorSystemFromScheme(darkSakuraScheme, "darkSakura", "Сакура"),
-        colorSystemFromScheme(darkTacosScheme, "darkTacos", "Тако"),
-        colorSystemFromScheme(darkLavenderScheme, "darkLavender", "Лаванда")
+        colorSystemFromScheme(DarkGreenAppleScheme, "darkGreenApple", "Яблоко"),
+        colorSystemFromScheme(DarkSakuraScheme, "darkSakura", "Сакура"),
+        colorSystemFromScheme(DarkTacosScheme, "darkTacos", "Тако"),
+        colorSystemFromScheme(DarkLavenderScheme, "darkLavender", "Лаванда"),
+        colorSystemFromScheme(DarkSeaScheme, "darkSea", "Море")
     )
 
     val lightColorSystems = listOf(
         colorSystemFromScheme(LightColorScheme, "light", "AniLiberty"),
-        colorSystemFromScheme(lightGreenAppleScheme, "lightGreenApple", "Яблоко"),
-        colorSystemFromScheme(lightSakuraScheme, "lightSakura", "Сакура"),
-        colorSystemFromScheme(lightTacosScheme, "lightTacos", "Тако"),
-        colorSystemFromScheme(lightLavenderScheme, "lightLavender", "Лаванда")
+        colorSystemFromScheme(LightGreenAppleScheme, "lightGreenApple", "Яблоко"),
+        colorSystemFromScheme(LightSakuraScheme, "lightSakura", "Сакура"),
+        colorSystemFromScheme(LightTacosScheme, "lightTacos", "Тако"),
+        colorSystemFromScheme(LightLavenderScheme, "lightLavender", "Лаванда"),
+        colorSystemFromScheme(LightSeaScheme, "lightSea", "Море")
     )
 
     val isDark = isSystemInDarkTheme()

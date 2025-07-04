@@ -23,14 +23,16 @@ fun LibriaNowTheme(
                 "default" -> DarkColorScheme
                 "dark" -> DarkColorScheme
                 "light" -> DarkColorScheme
-                "lightGreenApple" -> darkGreenAppleScheme
-                "darkGreenApple" -> darkGreenAppleScheme
-                "lightSakura" -> darkSakuraScheme
-                "darkSakura" -> darkSakuraScheme
-                "lightTacos" -> darkTacosScheme
-                "darkTacos" -> darkTacosScheme
-                "lightLavender" -> darkLavenderScheme
-                "darkLavender" -> darkLavenderScheme
+                "lightGreenApple" -> DarkGreenAppleScheme
+                "darkGreenApple" -> DarkGreenAppleScheme
+                "lightSakura" -> DarkSakuraScheme
+                "darkSakura" -> DarkSakuraScheme
+                "lightTacos" -> DarkTacosScheme
+                "darkTacos" -> DarkTacosScheme
+                "lightLavender" -> DarkLavenderScheme
+                "darkLavender" -> DarkLavenderScheme
+                "lightSea" -> LightSeaScheme
+                "darkSea" -> DarkSeaScheme
                 else -> DarkColorScheme
             }
         } else {
@@ -38,14 +40,16 @@ fun LibriaNowTheme(
                 "default" -> LightColorScheme
                 "dark" -> LightColorScheme
                 "light" -> LightColorScheme
-                "lightGreenApple" -> lightGreenAppleScheme
-                "darkGreenApple" -> lightGreenAppleScheme
-                "lightSakura" -> lightSakuraScheme
-                "darkSakura" -> lightSakuraScheme
-                "lightTacos" -> lightTacosScheme
-                "darkTacos" -> lightTacosScheme
-                "lightLavender" -> lightLavenderScheme
-                "darkLavender" -> lightLavenderScheme
+                "lightGreenApple" -> LightGreenAppleScheme
+                "darkGreenApple" -> LightGreenAppleScheme
+                "lightSakura" -> LightSakuraScheme
+                "darkSakura" -> LightSakuraScheme
+                "lightTacos" -> LightTacosScheme
+                "darkTacos" -> LightTacosScheme
+                "lightLavender" -> LightLavenderScheme
+                "darkLavender" -> LightLavenderScheme
+                "lightSea" -> LightSeaScheme
+                "darkSea" -> LightSeaScheme
                 else -> LightColorScheme
             }
         }
@@ -53,28 +57,32 @@ fun LibriaNowTheme(
             "default" -> DarkColorScheme
             "dark" -> DarkColorScheme
             "light" -> DarkColorScheme
-            "lightGreenApple" -> darkGreenAppleScheme
-            "darkGreenApple" -> darkGreenAppleScheme
-            "lightSakura" -> darkSakuraScheme
-            "darkSakura" -> darkSakuraScheme
-            "lightTacos" -> darkTacosScheme
-            "darkTacos" -> darkTacosScheme
-            "lightLavender" -> darkLavenderScheme
-            "darkLavender" -> darkLavenderScheme
+            "lightGreenApple" -> DarkGreenAppleScheme
+            "darkGreenApple" -> DarkGreenAppleScheme
+            "lightSakura" -> DarkSakuraScheme
+            "darkSakura" -> DarkSakuraScheme
+            "lightTacos" -> DarkTacosScheme
+            "darkTacos" -> DarkTacosScheme
+            "lightLavender" -> DarkLavenderScheme
+            "darkLavender" -> DarkLavenderScheme
+            "lightSea" -> DarkSeaScheme
+            "darkSea" -> DarkSeaScheme
             else -> DarkColorScheme
         }
         "light" -> when(colorSystem) {
             "default" -> LightColorScheme
             "dark" -> LightColorScheme
             "light" -> LightColorScheme
-            "lightGreenApple" -> lightGreenAppleScheme
-            "darkGreenApple" -> lightGreenAppleScheme
-            "lightSakura" -> lightSakuraScheme
-            "darkSakura" -> lightSakuraScheme
-            "lightTacos" -> lightTacosScheme
-            "darkTacos" -> lightTacosScheme
-            "lightLavender" -> lightLavenderScheme
-            "darkLavender" -> lightLavenderScheme
+            "lightGreenApple" -> LightGreenAppleScheme
+            "darkGreenApple" -> LightGreenAppleScheme
+            "lightSakura" -> LightSakuraScheme
+            "darkSakura" -> LightSakuraScheme
+            "lightTacos" -> LightTacosScheme
+            "darkTacos" -> LightTacosScheme
+            "lightLavender" -> LightLavenderScheme
+            "darkLavender" -> LightLavenderScheme
+            "lightSea" -> LightSeaScheme
+            "darkSea" -> LightSeaScheme
             else -> LightColorScheme
         }
         else -> if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
