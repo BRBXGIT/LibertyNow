@@ -6,6 +6,7 @@ import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.data.domain.PlayerFeaturesRepo
 import com.example.data.domain.ThemeRepo
+import com.example.simple_screens.settings_screen.sections.PlayerSettingsItemType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,10 @@ class SettingsScreenVM @Inject constructor(
         SettingsScreenState()
     )
 
+    private fun updateScreenState(state: SettingsScreenState) {
+        _settingsScreenState.value = state
+    }
+
     private fun observePlayerFeatures() {
         viewModelScope.launch(dispatcherIo) {
             combine(
@@ -46,7 +51,7 @@ class SettingsScreenVM @Inject constructor(
             }.collect { prefs ->
                 _settingsScreenState.update { state ->
                     state.copy(
-                        quality = prefs.videoQuality,
+                        videoQuality = prefs.videoQuality,
                         autoPlay = prefs.autoPlay,
                         isCropped = prefs.isCropped,
                         showSkipOpeningButton = prefs.showSkipOpeningButton
@@ -71,6 +76,49 @@ class SettingsScreenVM @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun setTheme(theme: String) {
+        viewModelScope.launch(dispatcherIo) {
+            themeRepo.saveTheme(theme)
+        }
+    }
+
+    private fun setColorSystem(colorSystem: String) {
+        viewModelScope.launch(dispatcherIo) {
+            themeRepo.saveColorSystem(colorSystem)
+        }
+    }
+
+    private fun setPlayerFeature(
+        quality: Int?,
+        type: PlayerSettingsItemType
+    ) {
+        viewModelScope.launch(dispatcherIo) {
+            when(type) {
+                PlayerSettingsItemType.VideoQuality -> playerFeaturesRepo.saveVideoQuality(quality!!)
+                PlayerSettingsItemType.ShowSkipOpeningButton -> {
+                    playerFeaturesRepo.saveShowSkipOpeningButton(!_settingsScreenState.value.showSkipOpeningButton)
+                }
+                PlayerSettingsItemType.Crop -> {
+                    playerFeaturesRepo.saveIsCropped(!_settingsScreenState.value.isCropped)
+                }
+                PlayerSettingsItemType.AutoPlay -> {
+                    playerFeaturesRepo.saveAutoplay(!_settingsScreenState.value.autoPlay)
+                }
+            }
+        }
+    }
+
+    fun sendIntent(intent: SettingsScreenIntent) {
+        when(intent) {
+            is SettingsScreenIntent.SetColorSystem -> setColorSystem(intent.colorSystem)
+            is SettingsScreenIntent.SetTheme -> setTheme(intent.theme)
+
+            is SettingsScreenIntent.SetPlayerFeature -> setPlayerFeature(intent.quality, intent.type)
+
+            is SettingsScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
         }
     }
 

@@ -81,6 +81,6 @@ fun NavGraph(
 
         supportScreen()
 
-        settingsScreen()
+        settingsScreen(navController)
     }
 }

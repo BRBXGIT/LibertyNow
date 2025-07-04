@@ -22,6 +22,10 @@ object LibriaNowIcons {
     val Exit = R.drawable.ic_exit
     val Group = R.drawable.ic_group
     val Gift = R.drawable.ic_gift
+    val Quality = R.drawable.ic_quality
+    val RewindCircle = R.drawable.ic_rewind_circle
+    val AutoPlay = R.drawable.ic_auto_play
+    val Crop = R.drawable.ic_crop
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
