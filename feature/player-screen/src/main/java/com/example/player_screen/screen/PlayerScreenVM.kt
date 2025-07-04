@@ -57,17 +57,17 @@ class PlayerScreenVM @Inject constructor(
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                _playerScreenState.update { state ->
-                    val nextId = state.currentAnimeId + 1
-                    if (nextId < state.links.size) {
+                val nextId = _playerScreenState.value.currentAnimeId + 1
+                if (nextId < _playerScreenState.value.links.size) {
+                    _playerScreenState.update { state ->
                         state.copy(
                             currentAnimeId = nextId,
-                            currentLink = state.links[nextId],
+                            currentLink = _playerScreenState.value.links[nextId],
                             isPlaying = IsPlayingState.Playing,
-                            duration = player.contentDuration
+                            duration = player.contentDuration,
+                            skipOpeningButtonTimer = 10,
+                            timerStarted = false
                         )
-                    } else {
-                        state
                     }
                 }
             }
@@ -199,7 +199,11 @@ class PlayerScreenVM @Inject constructor(
                 if (_playerScreenState.value.currentAnimeId < _playerScreenState.value.links.size) {
                     player.seekToNextMediaItem()
                     _playerScreenState.update { state ->
-                        state.copy(currentAnimeId = _playerScreenState.value.currentAnimeId + 1)
+                        state.copy(
+                            currentAnimeId = _playerScreenState.value.currentAnimeId + 1,
+                            timerStarted = false,
+                            skipOpeningButtonTimer = 10
+                        )
                     }
                 }
             }
@@ -207,7 +211,11 @@ class PlayerScreenVM @Inject constructor(
                 if (_playerScreenState.value.currentAnimeId > 0) {
                     player.seekToPreviousMediaItem()
                     _playerScreenState.update { state ->
-                        state.copy(currentAnimeId = _playerScreenState.value.currentAnimeId - 1)
+                        state.copy(
+                            currentAnimeId = _playerScreenState.value.currentAnimeId - 1,
+                            timerStarted = false,
+                            skipOpeningButtonTimer = 10
+                        )
                     }
                 }
             }
@@ -219,7 +227,9 @@ class PlayerScreenVM @Inject constructor(
         _playerScreenState.update { state ->
             state.copy(
                 currentAnimeId = episodeId,
-                isSelectEpisodeADVisible = false
+                isSelectEpisodeADVisible = false,
+                timerStarted = false,
+                skipOpeningButtonTimer = 10
             )
         }
     }
