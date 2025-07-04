@@ -81,6 +81,7 @@ fun PlayerScreen(
                 )
             )
         )
+        viewModel.sendIntent(PlayerScreenIntent.ObserveShowSkipOpeningButton)
         viewModel.sendIntent(PlayerScreenIntent.PreparePlayer)
         PlayerScreenVM.instance = viewModel
     }

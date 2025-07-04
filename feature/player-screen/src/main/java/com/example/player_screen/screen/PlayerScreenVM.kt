@@ -313,6 +313,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.UpdateIsUnlockButtonVisible -> updateIsUnlockButtonVisible()
 
             is PlayerScreenIntent.PreparePlayer -> preparePlayer()
+            is PlayerScreenIntent.ObserveShowSkipOpeningButton -> observeShowSkipOpeningButton()
             is PlayerScreenIntent.ReleasePlayer -> player.release()
             is PlayerScreenIntent.PausePlayer -> pausePlayer()
             is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)
@@ -322,9 +323,5 @@ class PlayerScreenVM @Inject constructor(
 
             is PlayerScreenIntent.ChangePlayerFeature -> changePlayerFeature(intent.feature)
         }
-    }
-
-    init {
-        observeShowSkipOpeningButton()
     }
 }
