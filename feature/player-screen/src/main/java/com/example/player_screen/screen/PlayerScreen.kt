@@ -332,6 +332,20 @@ fun PlayerScreen(
                 }
             }
 
+            LaunchedEffect(screenState.links, screenState.currentPosition) {
+                if (screenState.links.isNotEmpty()) {
+                    val opening = screenState.links[screenState.currentAnimeId].skips.opening
+                    if (opening.isNotEmpty()) {
+                        if ((opening[0] != null) and (opening[1] != null)) {
+                            if (screenState.currentPosition / 1000 in opening[0]!!..opening[1]!!) {
+                                if (!screenState.timerStarted) {
+                                    viewModel.sendIntent(PlayerScreenIntent.StartSkipOpeningButtonTimer)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             AnimatedVisibilityContent(
                 visible = screenState.isSkipOpeningButtonVisible and screenState.showSkipOpeningButton,
                 modifier = Modifier.zIndex(2f)
