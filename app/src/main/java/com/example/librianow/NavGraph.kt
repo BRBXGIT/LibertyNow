@@ -2,6 +2,7 @@ package com.example.librianow
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.anime_screen.navigation.animeScreen
@@ -11,9 +12,10 @@ import com.example.navbar_screens.home_screen.navigation.homeScreen
 import com.example.navbar_screens.home_screen.screen.HomeScreenVM
 import com.example.navbar_screens.likes_screen.navigation.likesScreen
 import com.example.navbar_screens.likes_screen.screen.LikesScreenVM
+import com.example.navbar_screens.more_screen.navigation.moreScreen
+import com.example.navbar_screens.more_screen.screen.MoreScreenVM
 import com.example.navbar_screens.search_screen.navigation.searchScreen
 import com.example.navbar_screens.search_screen.screen.SearchScreenVM
-import com.example.navbar_screens.settings_screen.navigation.settingsScreen
 import com.example.onboarding_screen.navigation.onBoardingScreen
 import com.example.player_screen.navigation.playerScreen
 
@@ -30,6 +32,7 @@ fun NavGraph(
     val homeScreenVM = hiltViewModel<HomeScreenVM>()
     val searchScreenVM = hiltViewModel<SearchScreenVM>()
     val likesScreenVM = hiltViewModel<LikesScreenVM>()
+    val moreScreenVM = viewModel<MoreScreenVM>()
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -55,9 +58,11 @@ fun NavGraph(
             navController = navController
         )
 
-        settingsScreen(
+        moreScreen(
             commonVM = commonVM,
-            navController = navController
+            navController = navController,
+            moreScreenVM = moreScreenVM,
+            authVM = authVM
         )
 
         animeScreen(
