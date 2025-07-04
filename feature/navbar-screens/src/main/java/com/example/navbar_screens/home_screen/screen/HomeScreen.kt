@@ -34,7 +34,7 @@ import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
-import com.example.navbar_screens.home_screen.sections.HomeScreenTopBar
+import com.example.navbar_screens.common.SearchableTopBar
 import com.example.navbar_screens.home_screen.sections.NothingHereSection
 import com.example.navbar_screens.home_screen.sections.TitlesUpdatesLVG
 import kotlinx.coroutines.launch
@@ -148,8 +148,11 @@ fun HomeScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            HomeScreenTopBar(
-                screenState = screenState,
+            SearchableTopBar(
+                title = "Последние обновления",
+                query = screenState.query,
+                isSearching = screenState.isSearching,
+                isLoading = screenState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
                 onSearchClick = {
                     viewModel.sendIntent(

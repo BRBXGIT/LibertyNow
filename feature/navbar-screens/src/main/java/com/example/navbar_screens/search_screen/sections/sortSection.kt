@@ -24,47 +24,35 @@ fun LazyGridScope.sortSection(
     sort: SortedBy,
     onSortClick: (SortedBy) -> Unit
 ) {
-    item(
-        span = { GridItemSpan(maxLineSpan) }
-    ) {
+    item(span = { GridItemSpan(maxLineSpan) }) {
         Text(
             text = "Сортировка",
             style = mTypography.titleMedium
         )
     }
 
-    item(
-        span = { GridItemSpan(maxLineSpan) }
-    ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                RadioButton(
-                    selected = sort == SortedBy.Popularity,
-                    onClick = { onSortClick(SortedBy.Popularity) }
-                )
+    item(span = { GridItemSpan(maxLineSpan) }) {
+        val options = listOf(
+            SortedBy.Popularity to "По популярности",
+            SortedBy.Novelty to "По новизне"
+        )
 
-                Text(
-                    text = "По популярности",
-                    style = mTypography.bodyLarge
-                )
-            }
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            options.forEach { (type, label) ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    RadioButton(
+                        selected = sort == type,
+                        onClick = { onSortClick(type) }
+                    )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            )  {
-                RadioButton(
-                    selected = sort == SortedBy.Novelty,
-                    onClick = { onSortClick(SortedBy.Novelty) }
-                )
-
-                Text(
-                    text = "По новизне",
-                    style = mTypography.bodyLarge
-                )
+                    Text(
+                        text = label,
+                        style = mTypography.bodyLarge
+                    )
+                }
             }
         }
     }

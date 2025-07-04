@@ -15,9 +15,15 @@
         android:theme="@style/Theme.LibriaNow"
         android:name=".HiltApp"
         tools:targetApi="31">
+
+        <receiver android:name="com.example.player_screen.screen.SkipEpisodeReceiver" />
+        <receiver android:name="com.example.player_screen.screen.PlayPauseReceiver" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:theme="@style/Theme.LibriaNow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

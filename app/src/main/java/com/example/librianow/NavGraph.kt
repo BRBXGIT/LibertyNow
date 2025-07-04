@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.anime_screen.navigation.animeScreen
 import com.example.common.auth.AuthVM
 import com.example.common.common.CommonVM
@@ -15,6 +16,7 @@ import com.example.navbar_screens.search_screen.navigation.searchScreen
 import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 import com.example.navbar_screens.settings_screen.navigation.settingsScreen
 import com.example.onboarding_screen.navigation.onBoardingScreen
+import com.example.player_screen.navigation.playerScreen
 
 @Composable
 fun NavGraph(
@@ -31,7 +33,7 @@ fun NavGraph(
     val likesScreenVM = hiltViewModel<LikesScreenVM>()
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = AnimeScreenRoute(9934)
     ) {
         onBoardingScreen()
 
@@ -62,6 +64,10 @@ fun NavGraph(
         animeScreen(
             navController = navController,
             authVM = authVM
+        )
+
+        playerScreen(
+            navController = navController
         )
     }
 }

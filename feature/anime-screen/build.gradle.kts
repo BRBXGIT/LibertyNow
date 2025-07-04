@@ -40,6 +40,7 @@ dependencies {
     implementation(project(":core:local"))
     // Feature modules
     implementation(project(":feature:common"))
+    implementation(project(":feature:player-screen"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))

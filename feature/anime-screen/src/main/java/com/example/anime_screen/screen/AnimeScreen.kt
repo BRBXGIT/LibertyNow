@@ -52,6 +52,8 @@ import com.example.network.common.titles_list_response.Names
 import com.example.network.common.titles_list_response.Original
 import com.example.network.common.titles_list_response.Posters
 import com.example.network.common.titles_list_response.Small
+import com.example.player_screen.navigation.PlayerScreenRoute
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -306,7 +308,18 @@ fun AnimeScreen(
                             modifier = Modifier.animateItem(),
                             episode = episode.episode,
                             name = episode.name ?: "Без названия",
-                            onWatchButtonClick = {}, // TODO
+                            onWatchButtonClick = {
+                                val links = anime.player.list.values.toList()
+                                val linksString = Gson().toJson(links)
+
+                                navController.navigate(
+                                    PlayerScreenRoute(
+                                        currentItemId = index,
+                                        gsonLinks = linksString,
+                                        host = anime.player.host
+                                    )
+                                )
+                            }
                         )
                     }
 

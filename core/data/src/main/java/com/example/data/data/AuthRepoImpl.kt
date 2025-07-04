@@ -9,14 +9,12 @@ import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager
 import com.example.local.datastore.auth.LoggingState
 import com.example.network.auth.api.AuthApiInstance
-import com.example.network.auth.api.LikesApiInstance
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AuthRepoImpl @Inject constructor(
     private val authManager: AuthManager,
     private val authApiInstance: AuthApiInstance,
-    private val likesApiInstance: LikesApiInstance
 ): AuthRepo {
 
     override val userSessionToken = authManager.userSessionTokenFlow
@@ -62,97 +60,6 @@ class AuthRepoImpl @Inject constructor(
                         )
                     }
                 }
-            } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-                NetworkResponse(
-                    error = error,
-                    label = label
-                )
-            }
-        } catch (e: Exception) {
-            processNetworkExceptions(e)
-        }
-    }
-
-    override suspend fun getLikesAmount(sessionToken: String): NetworkResponse {
-        return try {
-            val response = likesApiInstance.getLikesAmount(sessionToken)
-
-            if (response.code() == 200) {
-                NetworkResponse(
-                    response = response.body(),
-                    error = NetworkErrors.SUCCESS
-                )
-            } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-                NetworkResponse(
-                    error = error,
-                    label = label
-                )
-            }
-        } catch (e: Exception) {
-            processNetworkExceptions(e)
-        }
-    }
-
-    override suspend fun getLikes(sessionToken: String, itemsPerPage: Int): NetworkResponse {
-        return try {
-            val response = likesApiInstance.getLikes(
-                sessionToken = sessionToken,
-                itemsPerPage = itemsPerPage
-            )
-
-            if (response.code() == 200) {
-                NetworkResponse(
-                    response = response.body(),
-                    error = NetworkErrors.SUCCESS
-                )
-            } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-                NetworkResponse(
-                    error = error,
-                    label = label
-                )
-            }
-        } catch (e: Exception) {
-            processNetworkExceptions(e)
-        }
-    }
-
-    override suspend fun addLike(sessionToken: String, titleId: Int): NetworkResponse {
-        return try {
-            val response = likesApiInstance.addLike(sessionToken, titleId)
-
-            if (response.code() == 200) {
-                NetworkResponse(
-                    response = response.body(),
-                    error = NetworkErrors.SUCCESS
-                )
-            } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-                NetworkResponse(
-                    error = error,
-                    label = label
-                )
-            }
-        } catch (e: Exception) {
-            processNetworkExceptions(e)
-        }
-    }
-
-    override suspend fun removeLike(sessionToken: String, titleId: Int): NetworkResponse {
-        return try {
-            val response = likesApiInstance.removeLike(sessionToken, titleId)
-
-            if (response.code() == 200) {
-                NetworkResponse(
-                    response = response.body(),
-                    error = NetworkErrors.SUCCESS
-                )
             } else {
                 val error = processNetworkErrors(response.code())
                 val label = processNetworkErrorsForUi(error)

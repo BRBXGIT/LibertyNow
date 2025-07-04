@@ -19,18 +19,8 @@ android {
         minSdk = 28
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -44,6 +34,9 @@ dependencies {
 
     // Core modules
     implementation(project(":core:design-system"))
+    implementation(project(":core:network"))
+    implementation(project(":core:common"))
+    implementation(project(":core:data"))
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -63,6 +56,11 @@ dependencies {
     // Exo player
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.hls)
+    implementation(libs.androidx.media3.ui)
     // System ui controller
     implementation(libs.accompanist.systemuicontroller)
+    // Json
+    implementation(libs.converter.gson)
+    // Material
+    implementation(libs.androidx.material)
 }

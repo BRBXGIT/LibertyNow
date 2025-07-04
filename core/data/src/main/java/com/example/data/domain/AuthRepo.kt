@@ -18,21 +18,4 @@ interface AuthRepo {
         email: String,
         password: String
     ): NetworkResponse
-
-    suspend fun getLikesAmount(sessionToken: String): NetworkResponse
-
-    suspend fun getLikes(
-        sessionToken: String,
-        itemsPerPage: Int
-    ): NetworkResponse
-
-    suspend fun addLike(
-        sessionToken: String,
-        titleId: Int
-    ): NetworkResponse
-
-    suspend fun removeLike(
-        sessionToken: String,
-        titleId: Int
-    ): NetworkResponse
 }

@@ -1,6 +1,5 @@
 package com.example.network.anime_screen.models.anime_response
 
-
 import com.google.gson.annotations.SerializedName
 
 data class X1(
@@ -11,7 +10,7 @@ data class X1(
     @SerializedName("hls")
     val hls: Hls = Hls(),
     @SerializedName("name")
-    val name: String? = "",
+    val name: String? = null,
     @SerializedName("preview")
     val preview: String = "",
     @SerializedName("skips")
