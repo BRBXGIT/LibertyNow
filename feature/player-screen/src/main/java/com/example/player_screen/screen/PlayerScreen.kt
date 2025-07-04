@@ -1,15 +1,11 @@
 package com.example.player_screen.screen
 
 import android.app.Activity
-import android.app.PendingIntent
 import android.app.PictureInPictureParams
-import android.app.RemoteAction
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Rect
-import android.graphics.drawable.Icon
 import android.util.Rational
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -33,7 +29,6 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.CommonConstants
-import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
 import com.example.player_screen.sections.CentralButtonsSection
@@ -422,48 +417,14 @@ private fun AnimatedVisibilityContent(
     }
 }
 
-
 private fun updatedPipParams(context: Context): PictureInPictureParams? {
     return PictureInPictureParams.Builder()
         .setSourceRectHint(videoViewBounds)
         .setAspectRatio(Rational(16, 9))
         .setActions(
             listOf(
-                RemoteAction(
-                    Icon.createWithResource(context, LibriaNowIcons.ArrowLeftFilled),
-                    "Меняет эпизод на предыдущий",
-                    "Skip to the previous episode",
-                    PendingIntent.getBroadcast(
-                        context,
-                        1,
-                        Intent(
-                            context,
-                            SkipEpisodeReceiver::class.java
-                        ).apply {
-                            putExtra("forward", false)
-                        },
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-                ),
-                RemoteAction(
-                    Icon.createWithResource(
-                        context,
-                        LibriaNowIcons.ArrowRightFilled
-                    ),
-                    "Меняет эпизод на следующий",
-                    "Skip to the next episode",
-                    PendingIntent.getBroadcast(
-                        context,
-                        2,
-                        Intent(
-                            context,
-                            SkipEpisodeReceiver::class.java
-                        ).apply {
-                            putExtra("forward", true)
-                        },
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-                ),
+                createSkipEpisodeRemoteAction(context, false),
+                createSkipEpisodeRemoteAction(context, true)
             )
         )
         .build()
