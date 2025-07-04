@@ -87,6 +87,7 @@ fun PlayerScreen(
             )
         )
         viewModel.sendIntent(PlayerScreenIntent.PreparePlayer)
+        PlayerScreenVM.instance = viewModel
     }
 
     BackHandler {
@@ -429,17 +430,19 @@ private fun updatedPipParams(context: Context): PictureInPictureParams? {
         .setActions(
             listOf(
                 RemoteAction(
-                    Icon.createWithResource(
-                        context,
-                        LibriaNowIcons.ArrowLeftFilled
-                    ),
-                    "Change episode to previous",
+                    Icon.createWithResource(context, LibriaNowIcons.ArrowLeftFilled),
+                    "Меняет эпизод на предыдущий",
                     "Skip to the previous episode",
                     PendingIntent.getBroadcast(
                         context,
-                        0,
-                        Intent(context, SkipEpisodeReceiver::class.java),
-                        PendingIntent.FLAG_IMMUTABLE
+                        1,
+                        Intent(
+                            context,
+                            SkipEpisodeReceiver::class.java
+                        ).apply {
+                            putExtra("forward", false)
+                        },
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                 ),
                 RemoteAction(
@@ -447,13 +450,18 @@ private fun updatedPipParams(context: Context): PictureInPictureParams? {
                         context,
                         LibriaNowIcons.ArrowRightFilled
                     ),
-                    "Change episode to next",
+                    "Меняет эпизод на следующий",
                     "Skip to the next episode",
                     PendingIntent.getBroadcast(
                         context,
-                        0,
-                        Intent(context, SkipEpisodeReceiver::class.java),
-                        PendingIntent.FLAG_IMMUTABLE
+                        2,
+                        Intent(
+                            context,
+                            SkipEpisodeReceiver::class.java
+                        ).apply {
+                            putExtra("forward", true)
+                        },
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                     )
                 ),
             )

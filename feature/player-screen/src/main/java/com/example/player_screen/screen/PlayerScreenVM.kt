@@ -32,6 +32,10 @@ class PlayerScreenVM @Inject constructor(
     @Dispatcher(LibriaNowDispatchers.Default) private val dispatcherDefault: CoroutineDispatcher,
     @Dispatcher(LibriaNowDispatchers.Main) private val dispatcherMain: CoroutineDispatcher
 ): ViewModel() {
+    companion object {
+        var instance: PlayerScreenVM? = null
+    }
+
     private val _playerScreenState = MutableStateFlow(PlayerScreenState())
     val playerScreenState = _playerScreenState.stateIn(
         viewModelScope,
