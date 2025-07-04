@@ -18,6 +18,7 @@ class PlayerFeaturesManager(
         private val VIDEO_QUALITY_KEY = intPreferencesKey("video_quality")
         private val SHOW_SKIP_OPENING_BUTTON_KEY = booleanPreferencesKey("show_skip_opening_button")
         private val AUTOPLAY_KEY = booleanPreferencesKey("autoplay")
+        private val IS_CROPPED_KEY = booleanPreferencesKey("is_cropped")
     }
 
     val videoQualityFlow: Flow<Int?> = context.dataStore.data
@@ -44,6 +45,15 @@ class PlayerFeaturesManager(
     suspend fun saveAutoplay(autoplay: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[AUTOPLAY_KEY] = autoplay
+        }
+    }
+
+    val isCropped: Flow<Boolean?> = context.dataStore.data
+        .map { preferences -> preferences[IS_CROPPED_KEY] }
+
+    suspend fun saveIsCropped(isCropped: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[IS_CROPPED_KEY] = isCropped
         }
     }
 }

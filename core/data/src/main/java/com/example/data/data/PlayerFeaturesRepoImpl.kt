@@ -14,6 +14,8 @@ class PlayerFeaturesRepoImpl @Inject constructor(
 
     override val showSkipOpeningButton = playerFeaturesManager.showSkipOpeningButtonFlow
 
+    override val isCropped = playerFeaturesManager.isCropped
+
     override suspend fun saveAutoplay(autoplay: Boolean) {
         playerFeaturesManager.saveAutoplay(autoplay)
     }
@@ -24,5 +26,9 @@ class PlayerFeaturesRepoImpl @Inject constructor(
 
     override suspend fun saveShowSkipOpeningButton(show: Boolean) {
         playerFeaturesManager.saveShowOpeningButton(show)
+    }
+
+    override suspend fun saveIsCropped(isCropped: Boolean) {
+        playerFeaturesManager.saveIsCropped(isCropped)
     }
 }

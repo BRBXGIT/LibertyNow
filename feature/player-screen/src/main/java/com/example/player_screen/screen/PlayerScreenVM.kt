@@ -259,11 +259,19 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
-    fun observeShowSkipOpeningButton() {
+    fun observePlayerFeatures() {
         viewModelScope.launch(dispatcherIo) {
-            playerFeaturesRepository.showSkipOpeningButton.collect { show ->
+            combine(
+                playerFeaturesRepository.showSkipOpeningButton,
+                playerFeaturesRepository.isCropped
+            ) { showSkipOpeningButton, isCropped->
+                showSkipOpeningButton to isCropped
+            }.collect { (showSkipOpeningButton, isCropped) ->
                 _playerScreenState.update { state ->
-                    state.copy(showSkipOpeningButton = show != false)
+                    state.copy(
+                        showSkipOpeningButton = showSkipOpeningButton != false,
+                        isCropped = isCropped != false
+                    )
                 }
             }
         }
@@ -302,6 +310,9 @@ class PlayerScreenVM @Inject constructor(
                 is FeatureType.ShowSkipOpeningButton -> {
                     playerFeaturesRepository.saveShowSkipOpeningButton(!_playerScreenState.value.showSkipOpeningButton)
                 }
+                is FeatureType.IsCropped -> {
+                    playerFeaturesRepository.saveIsCropped(!_playerScreenState.value.isCropped)
+                }
             }
         }
     }
@@ -313,7 +324,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.UpdateIsUnlockButtonVisible -> updateIsUnlockButtonVisible()
 
             is PlayerScreenIntent.PreparePlayer -> preparePlayer()
-            is PlayerScreenIntent.ObserveShowSkipOpeningButton -> observeShowSkipOpeningButton()
+            is PlayerScreenIntent.ObservePlayerFeatures -> observePlayerFeatures()
             is PlayerScreenIntent.ReleasePlayer -> player.release()
             is PlayerScreenIntent.PausePlayer -> pausePlayer()
             is PlayerScreenIntent.SkipEpisode -> skipEpisode(intent.forward)

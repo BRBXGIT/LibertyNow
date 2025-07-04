@@ -81,7 +81,7 @@ fun PlayerScreen(
                 )
             )
         )
-        viewModel.sendIntent(PlayerScreenIntent.ObserveShowSkipOpeningButton)
+        viewModel.sendIntent(PlayerScreenIntent.ObservePlayerFeatures)
         viewModel.sendIntent(PlayerScreenIntent.PreparePlayer)
         PlayerScreenVM.instance = viewModel
     }
@@ -302,9 +302,7 @@ fun PlayerScreen(
                         },
                         onCropClick = {
                             viewModel.sendIntent(
-                                PlayerScreenIntent.UpdateScreenState(
-                                    screenState.copy(isCropped = !screenState.isCropped)
-                                )
+                                PlayerScreenIntent.ChangePlayerFeature(FeatureType.IsCropped)
                             )
                         },
                         onPipClick = {
