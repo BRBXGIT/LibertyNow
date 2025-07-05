@@ -115,7 +115,6 @@ class AuthVM @Inject constructor(
         }
     }
 
-    // TODO
     private fun fetchLikesAmount() {
         viewModelScope.launch(dispatcherIo) {
             val response = likesRepository.getLikesAmount(_authState.value.sessionToken!!)
@@ -133,7 +132,9 @@ class AuthVM @Inject constructor(
                         isLoading = false
                     )
                 }
-                fetchLikes()
+                if ((_authState.value.sessionToken != null) and (_authState.value.isLogged is LoggingState.LoggedIn)) {
+                    fetchLikes()
+                }
             } else {
                 _authState.update { state ->
                     state.copy(
