@@ -58,13 +58,25 @@ class PlayerScreenVM @Inject constructor(
                             IsPlayingState.Playing
                         } else {
                             IsPlayingState.Paused
-                        }
+                        },
+                        timerStarted = false,
+                        isSkipOpeningButtonVisible = false,
+                        skipOpeningButtonTimer = 10
                     )
                 }
             }
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            skipOpeningButtonTimerJob?.cancel()
+            _playerScreenState.update { state ->
+                state.copy(
+                    timerStarted = false,
+                    isSkipOpeningButtonVisible = false,
+                    skipOpeningButtonTimer = 10
+                )
+            }
+
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
                 val nextId = _playerScreenState.value.currentAnimeId + 1
                 if (nextId < _playerScreenState.value.links.size) {
@@ -72,10 +84,6 @@ class PlayerScreenVM @Inject constructor(
                         state.copy(
                             currentAnimeId = nextId,
                             currentLink = _playerScreenState.value.links[nextId],
-                            isPlaying = IsPlayingState.Playing,
-                            duration = player.contentDuration,
-                            skipOpeningButtonTimer = 10,
-                            timerStarted = false
                         )
                     }
                 }
@@ -312,8 +320,11 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private var skipOpeningButtonTimerJob: Job? = null
     fun startSkipOpeningButtonTimer() {
-        viewModelScope.launch(dispatcherDefault) {
+        skipOpeningButtonTimerJob?.cancel()
+
+        skipOpeningButtonTimerJob = viewModelScope.launch(dispatcherDefault) {
             _playerScreenState.update { state ->
                 state.copy(
                     isSkipOpeningButtonVisible = true,
@@ -321,7 +332,7 @@ class PlayerScreenVM @Inject constructor(
                 )
             }
 
-            for (i in 10 downTo 0) {
+            for (i in _playerScreenState.value.skipOpeningButtonTimer downTo 0) {
                 delay(1000)
                 _playerScreenState.update { state ->
                     state.copy(
