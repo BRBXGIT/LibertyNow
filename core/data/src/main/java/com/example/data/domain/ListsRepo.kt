@@ -1,13 +1,14 @@
 package com.example.data.domain
 
-import com.example.local.db.lists_db.ListAnimeEntity
 import com.example.local.db.lists_db.ListAnimeStatus
+import com.example.local.db.lists_db.ListsAnimeEntity
+import kotlinx.coroutines.flow.Flow
 
 interface ListsRepo {
 
-    suspend fun insertAnime(anime: ListAnimeEntity)
+    suspend fun insertAnime(anime: ListsAnimeEntity)
 
-    suspend fun getAnimeByStatus(status: ListAnimeStatus): List<ListAnimeEntity>
+    fun getAnimeByStatus(status: ListAnimeStatus): Flow<List<ListsAnimeEntity>>
 
-    suspend fun deleteAnime(anime: ListAnimeEntity)
+    suspend fun deleteAnime(anime: ListsAnimeEntity)
 }

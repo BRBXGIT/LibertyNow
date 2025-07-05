@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [ListAnimeEntity::class],
+    entities = [ListsAnimeEntity::class],
     version = 1
 )
 @TypeConverters(ListsDbConverters::class)

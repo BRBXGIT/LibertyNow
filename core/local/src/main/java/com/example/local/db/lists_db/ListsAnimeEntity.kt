@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ListAnimeEntity(
+data class ListsAnimeEntity(
     @PrimaryKey
     val id: Int,
     val poster: String,
