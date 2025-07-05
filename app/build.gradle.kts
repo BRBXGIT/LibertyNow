@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":core:design-system"))
     implementation(project(":core:data"))
     implementation(project(":core:local"))
+    implementation(project(":core:common"))
     // Feature modules
     implementation(project(":feature:onboarding-screen"))
     implementation(project(":feature:navbar-screens"))

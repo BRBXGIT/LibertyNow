@@ -77,10 +77,10 @@ fun NavGraph(
             navController = navController
         )
 
-        projectTeamScreen()
+        projectTeamScreen(navController)
 
-        supportScreen()
+        supportScreen(navController)
 
-        settingsScreen()
+        settingsScreen(navController)
     }
 }
