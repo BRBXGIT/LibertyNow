@@ -38,7 +38,7 @@ import com.example.local.db.lists_db.ListsAnimeEntity
 fun ListsTabRow(
     selectedTabIndex: Int,
     animeByStatus: Map<ListAnimeStatus, List<ListsAnimeEntity>>,
-    onTabClick: (Int) -> Unit
+    onTabClick: (Int, ListAnimeStatus) -> Unit
 ) {
     ScrollableTabRow(
         selectedTabIndex = selectedTabIndex,
@@ -64,7 +64,7 @@ fun ListsTabRow(
             }
             Tab(
                 selected = index == selectedTabIndex,
-                onClick = { onTabClick(index) },
+                onClick = { onTabClick(index, status) },
                 text = { Text(name) },
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
@@ -129,7 +129,7 @@ fun ListsTabRowPreview() {
         ListsTabRow(
             selectedTabIndex = 1,
             animeByStatus = emptyMap(),
-            onTabClick = {}
+            onTabClick = { index, status -> }
         )
     }
 }

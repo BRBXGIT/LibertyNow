@@ -9,5 +9,6 @@ data class ListsScreenState(
     val isSearching: Boolean = false,
     val query: String = "",
 
-    val selectedTabIndex: Int = 0
+    val selectedTabIndex: Int = 0,
+    val selectedStatus: ListAnimeStatus = ListAnimeStatus.HISTORY
 )
