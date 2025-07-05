@@ -87,8 +87,17 @@ fun AnimeScreen(
         floatingActionButton = {
             ContinueWatchFABWrapper(
                 screenState = screenState,
-                navController = navController,
-                animeId = animeId
+                animeId = animeId,
+                onClick = { currentEpisodeId, linksString, host, animeId ->
+                    navController.navigate(
+                        PlayerScreenRoute(
+                            currentEpisodeId = currentEpisodeId,
+                            gsonLinks = linksString,
+                            host = host,
+                            animeId = animeId
+                        )
+                    )
+                },
             )
         },
         modifier = Modifier

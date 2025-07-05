@@ -11,13 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.anime_screen.screen.AnimeScreenState
 import com.example.anime_screen.screen.ScrollDirection
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
-import com.example.player_screen.navigation.PlayerScreenRoute
+import com.example.design_system.theme.LibriaNowTheme
 import com.google.gson.Gson
 
 @Composable
@@ -45,7 +45,7 @@ private fun ContinueWatchFAB(
 @Composable
 fun ContinueWatchFABWrapper(
     screenState: AnimeScreenState,
-    navController: NavController,
+    onClick: (Int, String, String, Int) -> Unit,
     animeId: Int
 ) {
     if (screenState.anime?.player?.list != null) {
@@ -64,16 +64,23 @@ fun ContinueWatchFABWrapper(
                     val links = anime.player.list.values.toList()
                     val linksString = Gson().toJson(links)
 
-                    navController.navigate(
-                        PlayerScreenRoute(
-                            currentEpisodeId = currentEpisodeId,
-                            gsonLinks = linksString,
-                            host = anime.player.host,
-                            animeId = animeId
-                        )
-                    )
+                    onClick(currentEpisodeId, linksString, anime.player.host, animeId)
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun ContinueWatchFABWrapperPreview() {
+    LibriaNowTheme {
+        ContinueWatchFABWrapper(
+            screenState = AnimeScreenState(),
+            animeId = 9934,
+            onClick = { currentEpisodeId, linksString, host, animeId ->
+
+            }
+        )
     }
 }

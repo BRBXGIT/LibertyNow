@@ -60,7 +60,7 @@ fun SettingsLCSection(
             name = "Качество",
             label = videoQuality.toString(),
             type = PlayerSettingsItemType.VideoQuality,
-            isActive = true, //Doesn't matter what value here :)
+            isActive = true, // Doesn't matter what value here :)
             icon = LibriaNowIcons.Quality
         ),
         PlayerSettingsItem(
@@ -108,11 +108,13 @@ fun SettingsLCSection(
                     onThemeClick = { onThemeChange(it) }
                 )
 
-                ColorSystemElements(
-                    chosenTheme = chosenTheme,
-                    onColorSystemClick = { onColorSystemChange(it) },
-                    chosenColorSystem = chosenColorSystem
-                )
+                if (chosenTheme != "dynamic") {
+                    ColorSystemElements(
+                        chosenTheme = chosenTheme,
+                        onColorSystemClick = { onColorSystemChange(it) },
+                        chosenColorSystem = chosenColorSystem
+                    )
+                }
             }
         }
 
