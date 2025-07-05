@@ -1,0 +1,31 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:name="path"
+                android:pathData="M 5.655 2.227 C 5.223 2.34 4.944 2.5 4.727 2.712 C 4.422 3.012 4.223 3.432 4.114 4.225 C 4.002 5.042 4 6.124 4 7.676 L 4 16.244 C 4.389 15.978 4.827 15.776 5.299 15.652 C 5.413 15.622 5.531 15.598 5.655 15.58 L 5.655 2.227 Z M 7.31 15.514 L 20 15.514 L 20 7.676 C 20 6.124 19.998 5.042 19.886 4.225 C 19.777 3.432 19.578 3.012 19.273 2.712 C 18.967 2.413 18.539 2.218 17.729 2.112 C 16.895 2.002 15.791 2 14.207 2 L 9.793 2 C 8.791 2 7.981 2.001 7.31 2.029 L 7.31 15.514 Z M 8.69 17.135 L 7.474 17.135 C 6.394 17.135 6.017 17.142 5.727 17.218 C 4.934 17.426 4.301 18.004 4.03 18.756 C 4.046 19.138 4.073 19.475 4.114 19.775 C 4.223 20.568 4.422 20.988 4.727 21.288 C 5.033 21.587 5.461 21.782 6.271 21.889 C 7.105 21.998 8.209 22 9.793 22 L 14.207 22 C 15.791 22 16.896 21.998 17.729 21.889 C 18.539 21.782 18.968 21.587 19.273 21.288 C 19.578 20.988 19.777 20.568 19.886 19.775 C 19.978 19.109 19.996 18.266 19.999 17.135 L 13.104 17.135 L 13.104 20.142 C 13.104 20.44 13.104 20.589 12.999 20.649 C 12.894 20.709 12.751 20.642 12.465 20.509 L 11.094 19.871 C 10.997 19.826 10.949 19.804 10.897 19.804 C 10.845 19.804 10.796 19.826 10.699 19.871 L 9.329 20.509 C 9.042 20.642 8.899 20.709 8.794 20.649 C 8.69 20.589 8.69 20.44 8.69 20.142 L 8.69 17.135 Z"
+                android:fillColor="#1c274d"
+                android:fillAlpha="0"
+                android:strokeColor="#1c274d"
+                android:strokeWidth="1"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="fillAlpha"
+                android:duration="300"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

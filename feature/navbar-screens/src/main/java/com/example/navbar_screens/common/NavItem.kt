@@ -3,6 +3,7 @@ package com.example.navbar_screens.common
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.navbar_screens.home_screen.navigation.HomeScreenRoute
 import com.example.navbar_screens.likes_screen.navigation.LikesScreenRoute
+import com.example.navbar_screens.lists_screen.navigation.ListsScreenRoute
 import com.example.navbar_screens.more_screen.navigation.MoreScreenRoute
 import com.example.navbar_screens.search_screen.navigation.SearchScreenRoute
 
@@ -22,6 +23,11 @@ val navItems = listOf(
         label = "Избранное",
         icon = LibriaNowIcons.HeartAnimated,
         destination = LikesScreenRoute
+    ),
+    NavItem(
+        label = "Списки",
+        icon = LibriaNowIcons.BookAnimated,
+        destination = ListsScreenRoute
     ),
     NavItem(
         label = "Поиск",

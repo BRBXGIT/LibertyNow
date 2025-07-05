@@ -94,7 +94,7 @@ fun MoreLC(
         ),
         MoreItem(
             onClick = { startLink(context, "https://anilibria.top") },
-            icon = LibriaNowIcons.AniLibertyMilticolored,
+            icon = LibriaNowIcons.AniLibertyMulticolored,
             label = "Сайт AniLiberty",
             fromLink = true
         ),

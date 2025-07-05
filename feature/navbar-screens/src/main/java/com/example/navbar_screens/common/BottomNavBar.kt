@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
@@ -47,11 +48,15 @@ fun BottomNavBar(
                     Image(
                         painter = animatedPainter,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(mColors.onSecondaryContainer)
+                        colorFilter = ColorFilter.tint(mColors.onSecondaryContainer),
                     )
                 },
                 label = {
-                    Text(navItem.label)
+                    Text(
+                        navItem.label,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             )
         }

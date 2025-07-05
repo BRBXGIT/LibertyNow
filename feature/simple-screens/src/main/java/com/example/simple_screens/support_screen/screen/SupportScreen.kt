@@ -118,7 +118,7 @@ fun SupportScreen(navController: NavController) {
 
                 DonateItemUi(
                     onClick = { isJoinTeamBSOpened = true },
-                    icon = LibriaNowIcons.AniLibertyMilticolored,
+                    icon = LibriaNowIcons.AniLibertyMulticolored,
                     text = "Вступить в команду AniLibria"
                 )
             }

@@ -12,6 +12,7 @@ import com.example.navbar_screens.home_screen.navigation.homeScreen
 import com.example.navbar_screens.home_screen.screen.HomeScreenVM
 import com.example.navbar_screens.likes_screen.navigation.likesScreen
 import com.example.navbar_screens.likes_screen.screen.LikesScreenVM
+import com.example.navbar_screens.lists_screen.navigation.listsScreen
 import com.example.navbar_screens.more_screen.navigation.moreScreen
 import com.example.navbar_screens.more_screen.screen.MoreScreenVM
 import com.example.navbar_screens.search_screen.navigation.searchScreen
@@ -53,6 +54,11 @@ fun NavGraph(
             commonVM = commonVM,
             navController = navController,
             authVM = authVM
+        )
+
+        listsScreen(
+            commonVM = commonVM,
+            navController = navController
         )
 
         searchScreen(

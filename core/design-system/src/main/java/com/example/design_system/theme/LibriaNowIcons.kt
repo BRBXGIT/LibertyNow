@@ -43,6 +43,7 @@ object LibriaNowIcons {
     // Animated
     val HomeAnimated = R.drawable.ic_home_animated
     val HeartAnimated = R.drawable.ic_heart_animated
+    val BookAnimated = R.drawable.ic_book_animated
     val MagnifierAnimated = R.drawable.ic_magnifier_animated
     val MoreAnimated = R.drawable.ic_more_animated
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
@@ -51,7 +52,7 @@ object LibriaNowIcons {
     val CropAnimated = R.drawable.ic_crop_animated
 
     // Multicolored
-    val AniLibertyMilticolored = R.drawable.ic_aniliberty_multicolored
+    val AniLibertyMulticolored = R.drawable.ic_aniliberty_multicolored
     val VKMulticolored = R.drawable.ic_vk_multicolored
     val YouTubeMulticolored = R.drawable.ic_youtube_multicolored
     val PatreonMulticolored = R.drawable.ic_patreon_multicolored
