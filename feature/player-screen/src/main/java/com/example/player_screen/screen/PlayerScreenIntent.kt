@@ -19,6 +19,7 @@ interface PlayerScreenIntent {
         val quickSeek: Boolean = false
     ): PlayerScreenIntent
     data object StartSkipOpeningButtonTimer: PlayerScreenIntent
+    data object CancelSkipOpeningButtonTimer: PlayerScreenIntent
 
     data class ChangePlayerFeature(val feature: FeatureType): PlayerScreenIntent
 }

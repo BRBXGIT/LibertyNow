@@ -348,6 +348,18 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private fun cancelSkipOpeningButtonTimer() {
+        skipOpeningButtonTimerJob?.cancel()
+        skipOpeningButtonTimerJob = null
+        _playerScreenState.update { state ->
+            state.copy(
+                isSkipOpeningButtonVisible = false,
+                timerStarted = false,
+                skipOpeningButtonTimer = 10
+            )
+        }
+    }
+
     private fun changePlayerFeature(featureType: FeatureType) {
         viewModelScope.launch(dispatcherIo) {
             when(featureType) {
@@ -377,6 +389,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.SetEpisode -> setEpisode(intent.episodeId)
             is PlayerScreenIntent.SeekEpisode -> seekEpisode(intent.seekTo, intent.quickSeek)
             is PlayerScreenIntent.StartSkipOpeningButtonTimer -> startSkipOpeningButtonTimer()
+            is PlayerScreenIntent.CancelSkipOpeningButtonTimer -> cancelSkipOpeningButtonTimer()
 
             is PlayerScreenIntent.ChangePlayerFeature -> changePlayerFeature(intent.feature)
         }

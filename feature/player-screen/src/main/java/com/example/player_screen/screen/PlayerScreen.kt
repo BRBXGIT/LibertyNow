@@ -361,10 +361,18 @@ fun PlayerScreen(
                 if (screenState.links.isNotEmpty()) {
                     val opening = screenState.links[screenState.currentAnimeId].skips.opening
                     if (opening.isNotEmpty()) {
-                        if ((opening[0] != null) and (opening[1] != null)) {
-                            if (screenState.currentPosition / 1000 in opening[0]!!..opening[1]!!) {
+                        if ((opening[0] != null) && (opening[1] != null)) {
+                            val currentSec = screenState.currentPosition / 1000
+                            val inOpening = currentSec in opening[0]!!..opening[1]!!
+
+                            if (inOpening) {
                                 if (!screenState.timerStarted) {
                                     viewModel.sendIntent(PlayerScreenIntent.StartSkipOpeningButtonTimer)
+                                }
+                            } else {
+                                // Пользователь вышел за пределы опенинга — отменить кнопку
+                                if (screenState.isSkipOpeningButtonVisible) {
+                                    viewModel.sendIntent(PlayerScreenIntent.CancelSkipOpeningButtonTimer)
                                 }
                             }
                         }
