@@ -249,7 +249,7 @@ fun PlayerScreen(
                     CentralButtonsSection(
                         isPlaying = screenState.isPlaying,
                         firstEpisode = screenState.currentAnimeId == 0,
-                        lastEpisode = screenState.currentAnimeId == screenState.links.size,
+                        lastEpisode = screenState.currentAnimeId == screenState.links.size - 1,
                         onPreviousClick = {
                             viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(false))
                         },
