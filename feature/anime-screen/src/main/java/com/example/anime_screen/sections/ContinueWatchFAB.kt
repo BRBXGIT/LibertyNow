@@ -14,9 +14,10 @@ import com.example.design_system.theme.LibriaNowIcons
 fun ContinueWatchFAB(
     start: Boolean,
     expanded: Boolean,
+    onClick: () -> Unit
 ) {
     ExtendedFloatingActionButton(
-        onClick = {},
+        onClick = onClick,
         icon = {
             Icon(
                 painter = painterResource(LibriaNowIcons.PlayFilled),

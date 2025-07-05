@@ -72,7 +72,7 @@ fun AnimeScreen(
     val screenState by viewModel.animeScreenState.collectAsStateWithLifecycle()
 
     // Fetch anime and watched eps
-    LaunchedEffect(animeId, authState.likes, authState.isLogged) {
+    LaunchedEffect(Unit) {
         viewModel.sendIntent(AnimeScreenIntent.FetchAnime(animeId))
         viewModel.sendIntent(AnimeScreenIntent.ObserveWatchedEps(animeId))
 
@@ -114,6 +114,7 @@ fun AnimeScreen(
         }
     }
 
+    val anime = screenState.anime
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -138,6 +139,36 @@ fun AnimeScreen(
                     expanded = when(screenState.scrollDirection) {
                         ScrollDirection.Down -> false
                         ScrollDirection.Up -> true
+                    },
+                    onClick = {
+                        anime?.let {
+                            if (screenState.watchedEps.isEmpty()) {
+                                val links = anime.player.list.values.toList()
+                                val linksString = Gson().toJson(links)
+
+                                navController.navigate(
+                                    PlayerScreenRoute(
+                                        currentEpisodeId = 0,
+                                        gsonLinks = linksString,
+                                        host = anime.player.host,
+                                        animeId = animeId
+                                    )
+                                )
+                            } else {
+                                val lastWatchedEpisode = screenState.watchedEps.size
+                                val links = anime.player.list.values.toList()
+                                val linksString = Gson().toJson(links)
+
+                                navController.navigate(
+                                    PlayerScreenRoute(
+                                        currentEpisodeId = lastWatchedEpisode,
+                                        gsonLinks = linksString,
+                                        host = anime.player.host,
+                                        animeId = animeId
+                                    )
+                                )
+                            }
+                        }
                     }
                 )
             }
@@ -189,7 +220,6 @@ fun AnimeScreen(
             )
         }
 
-        val anime = screenState.anime
         if (screenState.isError) {
             ErrorSection(modifier = Modifier.fillMaxSize())
         } else {
