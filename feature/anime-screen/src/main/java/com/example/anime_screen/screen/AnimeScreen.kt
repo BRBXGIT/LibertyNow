@@ -219,6 +219,7 @@ fun AnimeScreen(
                         AddToLikesButton(
                             modifier = Modifier.animateItem(),
                             alreadyInLikes = screenState.isInLikes,
+                            isLoading = authState.isLoading,
                             onAddClick = {
                                 authVM.sendIntent(
                                     AuthIntent.AddLike(currentAnime)

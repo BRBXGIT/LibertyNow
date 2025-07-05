@@ -28,7 +28,7 @@ class SearchScreenVM @Inject constructor(
     private val _searchScreenState = MutableStateFlow(SearchScreenState())
     val searchScreenState = _searchScreenState.stateIn(
         viewModelScope,
-        SharingStarted.Lazily,
+        SharingStarted.Eagerly,
         SearchScreenState()
     )
 

@@ -50,16 +50,33 @@ class PlayerScreenVM @Inject constructor(
     private val playerListener = object : Player.Listener {
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
             if (player.contentDuration != C.TIME_UNSET) {
+                player.playWhenReady = _playerScreenState.value.autoPlay != false
                 _playerScreenState.update { state ->
                     state.copy(
                         duration = player.contentDuration,
-                        isPlaying = IsPlayingState.Playing,
+                        isPlaying = if (_playerScreenState.value.autoPlay != false) {
+                            IsPlayingState.Playing
+                        } else {
+                            IsPlayingState.Paused
+                        },
+                        timerStarted = false,
+                        isSkipOpeningButtonVisible = false,
+                        skipOpeningButtonTimer = 10
                     )
                 }
             }
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            skipOpeningButtonTimerJob?.cancel()
+            _playerScreenState.update { state ->
+                state.copy(
+                    timerStarted = false,
+                    isSkipOpeningButtonVisible = false,
+                    skipOpeningButtonTimer = 10
+                )
+            }
+
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
                 val nextId = _playerScreenState.value.currentAnimeId + 1
                 if (nextId < _playerScreenState.value.links.size) {
@@ -67,11 +84,38 @@ class PlayerScreenVM @Inject constructor(
                         state.copy(
                             currentAnimeId = nextId,
                             currentLink = _playerScreenState.value.links[nextId],
-                            isPlaying = IsPlayingState.Playing,
-                            duration = player.contentDuration,
-                            skipOpeningButtonTimer = 10,
-                            timerStarted = false
                         )
+                    }
+                }
+            }
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            when (playbackState) {
+                Player.STATE_BUFFERING -> {
+                    _playerScreenState.update { state ->
+                        state.copy(isPlaying = IsPlayingState.Loading)
+                    }
+                }
+                Player.STATE_READY -> {
+                    if (player.playWhenReady) {
+                        _playerScreenState.update { state ->
+                            state.copy(isPlaying = IsPlayingState.Playing)
+                        }
+                    } else {
+                        _playerScreenState.update { state ->
+                            state.copy(isPlaying = IsPlayingState.Paused)
+                        }
+                    }
+                }
+                Player.STATE_ENDED -> {
+                    _playerScreenState.update { state ->
+                        state.copy(isPlaying = IsPlayingState.Paused)
+                    }
+                }
+                Player.STATE_IDLE -> {
+                    _playerScreenState.update { state ->
+                        state.copy(isPlaying = IsPlayingState.Loading)
                     }
                 }
             }
@@ -108,7 +152,6 @@ class PlayerScreenVM @Inject constructor(
                     player.removeListener(playerListener)
 
                     player.setMediaItems(mediaItems, state.currentAnimeId, state.currentPosition)
-                    player.playWhenReady = autoPlay != false
                     player.prepare()
 
                     player.addListener(playerListener)
@@ -277,28 +320,48 @@ class PlayerScreenVM @Inject constructor(
         }
     }
 
+    private var skipOpeningButtonTimerJob: Job? = null
     fun startSkipOpeningButtonTimer() {
-        viewModelScope.launch(dispatcherDefault) {
-            _playerScreenState.update { state ->
-                state.copy(
+        skipOpeningButtonTimerJob?.cancel()
+
+        skipOpeningButtonTimerJob = viewModelScope.launch(dispatcherDefault) {
+            _playerScreenState.update {
+                it.copy(
                     isSkipOpeningButtonVisible = true,
                     timerStarted = true
                 )
             }
-
-            for (i in 10 downTo 0) {
+            while (_playerScreenState.value.skipOpeningButtonTimer > 0) {
+                if (_playerScreenState.value.isPlaying == IsPlayingState.Paused) {
+                    delay(200)
+                    continue
+                }
                 delay(1000)
-                _playerScreenState.update { state ->
-                    state.copy(
-                        skipOpeningButtonTimer = i
+                _playerScreenState.update {
+                    val newTimer = it.skipOpeningButtonTimer - 1
+                    it.copy(
+                        skipOpeningButtonTimer = newTimer
                     )
                 }
-                if (i == 0) {
-                    _playerScreenState.update { state ->
-                        state.copy(isSkipOpeningButtonVisible = false)
-                    }
-                }
             }
+            _playerScreenState.update {
+                it.copy(
+                    isSkipOpeningButtonVisible = false,
+                    timerStarted = false
+                )
+            }
+        }
+    }
+
+    private fun cancelSkipOpeningButtonTimer() {
+        skipOpeningButtonTimerJob?.cancel()
+        skipOpeningButtonTimerJob = null
+        _playerScreenState.update { state ->
+            state.copy(
+                isSkipOpeningButtonVisible = false,
+                timerStarted = false,
+                skipOpeningButtonTimer = 10
+            )
         }
     }
 
@@ -331,6 +394,7 @@ class PlayerScreenVM @Inject constructor(
             is PlayerScreenIntent.SetEpisode -> setEpisode(intent.episodeId)
             is PlayerScreenIntent.SeekEpisode -> seekEpisode(intent.seekTo, intent.quickSeek)
             is PlayerScreenIntent.StartSkipOpeningButtonTimer -> startSkipOpeningButtonTimer()
+            is PlayerScreenIntent.CancelSkipOpeningButtonTimer -> cancelSkipOpeningButtonTimer()
 
             is PlayerScreenIntent.ChangePlayerFeature -> changePlayerFeature(intent.feature)
         }

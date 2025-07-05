@@ -93,13 +93,15 @@ fun PlayerScreen(
         navController.navigateUp()
     }
 
-    LaunchedEffect(screenState.isPlaying) {
+    LaunchedEffect(screenState.isPlaying, screenState.currentAnimeId) {
         if (activity.isInPictureInPictureMode) {
             val isPlayingNow = when (screenState.isPlaying) {
                 IsPlayingState.Paused -> false
                 else -> true
             }
-            updatedPipParams(context, isPlayingNow)?.let { params ->
+            val firstEpisode = screenState.currentAnimeId == 0
+            val lastEpisode = screenState.currentAnimeId < screenState.links.size
+            updatedPipParams(context, isPlayingNow, firstEpisode, lastEpisode)?.let { params ->
                 activity.setPictureInPictureParams(params)
             }
         }
@@ -249,7 +251,7 @@ fun PlayerScreen(
                     CentralButtonsSection(
                         isPlaying = screenState.isPlaying,
                         firstEpisode = screenState.currentAnimeId == 0,
-                        lastEpisode = screenState.currentAnimeId == screenState.links.size,
+                        lastEpisode = screenState.currentAnimeId == screenState.links.size - 1,
                         onPreviousClick = {
                             viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(false))
                         },
@@ -312,12 +314,16 @@ fun PlayerScreen(
                                         screenState.copy(isControllerVisible = false)
                                     )
                                 )
+                                val firstEpisode = screenState.currentAnimeId == 0
+                                val lastEpisode = screenState.currentAnimeId < screenState.links.size
                                 updatedPipParams(
                                     context = context,
                                     isPlaying = when(screenState.isPlaying) {
                                         IsPlayingState.Paused -> false
                                         else -> true
-                                    }
+                                    },
+                                    firstEpisode = firstEpisode,
+                                    lastEpisode = lastEpisode
                                 )?.let { params ->
                                     activity.enterPictureInPictureMode(params)
                                 }
@@ -355,10 +361,17 @@ fun PlayerScreen(
                 if (screenState.links.isNotEmpty()) {
                     val opening = screenState.links[screenState.currentAnimeId].skips.opening
                     if (opening.isNotEmpty()) {
-                        if ((opening[0] != null) and (opening[1] != null)) {
-                            if (screenState.currentPosition / 1000 in opening[0]!!..opening[1]!!) {
+                        if ((opening[0] != null) && (opening[1] != null)) {
+                            val currentSec = screenState.currentPosition / 1000
+                            val inOpening = currentSec in opening[0]!!..opening[1]!!
+
+                            if (inOpening) {
                                 if (!screenState.timerStarted) {
                                     viewModel.sendIntent(PlayerScreenIntent.StartSkipOpeningButtonTimer)
+                                }
+                            } else {
+                                if (screenState.isSkipOpeningButtonVisible) {
+                                    viewModel.sendIntent(PlayerScreenIntent.CancelSkipOpeningButtonTimer)
                                 }
                             }
                         }
@@ -434,15 +447,20 @@ private fun AnimatedVisibilityContent(
     }
 }
 
-private fun updatedPipParams(context: Context, isPlaying: Boolean): PictureInPictureParams? {
+private fun updatedPipParams(
+    context: Context,
+    isPlaying: Boolean,
+    firstEpisode: Boolean,
+    lastEpisode: Boolean,
+): PictureInPictureParams? {
     return PictureInPictureParams.Builder()
         .setSourceRectHint(videoViewBounds)
         .setAspectRatio(Rational(16, 9))
         .setActions(
             listOf(
-                createSkipEpisodeRemoteAction(context, false),
+                createSkipEpisodeRemoteAction(context, false, firstEpisode),
                 createPlayPauseRemoteAction(context, isPlaying),
-                createSkipEpisodeRemoteAction(context, true)
+                createSkipEpisodeRemoteAction(context, true, lastEpisode)
             )
         )
         .build()

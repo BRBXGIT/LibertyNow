@@ -28,6 +28,13 @@ import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 
+data class LikeButtonAnimationStates(
+    val buttonColor: Color,
+    val inLikesAlpha: Float,
+    val notInLikesAlpha: Float,
+    val loadingAlpha: Float
+)
+
 @Composable
 fun AddToLikesButton(
     alreadyInLikes: Boolean,
@@ -35,25 +42,28 @@ fun AddToLikesButton(
     onPopClick: () -> Unit,
     onAuthClick: () -> Unit,
     isLogged: Boolean,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val (animatedButtonColor, animatedInLikesAlpha, animatedNotInLikesAlpha) =
-        rememberLikeButtonAnimations(alreadyInLikes, isLogged)
+    val animationStates = rememberLikeButtonAnimations(alreadyInLikes, isLogged, isLoading)
 
     val animatedAuthAlpha by animateFloatAsState(
-        targetValue = if (!isLogged) 1f else 0f,
+        targetValue = if (!isLogged && !isLoading) 1f else 0f,
         animationSpec = tween(CommonConstants.ANIMATION_DURATION)
     )
 
+    val noop: () -> Unit = {}
     val onClick = when {
+        isLoading -> noop
         isLogged && alreadyInLikes -> onPopClick
         isLogged -> onAddClick
         else -> onAuthClick
     }
 
     Button(
-        colors = ButtonDefaults.buttonColors(containerColor = animatedButtonColor),
+        colors = ButtonDefaults.buttonColors(containerColor = animationStates.buttonColor),
         onClick = onClick,
+        enabled = !isLoading,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
@@ -65,17 +75,22 @@ fun AddToLikesButton(
             LikeButtonContent(
                 icon = LibriaNowIcons.MinusCircle,
                 text = "Удалить из избранного",
-                alpha = animatedInLikesAlpha
+                alpha = animationStates.inLikesAlpha
             )
             LikeButtonContent(
                 icon = LibriaNowIcons.PlusCircle,
                 text = "Добавить в избранное",
-                alpha = animatedNotInLikesAlpha
+                alpha = animationStates.notInLikesAlpha
             )
             LikeButtonContent(
                 icon = LibriaNowIcons.UserCheck,
                 text = "Авторизация",
                 alpha = animatedAuthAlpha
+            )
+            LikeButtonContent(
+                icon = LibriaNowIcons.Hourglass,
+                text = "Loading...",
+                alpha = animationStates.loadingAlpha
             )
         }
     }
@@ -102,21 +117,34 @@ private fun LikeButtonContent(
 }
 
 @Composable
-private fun rememberLikeButtonAnimations(alreadyInLikes: Boolean, isLogged: Boolean): Triple<Color, Float, Float> {
+private fun rememberLikeButtonAnimations(
+    alreadyInLikes: Boolean,
+    isLogged: Boolean,
+    isLoading: Boolean
+): LikeButtonAnimationStates {
     val animatedButtonColor by animateColorAsState(
         targetValue = if (alreadyInLikes && isLogged) mColors.secondary else mColors.primary,
         label = "Animated color for button",
         animationSpec = tween(CommonConstants.ANIMATION_DURATION)
     )
     val animatedInLikesAlpha by animateFloatAsState(
-        targetValue = if (alreadyInLikes && isLogged) 1f else 0f,
+        targetValue = if (alreadyInLikes && isLogged && !isLoading) 1f else 0f,
         animationSpec = tween(CommonConstants.ANIMATION_DURATION)
     )
     val animatedNotInLikesAlpha by animateFloatAsState(
-        targetValue = if (!alreadyInLikes && isLogged) 1f else 0f,
+        targetValue = if (!alreadyInLikes && isLogged && !isLoading) 1f else 0f,
         animationSpec = tween(CommonConstants.ANIMATION_DURATION)
     )
-    return Triple(animatedButtonColor, animatedInLikesAlpha, animatedNotInLikesAlpha)
+    val animatedLoadingAlpha by animateFloatAsState(
+        targetValue = if (isLoading) 1f else 0f,
+        animationSpec = tween(CommonConstants.ANIMATION_DURATION)
+    )
+    return LikeButtonAnimationStates(
+        buttonColor = animatedButtonColor,
+        inLikesAlpha = animatedInLikesAlpha,
+        notInLikesAlpha = animatedNotInLikesAlpha,
+        loadingAlpha = animatedLoadingAlpha
+    )
 }
 
 @Preview
@@ -141,6 +169,7 @@ private fun AddToLikesButtonPreview() {
             onPopClick = {},
             isLogged = true,
             onAuthClick = {},
+            isLoading = true
         )
     }
 }

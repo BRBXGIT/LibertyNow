@@ -57,7 +57,7 @@ class AuthVM @Inject constructor(
                         sessionToken = token
                     )
                 }
-                if (loggingState is LoggingState.LoggedIn) {
+                if ((loggingState is LoggingState.LoggedIn) and (_authState.value.sessionToken != null)) {
                     fetchLikesAmount()
                 }
             }
@@ -79,7 +79,6 @@ class AuthVM @Inject constructor(
             when (response.error) {
                 NetworkErrors.SUCCESS -> {
                     authRepository.saveUserSessionToken((response.response as SessionTokenResponse).sessionId)
-                    observeSessionToken()
                 }
                 NetworkErrors.INCORRECT_PASSWORD -> {
                     _authState.update { state ->
@@ -133,7 +132,9 @@ class AuthVM @Inject constructor(
                         isLoading = false
                     )
                 }
-                fetchLikes()
+                if ((_authState.value.sessionToken != null) and (_authState.value.isLogged is LoggingState.LoggedIn)) {
+                    fetchLikes()
+                }
             } else {
                 _authState.update { state ->
                     state.copy(

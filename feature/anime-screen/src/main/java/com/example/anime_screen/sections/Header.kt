@@ -119,7 +119,7 @@ fun Header(
                 Text(
                     text = nameEnglish,
                     style = mTypography.titleMedium,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
 
