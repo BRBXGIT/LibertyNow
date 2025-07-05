@@ -1,6 +1,10 @@
 package com.example.anime_screen.screen
 
 import android.content.Intent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -30,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.anime_screen.sections.AddToLikesButton
 import com.example.anime_screen.sections.AnimeScreenTopBar
+import com.example.anime_screen.sections.ContinueWatchFAB
 import com.example.anime_screen.sections.DescriptionSection
 import com.example.anime_screen.sections.EpisodeItem
 import com.example.anime_screen.sections.GenresLR
@@ -121,6 +127,21 @@ fun AnimeScreen(
                 onNavClick = { navController.navigateUp() }
             )
         },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = !screenState.isLoading,
+                enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
+                exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION))
+            ) {
+                ContinueWatchFAB(
+                    start = screenState.watchedEps.isEmpty(),
+                    expanded = when(screenState.scrollDirection) {
+                        ScrollDirection.Down -> false
+                        ScrollDirection.Up -> true
+                    }
+                )
+            }
+        },
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
@@ -172,8 +193,21 @@ fun AnimeScreen(
         if (screenState.isError) {
             ErrorSection(modifier = Modifier.fillMaxSize())
         } else {
+            val lazyListState = rememberLazyListState()
+            val directionalLazyListState = rememberDirectionalLazyListState(
+                lazyListState
+            )
+            LaunchedEffect(directionalLazyListState.scrollDirection) {
+                viewModel.sendIntent(
+                    AnimeScreenIntent.UpdateScreenState(
+                        screenState.copy(scrollDirection = directionalLazyListState.scrollDirection)
+                    )
+                )
+            }
+
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                state = lazyListState
             ) {
                 anime?.let {
                     item(key = "header") {
