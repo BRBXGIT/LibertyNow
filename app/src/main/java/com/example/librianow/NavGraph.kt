@@ -77,7 +77,7 @@ fun NavGraph(
             navController = navController
         )
 
-        projectTeamScreen()
+        projectTeamScreen(navController)
 
         supportScreen(navController)
 

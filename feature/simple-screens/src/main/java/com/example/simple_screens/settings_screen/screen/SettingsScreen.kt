@@ -63,7 +63,7 @@ fun SettingsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(mColors.background)
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
         ) {
             SettingsLCSection(
                 chosenTheme = screenState.theme,
@@ -78,6 +78,7 @@ fun SettingsScreen(
                 onThemeChange = {
                     viewModel.sendIntent(SettingsScreenIntent.SetTheme(it))
                 },
+                bottomPadding = innerPadding.calculateBottomPadding(),
                 onCheckChange = {
                     when(it) {
                         PlayerSettingsItemType.VideoQuality -> {
