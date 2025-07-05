@@ -18,21 +18,25 @@ fun ListLVG(
     list: List<ListsAnimeEntity>,
     onAnimeClick: (Int) -> Unit
 ) {
-    LazyVerticalGrid(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize(),
-        columns = GridCells.Adaptive(150.dp),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        items(list, key = { it.id }) { anime ->
-            AnimeCard(
-                posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster,
-                genresString = anime.genres,
-                title = anime.name,
-                onCardClick = { onAnimeClick(anime.id) },
-                modifier = Modifier.animateItem()
-            )
+    if (list.isEmpty()) {
+        EmptyPageSection()
+    } else {
+        LazyVerticalGrid(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            columns = GridCells.Adaptive(150.dp),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(list, key = { it.id }) { anime ->
+                AnimeCard(
+                    posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster,
+                    genresString = anime.genres,
+                    title = anime.name,
+                    onCardClick = { onAnimeClick(anime.id) },
+                    modifier = Modifier.animateItem()
+                )
+            }
         }
     }
 }

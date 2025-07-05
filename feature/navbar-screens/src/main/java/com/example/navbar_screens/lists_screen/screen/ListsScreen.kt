@@ -128,8 +128,8 @@ fun ListsScreen(
 
                 ListPager(
                     pagerState = pagerState,
-                    list = screenState.animeByStatus[screenState.selectedStatus]!!,
-                    onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
+                    animeByStatus = screenState.animeByStatus,
+                    onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) },
                 )
             }
         }
