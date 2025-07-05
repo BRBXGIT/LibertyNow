@@ -370,7 +370,6 @@ fun PlayerScreen(
                                     viewModel.sendIntent(PlayerScreenIntent.StartSkipOpeningButtonTimer)
                                 }
                             } else {
-                                // Пользователь вышел за пределы опенинга — отменить кнопку
                                 if (screenState.isSkipOpeningButtonVisible) {
                                     viewModel.sendIntent(PlayerScreenIntent.CancelSkipOpeningButtonTimer)
                                 }

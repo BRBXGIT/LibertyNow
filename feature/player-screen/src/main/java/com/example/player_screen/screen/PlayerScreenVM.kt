@@ -325,25 +325,30 @@ class PlayerScreenVM @Inject constructor(
         skipOpeningButtonTimerJob?.cancel()
 
         skipOpeningButtonTimerJob = viewModelScope.launch(dispatcherDefault) {
-            _playerScreenState.update { state ->
-                state.copy(
+            _playerScreenState.update {
+                it.copy(
                     isSkipOpeningButtonVisible = true,
                     timerStarted = true
                 )
             }
-
-            for (i in _playerScreenState.value.skipOpeningButtonTimer downTo 0) {
+            while (_playerScreenState.value.skipOpeningButtonTimer > 0) {
+                if (_playerScreenState.value.isPlaying == IsPlayingState.Paused) {
+                    delay(200)
+                    continue
+                }
                 delay(1000)
-                _playerScreenState.update { state ->
-                    state.copy(
-                        skipOpeningButtonTimer = i
+                _playerScreenState.update {
+                    val newTimer = it.skipOpeningButtonTimer - 1
+                    it.copy(
+                        skipOpeningButtonTimer = newTimer
                     )
                 }
-                if (i == 0) {
-                    _playerScreenState.update { state ->
-                        state.copy(isSkipOpeningButtonVisible = false)
-                    }
-                }
+            }
+            _playerScreenState.update {
+                it.copy(
+                    isSkipOpeningButtonVisible = false,
+                    timerStarted = false
+                )
             }
         }
     }
