@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
+import com.example.design_system.theme.mColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,10 +37,18 @@ fun SearchableTopBar(
     placeholder: String = "Поиск",
     onSearchClick: () -> Unit,
     onQueryInput: (String) -> Unit,
-    onClearClick: () -> Unit
+    onClearClick: () -> Unit,
+    changeColor: Boolean = true
 ) {
     Column {
         TopAppBar(
+            colors = if (changeColor) {
+                TopAppBarDefaults.topAppBarColors()
+            } else {
+                TopAppBarDefaults.topAppBarColors(
+                    scrolledContainerColor = mColors.background
+                )
+            },
             title = {
                 if (isSearching) {
                     TextField(

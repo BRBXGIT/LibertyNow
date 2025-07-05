@@ -38,10 +38,11 @@ fun ListsScreen(
     val commonState by commonVM.commonState.collectAsStateWithLifecycle()
     val screenState by viewModel.listsScreenState.collectAsStateWithLifecycle()
 
-    val topBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val topBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         topBar = {
             SearchableTopBar(
+                changeColor = false,
                 title = "Списки",
                 query = screenState.query,
                 isSearching = screenState.isSearching,

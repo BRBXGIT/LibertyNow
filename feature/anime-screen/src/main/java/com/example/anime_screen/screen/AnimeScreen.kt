@@ -296,7 +296,7 @@ fun AnimeScreen(
                             episode = episode.episode,
                             name = episode.name ?: "Без названия",
                             isWatched = isWatched,
-                            onWatchButtonClick = {
+                            onClick = {
                                 val links = anime.player.list.values.toList()
                                 val linksString = Gson().toJson(links)
 

@@ -1,15 +1,15 @@
 package com.example.anime_screen.sections
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,37 +25,31 @@ fun EpisodeItem(
     episode: Int,
     name: String,
     isWatched: Boolean,
-    onWatchButtonClick: () -> Unit,
+    onClick: () -> Unit,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+    Box(
+        contentAlignment = Alignment.CenterStart,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
+            .clip(mShapes.small)
+            .clickable {
+                onClick()
+            }
             .background(
-                color = if (isWatched) mColors.surfaceContainerLow else mColors.surfaceContainerHigh,
-                shape = mShapes.small
+                if (isWatched) mColors.surfaceContainerLow else mColors.surfaceContainerHigh
             )
-            .padding(8.dp),
     ) {
         Text(
             text = "$episode • $name",
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = mTypography.bodyLarge,
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = CommonConstants.HORIZONTAL_PADDING.dp)
-        )
-
-        TextButton(
-            onClick = onWatchButtonClick,
-        ) {
-            Text(
-                text = "Смотреть",
+            modifier = Modifier.padding(
+                horizontal = 12.dp,
+                vertical = 20.dp
             )
-        }
+        )
     }
 }
 
@@ -66,7 +60,7 @@ private fun EpisodeItemPreview() {
         EpisodeItem(
             episode = 1,
             name = "Новый эпизод",
-            onWatchButtonClick = {},
+            onClick = {},
             isWatched = true
         )
     }
