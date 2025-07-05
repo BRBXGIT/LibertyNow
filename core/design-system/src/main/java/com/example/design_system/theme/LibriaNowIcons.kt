@@ -50,12 +50,15 @@ object LibriaNowIcons {
     val CropAnimated = R.drawable.ic_crop_animated
 
     // Multicolored
-    val AniLiberty = R.drawable.ic_aniliberty_multicolored
+    val AniLibertyMilticolored = R.drawable.ic_aniliberty_multicolored
     val VKMulticolored = R.drawable.ic_vk_multicolored
     val YouTubeMulticolored = R.drawable.ic_youtube_multicolored
     val PatreonMulticolored = R.drawable.ic_patreon_multicolored
     val TelegramMulticolored = R.drawable.ic_telegram_multicolored
     val DiscordMulticolored = R.drawable.ic_discord_multicolored
+    val BoostyMulticolored = R.drawable.ic_boosty_multicolored
+    val YoomoneyMulticolored = R.drawable.ic_yoomoney_multicolored
+    val DonationAlertsMulticolored = R.drawable.ic_donationalerts_multicolored
 
     // Images
     val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light

@@ -28,7 +28,7 @@ fun MoreScreenTopBar(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
-                    painter = painterResource(LibriaNowIcons.AniLiberty),
+                    painter = painterResource(LibriaNowIcons.AniLibertyMilticolored),
                     contentDescription = null,
                     tint = Color.Unspecified
                 )

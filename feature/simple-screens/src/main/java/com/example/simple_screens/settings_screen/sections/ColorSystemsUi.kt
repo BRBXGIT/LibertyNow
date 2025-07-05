@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.DarkColorScheme
 import com.example.design_system.theme.DarkGreenAppleScheme
@@ -32,6 +33,7 @@ import com.example.design_system.theme.DarkLavenderScheme
 import com.example.design_system.theme.DarkSakuraScheme
 import com.example.design_system.theme.DarkSeaScheme
 import com.example.design_system.theme.DarkTacosScheme
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.LightColorScheme
 import com.example.design_system.theme.LightGreenAppleScheme
 import com.example.design_system.theme.LightLavenderScheme
@@ -110,7 +112,7 @@ fun ColorSystemElements(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         items(colorSystems) { colorSystem ->
-            ColorSystemPreview(
+            ColorSystemUi(
                 colorSystem = colorSystem,
                 isChosen = colorSystem.name == chosenColorSystem,
                 onClick = { onColorSystemClick(colorSystem.name) }
@@ -120,7 +122,7 @@ fun ColorSystemElements(
 }
 
 @Composable
-private fun ColorSystemPreview(
+private fun ColorSystemUi(
     colorSystem: ColorSystemPreviewColors,
     isChosen: Boolean,
     onClick: () -> Unit
@@ -249,6 +251,40 @@ private fun ColorSystemPreview(
         Text(
             text = colorSystem.previewName,
             style = mTypography.labelMedium
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ColorSystemUiPreview() {
+    LibriaNowTheme {
+        ColorSystemUi(
+            colorSystem = ColorSystemPreviewColors(
+                secondaryContainer = mColors.secondaryContainer,
+                background = mColors.background,
+                surfaceContainerHighest = mColors.surfaceContainerHighest,
+                secondary = mColors.secondary,
+                onSecondaryContainer = mColors.onSecondaryContainer,
+                primary = mColors.primary,
+                tertiary = mColors.tertiary,
+                name = "lavenderDark",
+                previewName = "Лаванда"
+            ),
+            isChosen = true,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ColorSystemElementsPreview() {
+    LibriaNowTheme {
+        ColorSystemElements(
+            chosenTheme = "dark",
+            chosenColorSystem = "lavenderDark",
+            onColorSystemClick = {},
         )
     }
 }

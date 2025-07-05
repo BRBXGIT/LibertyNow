@@ -79,7 +79,7 @@ fun NavGraph(
 
         projectTeamScreen()
 
-        supportScreen()
+        supportScreen(navController)
 
         settingsScreen(navController)
     }

@@ -20,8 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.LibriaNowIcons
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
@@ -167,5 +169,23 @@ fun SettingsLCSection(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun SettingsLCSectionPreview() {
+    LibriaNowTheme {
+        SettingsLCSection(
+            chosenTheme = "dark",
+            chosenColorSystem = "darkLavender",
+            videoQuality = 480,
+            autoPlay = true,
+            showSkipOpeningButton = false,
+            isCropped = true,
+            onThemeChange = {},
+            onColorSystemChange = {},
+            onCheckChange = {}
+        )
     }
 }
