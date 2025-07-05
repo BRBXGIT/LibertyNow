@@ -1,10 +1,6 @@
 package com.example.anime_screen.screen
 
 import android.content.Intent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,16 +12,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -35,18 +28,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.anime_screen.sections.AddToLikesButton
 import com.example.anime_screen.sections.AnimeScreenTopBar
-import com.example.anime_screen.sections.ContinueWatchFAB
+import com.example.anime_screen.sections.ContinueWatchFABWrapper
 import com.example.anime_screen.sections.DescriptionSection
 import com.example.anime_screen.sections.EpisodeItem
 import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
 import com.example.anime_screen.sections.TorrentsSection
 import com.example.common.auth.AuthIntent
+import com.example.common.auth.AuthState
 import com.example.common.auth.AuthVM
 import com.example.design_system.sections.auth_bs.AuthBS
 import com.example.design_system.sections.error_section.ErrorSection
-import com.example.design_system.snackbars.ObserveAsEvents
-import com.example.design_system.snackbars.SnackbarController
+import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
 import com.example.local.datastore.auth.LoggingState
@@ -58,7 +51,6 @@ import com.example.network.common.titles_list_response.Posters
 import com.example.network.common.titles_list_response.Small
 import com.example.player_screen.navigation.PlayerScreenRoute
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,47 +64,11 @@ fun AnimeScreen(
     val screenState by viewModel.animeScreenState.collectAsStateWithLifecycle()
 
     // Fetch anime and watched eps
-    LaunchedEffect(Unit) {
-        viewModel.sendIntent(AnimeScreenIntent.FetchAnime(animeId))
-        viewModel.sendIntent(AnimeScreenIntent.ObserveWatchedEps(animeId))
-
-        if (authState.isLogged is LoggingState.LoggedIn) {
-            val currentLikesIds = authState.likes.map { it.id }
-            if (animeId in currentLikesIds) {
-                viewModel.sendIntent(
-                    AnimeScreenIntent.UpdateScreenState(
-                        state = screenState.copy(isInLikes = true)
-                    )
-                )
-            } else {
-                viewModel.sendIntent(
-                    AnimeScreenIntent.UpdateScreenState(
-                        state = screenState.copy(isInLikes = false)
-                    )
-                )
-            }
-        }
-    }
+    HandleAnimeFetching(animeId, authState, screenState, viewModel)
 
     // Snackbars stuff
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    ObserveAsEvents(flow = SnackbarController.events, snackbarHostState) { event ->
-        scope.launch {
-            snackbarHostState.currentSnackbarData?.dismiss()
-
-            val result = snackbarHostState.showSnackbar(
-                message = event.message,
-                actionLabel = event.action?.name,
-                duration = SnackbarDuration.Indefinite,
-                withDismissAction = true
-            )
-
-            if(result == SnackbarResult.ActionPerformed) {
-                event.action?.action?.invoke()
-            }
-        }
-    }
+    SnackbarObserver(snackbarHostState)
 
     val anime = screenState.anime
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -129,49 +85,11 @@ fun AnimeScreen(
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = !screenState.isLoading,
-                enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
-                exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION))
-            ) {
-                ContinueWatchFAB(
-                    start = screenState.watchedEps.isEmpty(),
-                    expanded = when(screenState.scrollDirection) {
-                        ScrollDirection.Down -> false
-                        ScrollDirection.Up -> true
-                    },
-                    onClick = {
-                        anime?.let {
-                            if (screenState.watchedEps.isEmpty()) {
-                                val links = anime.player.list.values.toList()
-                                val linksString = Gson().toJson(links)
-
-                                navController.navigate(
-                                    PlayerScreenRoute(
-                                        currentEpisodeId = 0,
-                                        gsonLinks = linksString,
-                                        host = anime.player.host,
-                                        animeId = animeId
-                                    )
-                                )
-                            } else {
-                                val lastWatchedEpisode = screenState.watchedEps.size
-                                val links = anime.player.list.values.toList()
-                                val linksString = Gson().toJson(links)
-
-                                navController.navigate(
-                                    PlayerScreenRoute(
-                                        currentEpisodeId = lastWatchedEpisode,
-                                        gsonLinks = linksString,
-                                        host = anime.player.host,
-                                        animeId = animeId
-                                    )
-                                )
-                            }
-                        }
-                    }
-                )
-            }
+            ContinueWatchFABWrapper(
+                screenState = screenState,
+                navController = navController,
+                animeId = animeId
+            )
         },
         modifier = Modifier
             .fillMaxSize()
@@ -390,6 +308,28 @@ fun AnimeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun HandleAnimeFetching(
+    animeId: Int,
+    authState: AuthState,
+    screenState: AnimeScreenState,
+    viewModel: AnimeScreenVM
+) {
+    LaunchedEffect(Unit) {
+        viewModel.sendIntent(AnimeScreenIntent.FetchAnime(animeId))
+        viewModel.sendIntent(AnimeScreenIntent.ObserveWatchedEps(animeId))
+
+        if (authState.isLogged is LoggingState.LoggedIn) {
+            val isInLikes = animeId in authState.likes.map { it.id }
+            viewModel.sendIntent(
+                AnimeScreenIntent.UpdateScreenState(
+                    state = screenState.copy(isInLikes = isInLikes)
+                )
+            )
         }
     }
 }
