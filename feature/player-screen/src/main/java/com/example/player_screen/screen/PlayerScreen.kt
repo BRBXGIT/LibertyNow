@@ -93,13 +93,15 @@ fun PlayerScreen(
         navController.navigateUp()
     }
 
-    LaunchedEffect(screenState.isPlaying) {
+    LaunchedEffect(screenState.isPlaying, screenState.currentAnimeId) {
         if (activity.isInPictureInPictureMode) {
             val isPlayingNow = when (screenState.isPlaying) {
                 IsPlayingState.Paused -> false
                 else -> true
             }
-            updatedPipParams(context, isPlayingNow)?.let { params ->
+            val firstEpisode = screenState.currentAnimeId == 0
+            val lastEpisode = screenState.currentAnimeId < screenState.links.size
+            updatedPipParams(context, isPlayingNow, firstEpisode, lastEpisode)?.let { params ->
                 activity.setPictureInPictureParams(params)
             }
         }
@@ -312,12 +314,16 @@ fun PlayerScreen(
                                         screenState.copy(isControllerVisible = false)
                                     )
                                 )
+                                val firstEpisode = screenState.currentAnimeId == 0
+                                val lastEpisode = screenState.currentAnimeId < screenState.links.size
                                 updatedPipParams(
                                     context = context,
                                     isPlaying = when(screenState.isPlaying) {
                                         IsPlayingState.Paused -> false
                                         else -> true
-                                    }
+                                    },
+                                    firstEpisode = firstEpisode,
+                                    lastEpisode = lastEpisode
                                 )?.let { params ->
                                     activity.enterPictureInPictureMode(params)
                                 }
@@ -434,15 +440,20 @@ private fun AnimatedVisibilityContent(
     }
 }
 
-private fun updatedPipParams(context: Context, isPlaying: Boolean): PictureInPictureParams? {
+private fun updatedPipParams(
+    context: Context,
+    isPlaying: Boolean,
+    firstEpisode: Boolean,
+    lastEpisode: Boolean,
+): PictureInPictureParams? {
     return PictureInPictureParams.Builder()
         .setSourceRectHint(videoViewBounds)
         .setAspectRatio(Rational(16, 9))
         .setActions(
             listOf(
-                createSkipEpisodeRemoteAction(context, false),
+                createSkipEpisodeRemoteAction(context, false, firstEpisode),
                 createPlayPauseRemoteAction(context, isPlaying),
-                createSkipEpisodeRemoteAction(context, true)
+                createSkipEpisodeRemoteAction(context, true, lastEpisode)
             )
         )
         .build()

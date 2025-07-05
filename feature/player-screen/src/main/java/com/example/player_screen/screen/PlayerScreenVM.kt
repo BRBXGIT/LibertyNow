@@ -50,10 +50,15 @@ class PlayerScreenVM @Inject constructor(
     private val playerListener = object : Player.Listener {
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
             if (player.contentDuration != C.TIME_UNSET) {
+                player.playWhenReady = _playerScreenState.value.autoPlay != false
                 _playerScreenState.update { state ->
                     state.copy(
                         duration = player.contentDuration,
-                        isPlaying = IsPlayingState.Playing,
+                        isPlaying = if (_playerScreenState.value.autoPlay != false) {
+                            IsPlayingState.Playing
+                        } else {
+                            IsPlayingState.Paused
+                        }
                     )
                 }
             }
@@ -108,7 +113,6 @@ class PlayerScreenVM @Inject constructor(
                     player.removeListener(playerListener)
 
                     player.setMediaItems(mediaItems, state.currentAnimeId, state.currentPosition)
-                    player.playWhenReady = autoPlay != false
                     player.prepare()
 
                     player.addListener(playerListener)

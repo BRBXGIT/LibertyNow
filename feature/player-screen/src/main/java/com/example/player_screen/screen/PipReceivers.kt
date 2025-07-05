@@ -13,13 +13,16 @@ class SkipEpisodeReceiver(): BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val forward = intent?.getBooleanExtra("forward", true) != false
+        val extremeElement = intent?.getBooleanExtra("extremeElement", false)
 
         val viewModel = PlayerScreenVM.instance
 
         if (viewModel != null) {
-            viewModel.sendIntent(
-                PlayerScreenIntent.SkipEpisode(forward)
-            )
+            if (!extremeElement!!) {
+                viewModel.sendIntent(
+                    PlayerScreenIntent.SkipEpisode(forward)
+                )
+            }
         } else {
             Toast.makeText(
                 context,
@@ -33,17 +36,23 @@ class SkipEpisodeReceiver(): BroadcastReceiver() {
 fun createSkipEpisodePendingIntent(
     context: Context,
     requestCode: Int,
-    forward: Boolean
+    forward: Boolean,
+    extremeElement: Boolean
 ): PendingIntent = PendingIntent.getBroadcast(
     context,
     requestCode,
     Intent(context, SkipEpisodeReceiver::class.java).apply {
         putExtra("forward", forward)
+        putExtra("extremeElement", extremeElement)
     },
     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 )
 
-fun createSkipEpisodeRemoteAction(context: Context, forward: Boolean): RemoteAction {
+fun createSkipEpisodeRemoteAction(
+    context: Context,
+    forward: Boolean,
+    extremeEpisode: Boolean
+): RemoteAction {
     val iconRes = if (forward) LibriaNowIcons.ArrowRightFilled else LibriaNowIcons.ArrowLeftFilled
     val title = if (forward) "Меняет эпизод на следующий" else "Меняет эпизод на предыдущий"
     val description = if (forward) "Skip to the next episode" else "Skip to the previous episode"
@@ -53,7 +62,7 @@ fun createSkipEpisodeRemoteAction(context: Context, forward: Boolean): RemoteAct
         Icon.createWithResource(context, iconRes),
         title,
         description,
-        createSkipEpisodePendingIntent(context, requestCode, forward)
+        createSkipEpisodePendingIntent(context, requestCode, forward, extremeEpisode)
     )
 }
 
