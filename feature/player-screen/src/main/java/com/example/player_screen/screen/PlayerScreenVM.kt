@@ -10,7 +10,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.data.domain.PlayerFeaturesRepo
+import com.example.data.domain.WatchedEpsRepo
 import com.example.design_system.theme.CommonConstants
+import com.example.local.db.watched_eps_db.WatchedEpisodeEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
@@ -28,6 +30,7 @@ import javax.inject.Inject
 class PlayerScreenVM @Inject constructor(
     val player: ExoPlayer,
     private val playerFeaturesRepository: PlayerFeaturesRepo,
+    private val watchedEpsRepo: WatchedEpsRepo,
     @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher,
     @Dispatcher(LibriaNowDispatchers.Default) private val dispatcherDefault: CoroutineDispatcher,
     @Dispatcher(LibriaNowDispatchers.Main) private val dispatcherMain: CoroutineDispatcher
@@ -50,6 +53,7 @@ class PlayerScreenVM @Inject constructor(
     private val playerListener = object : Player.Listener {
         override fun onTimelineChanged(timeline: Timeline, reason: Int) {
             if (player.contentDuration != C.TIME_UNSET) {
+                addEpisodeToWatchedEps()
                 player.playWhenReady = _playerScreenState.value.autoPlay != false
                 _playerScreenState.update { state ->
                     state.copy(
@@ -78,11 +82,11 @@ class PlayerScreenVM @Inject constructor(
             }
 
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
-                val nextId = _playerScreenState.value.currentAnimeId + 1
+                val nextId = _playerScreenState.value.currentEpisodeId + 1
                 if (nextId < _playerScreenState.value.links.size) {
                     _playerScreenState.update { state ->
                         state.copy(
-                            currentAnimeId = nextId,
+                            currentEpisodeId = nextId,
                             currentLink = _playerScreenState.value.links[nextId],
                         )
                     }
@@ -151,7 +155,7 @@ class PlayerScreenVM @Inject constructor(
                     player.clearMediaItems()
                     player.removeListener(playerListener)
 
-                    player.setMediaItems(mediaItems, state.currentAnimeId, state.currentPosition)
+                    player.setMediaItems(mediaItems, state.currentEpisodeId, state.currentPosition)
                     player.prepare()
 
                     player.addListener(playerListener)
@@ -243,11 +247,11 @@ class PlayerScreenVM @Inject constructor(
     private fun skipEpisode(forward: Boolean) {
         when(forward) {
             true -> {
-                if (_playerScreenState.value.currentAnimeId < _playerScreenState.value.links.size) {
+                if (_playerScreenState.value.currentEpisodeId < _playerScreenState.value.links.size) {
                     player.seekToNextMediaItem()
                     _playerScreenState.update { state ->
                         state.copy(
-                            currentAnimeId = _playerScreenState.value.currentAnimeId + 1,
+                            currentEpisodeId = _playerScreenState.value.currentEpisodeId + 1,
                             timerStarted = false,
                             skipOpeningButtonTimer = 10
                         )
@@ -255,11 +259,11 @@ class PlayerScreenVM @Inject constructor(
                 }
             }
             false -> {
-                if (_playerScreenState.value.currentAnimeId > 0) {
+                if (_playerScreenState.value.currentEpisodeId > 0) {
                     player.seekToPreviousMediaItem()
                     _playerScreenState.update { state ->
                         state.copy(
-                            currentAnimeId = _playerScreenState.value.currentAnimeId - 1,
+                            currentEpisodeId = _playerScreenState.value.currentEpisodeId - 1,
                             timerStarted = false,
                             skipOpeningButtonTimer = 10
                         )
@@ -273,7 +277,7 @@ class PlayerScreenVM @Inject constructor(
         player.seekTo(episodeId, 0L)
         _playerScreenState.update { state ->
             state.copy(
-                currentAnimeId = episodeId,
+                currentEpisodeId = episodeId,
                 isSelectEpisodeADVisible = false,
                 timerStarted = false,
                 skipOpeningButtonTimer = 10
@@ -377,6 +381,17 @@ class PlayerScreenVM @Inject constructor(
                     playerFeaturesRepository.saveIsCropped(!_playerScreenState.value.isCropped)
                 }
             }
+        }
+    }
+
+    private fun addEpisodeToWatchedEps() {
+        viewModelScope.launch(dispatcherIo) {
+            watchedEpsRepo.insertWatchedEpisode(
+                WatchedEpisodeEntity(
+                    titleId = _playerScreenState.value.animeId,
+                    episodeNumber = _playerScreenState.value.currentEpisodeId
+                )
+            )
         }
     }
 

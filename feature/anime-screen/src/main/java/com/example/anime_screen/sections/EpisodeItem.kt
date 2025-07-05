@@ -24,6 +24,7 @@ fun EpisodeItem(
     modifier: Modifier = Modifier,
     episode: Int,
     name: String,
+    isWatched: Boolean,
     onWatchButtonClick: () -> Unit,
 ) {
     Row(
@@ -33,7 +34,7 @@ fun EpisodeItem(
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
             .background(
-                color = mColors.surfaceContainerHigh,
+                color = if (isWatched) mColors.surfaceContainerLow else mColors.surfaceContainerHigh,
                 shape = mShapes.small
             )
             .padding(8.dp),
@@ -65,7 +66,8 @@ private fun EpisodeItemPreview() {
         EpisodeItem(
             episode = 1,
             name = "Новый эпизод",
-            onWatchButtonClick = {}
+            onWatchButtonClick = {},
+            isWatched = true
         )
     }
 }

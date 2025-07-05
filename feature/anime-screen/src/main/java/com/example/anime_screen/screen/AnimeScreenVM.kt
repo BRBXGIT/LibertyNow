@@ -6,9 +6,11 @@ import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
 import com.example.data.domain.AnimeScreenRepo
+import com.example.data.domain.WatchedEpsRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
+import com.example.local.db.watched_eps_db.TitleEntity
 import com.example.network.anime_screen.models.anime_response.AnimeResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnimeScreenVM @Inject constructor(
+    private val watchedEpsRepository: WatchedEpsRepo,
     private val repository: AnimeScreenRepo,
     @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher
 ): ViewModel() {
@@ -30,6 +33,17 @@ class AnimeScreenVM @Inject constructor(
         SharingStarted.WhileSubscribed(5_000),
         AnimeScreenState()
     )
+
+    private fun observeWatchedEps(titleId: Int) {
+        viewModelScope.launch(dispatcherIo) {
+            watchedEpsRepository.insertTitle(TitleEntity(titleId))
+            watchedEpsRepository.getWatchedEpisodes(titleId).collect { eps ->
+                _animeScreenState.update { state ->
+                    state.copy(watchedEps = eps)
+                }
+            }
+        }
+    }
 
     private fun fetchAnime(id: Int) {
         viewModelScope.launch(dispatcherIo) {
@@ -76,6 +90,8 @@ class AnimeScreenVM @Inject constructor(
     fun sendIntent(intent: AnimeScreenIntent) {
         when (intent) {
             is AnimeScreenIntent.FetchAnime -> fetchAnime(intent.id)
+            is AnimeScreenIntent.ObserveWatchedEps -> observeWatchedEps(intent.id)
+
             is AnimeScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
         }
     }

@@ -9,7 +9,9 @@ sealed interface IsPlayingState {
 }
 
 data class PlayerScreenState(
-    val currentAnimeId: Int = 0,
+    val animeId: Int = 0,
+
+    val currentEpisodeId: Int = 0,
     val host: String = "",
     val links: List<X1> = emptyList(),
     val currentLink: X1 = X1(),

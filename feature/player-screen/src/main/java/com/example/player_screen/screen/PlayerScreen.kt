@@ -50,7 +50,8 @@ var videoViewBounds = Rect()
 @Composable
 fun PlayerScreen(
     host: String,
-    currentAnimeId: Int,
+    animeId: Int,
+    currentEpisodeId: Int,
     gsonLinks: String,
     viewModel: PlayerScreenVM,
     navController: NavController
@@ -75,9 +76,10 @@ fun PlayerScreen(
             PlayerScreenIntent.UpdateScreenState(
                 screenState.copy(
                     links = links,
-                    currentAnimeId = currentAnimeId,
+                    currentEpisodeId = currentEpisodeId,
                     host = host,
-                    currentLink = links[currentAnimeId]
+                    currentLink = links[currentEpisodeId],
+                    animeId = animeId
                 )
             )
         )
@@ -93,14 +95,14 @@ fun PlayerScreen(
         navController.navigateUp()
     }
 
-    LaunchedEffect(screenState.isPlaying, screenState.currentAnimeId) {
+    LaunchedEffect(screenState.isPlaying, screenState.currentEpisodeId) {
         if (activity.isInPictureInPictureMode) {
             val isPlayingNow = when (screenState.isPlaying) {
                 IsPlayingState.Paused -> false
                 else -> true
             }
-            val firstEpisode = screenState.currentAnimeId == 0
-            val lastEpisode = screenState.currentAnimeId < screenState.links.size
+            val firstEpisode = screenState.currentEpisodeId == 0
+            val lastEpisode = screenState.currentEpisodeId < screenState.links.size
             updatedPipParams(context, isPlayingNow, firstEpisode, lastEpisode)?.let { params ->
                 activity.setPictureInPictureParams(params)
             }
@@ -139,7 +141,7 @@ fun PlayerScreen(
 
             if (screenState.isSelectEpisodeADVisible) {
                 SelectEpisodeAD(
-                    currentAnimeId = screenState.currentAnimeId,
+                    currentAnimeId = screenState.currentEpisodeId,
                     links = screenState.links,
                     onDismissRequest = {
                         viewModel.sendIntent(
@@ -230,8 +232,8 @@ fun PlayerScreen(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     Header(
-                        episode = screenState.currentAnimeId,
-                        episodeTitle = screenState.links[screenState.currentAnimeId].name ?: "Без названия",
+                        episode = screenState.currentEpisodeId,
+                        episodeTitle = screenState.links[screenState.currentEpisodeId].name ?: "Без названия",
                         topPadding = innerPadding.calculateTopPadding(),
                         onBackClick = {
                             viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
@@ -250,8 +252,8 @@ fun PlayerScreen(
 
                     CentralButtonsSection(
                         isPlaying = screenState.isPlaying,
-                        firstEpisode = screenState.currentAnimeId == 0,
-                        lastEpisode = screenState.currentAnimeId == screenState.links.size - 1,
+                        firstEpisode = screenState.currentEpisodeId == 0,
+                        lastEpisode = screenState.currentEpisodeId == screenState.links.size - 1,
                         onPreviousClick = {
                             viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(false))
                         },
@@ -314,8 +316,8 @@ fun PlayerScreen(
                                         screenState.copy(isControllerVisible = false)
                                     )
                                 )
-                                val firstEpisode = screenState.currentAnimeId == 0
-                                val lastEpisode = screenState.currentAnimeId < screenState.links.size
+                                val firstEpisode = screenState.currentEpisodeId == 0
+                                val lastEpisode = screenState.currentEpisodeId < screenState.links.size
                                 updatedPipParams(
                                     context = context,
                                     isPlaying = when(screenState.isPlaying) {
@@ -359,7 +361,7 @@ fun PlayerScreen(
 
             LaunchedEffect(screenState.links, screenState.currentPosition) {
                 if (screenState.links.isNotEmpty()) {
-                    val opening = screenState.links[screenState.currentAnimeId].skips.opening
+                    val opening = screenState.links[screenState.currentEpisodeId].skips.opening
                     if (opening.isNotEmpty()) {
                         if ((opening[0] != null) && (opening[1] != null)) {
                             val currentSec = screenState.currentPosition / 1000
@@ -389,7 +391,7 @@ fun PlayerScreen(
                         onClick = {
                             viewModel.sendIntent(
                                 PlayerScreenIntent.SeekEpisode(
-                                    seekTo = (screenState.links[screenState.currentAnimeId].skips.opening[1]!! * 1000).toLong()
+                                    seekTo = (screenState.links[screenState.currentEpisodeId].skips.opening[1]!! * 1000).toLong()
                                 )
                             )
                             viewModel.sendIntent(

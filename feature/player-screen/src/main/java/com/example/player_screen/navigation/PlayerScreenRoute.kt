@@ -15,7 +15,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlayerScreenRoute(
-    val currentItemId: Int,
+    val animeId: Int,
+    val currentEpisodeId: Int,
     val gsonLinks: String,
     val host: String
 )
@@ -26,16 +27,18 @@ fun NavGraphBuilder.playerScreen(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
 ) {
-    val currentItemId = it.toRoute<PlayerScreenRoute>().currentItemId
+    val currentEpisodeId = it.toRoute<PlayerScreenRoute>().currentEpisodeId
     val gsonLinks = it.toRoute<PlayerScreenRoute>().gsonLinks
     val host = it.toRoute<PlayerScreenRoute>().host
+    val animeId = it.toRoute<PlayerScreenRoute>().animeId
 
     val playerScreenVM = hiltViewModel<PlayerScreenVM>()
     PlayerScreen(
-        currentAnimeId = currentItemId,
+        currentEpisodeId = currentEpisodeId,
         gsonLinks = gsonLinks,
         viewModel = playerScreenVM,
         host = host,
-        navController = navController
+        navController = navController,
+        animeId = animeId
     )
 }

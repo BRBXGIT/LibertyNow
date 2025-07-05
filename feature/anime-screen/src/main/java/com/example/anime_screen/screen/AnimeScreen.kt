@@ -65,11 +65,11 @@ fun AnimeScreen(
     val authState by authVM.authState.collectAsStateWithLifecycle()
     val screenState by viewModel.animeScreenState.collectAsStateWithLifecycle()
 
-    // Fetch anime
+    // Fetch anime and watched eps
     LaunchedEffect(animeId, authState.likes, authState.isLogged) {
-        viewModel.sendIntent(
-            AnimeScreenIntent.FetchAnime(animeId)
-        )
+        viewModel.sendIntent(AnimeScreenIntent.FetchAnime(animeId))
+        viewModel.sendIntent(AnimeScreenIntent.ObserveWatchedEps(animeId))
+
         if (authState.isLogged is LoggingState.LoggedIn) {
             val currentLikesIds = authState.likes.map { it.id }
             if (animeId in currentLikesIds) {
@@ -298,19 +298,23 @@ fun AnimeScreen(
                         items = anime.player.list.values.toList(),
                         key = { index, episode -> index }
                     ) { index, episode ->
+                        val isWatched = index in screenState.watchedEps
+
                         EpisodeItem(
                             modifier = Modifier.animateItem(),
                             episode = episode.episode,
                             name = episode.name ?: "Без названия",
+                            isWatched = isWatched,
                             onWatchButtonClick = {
                                 val links = anime.player.list.values.toList()
                                 val linksString = Gson().toJson(links)
 
                                 navController.navigate(
                                     PlayerScreenRoute(
-                                        currentItemId = index,
+                                        currentEpisodeId = index,
                                         gsonLinks = linksString,
-                                        host = anime.player.host
+                                        host = anime.player.host,
+                                        animeId = animeId
                                     )
                                 )
                             }
