@@ -81,6 +81,37 @@ class PlayerScreenVM @Inject constructor(
                 }
             }
         }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            when (playbackState) {
+                Player.STATE_BUFFERING -> {
+                    _playerScreenState.update { state ->
+                        state.copy(isPlaying = IsPlayingState.Loading)
+                    }
+                }
+                Player.STATE_READY -> {
+                    if (player.playWhenReady) {
+                        _playerScreenState.update { state ->
+                            state.copy(isPlaying = IsPlayingState.Playing)
+                        }
+                    } else {
+                        _playerScreenState.update { state ->
+                            state.copy(isPlaying = IsPlayingState.Paused)
+                        }
+                    }
+                }
+                Player.STATE_ENDED -> {
+                    _playerScreenState.update { state ->
+                        state.copy(isPlaying = IsPlayingState.Paused)
+                    }
+                }
+                Player.STATE_IDLE -> {
+                    _playerScreenState.update { state ->
+                        state.copy(isPlaying = IsPlayingState.Loading)
+                    }
+                }
+            }
+        }
     }
 
     private fun preparePlayer() {
