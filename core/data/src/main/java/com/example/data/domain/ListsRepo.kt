@@ -10,5 +10,5 @@ interface ListsRepo {
 
     fun getAnimeByStatus(status: ListAnimeStatus): Flow<List<ListsAnimeEntity>>
 
-    suspend fun deleteAnime(anime: ListsAnimeEntity)
+    suspend fun moveAnimeToStatus(anime: ListsAnimeEntity)
 }

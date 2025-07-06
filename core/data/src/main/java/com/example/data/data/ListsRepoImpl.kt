@@ -1,9 +1,9 @@
 package com.example.data.data
 
 import com.example.data.domain.ListsRepo
-import com.example.local.db.lists_db.ListsAnimeEntity
 import com.example.local.db.lists_db.ListAnimeStatus
 import com.example.local.db.lists_db.ListsAnimeDao
+import com.example.local.db.lists_db.ListsAnimeEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -19,7 +19,8 @@ class ListsRepoImpl @Inject constructor(
         return dao.getAnimeByStatus(status)
     }
 
-    override suspend fun deleteAnime(anime: ListsAnimeEntity) {
-        dao.deleteAnime(anime)
+    override suspend fun moveAnimeToStatus(anime: ListsAnimeEntity) {
+        dao.deleteAnimeIfNotHistory(anime.id)
+        dao.insertAnime(anime)
     }
 }

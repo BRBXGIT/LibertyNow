@@ -68,15 +68,7 @@ class AnimeScreenVM @Inject constructor(
                         isLoading = false
                     )
                 }
-                listsRepository.insertAnime(
-                    ListsAnimeEntity(
-                        id = id,
-                        poster = anime.posters.small.url,
-                        genres = anime.genres.joinToString(", "),
-                        name = anime.names.ru,
-                        status = ListAnimeStatus.HISTORY
-                    )
-                )
+                addAnimeToHistory(id, anime.posters.small.url, anime.genres.joinToString(", "), anime.names.ru)
             } else {
                 _animeScreenState.update { state ->
                     state.copy(
@@ -97,6 +89,43 @@ class AnimeScreenVM @Inject constructor(
         }
     }
 
+    private suspend fun addAnimeToHistory(
+        id: Int,
+        poster: String,
+        genres: String,
+        name: String,
+    ) {
+        listsRepository.insertAnime(
+            ListsAnimeEntity(
+                id = id,
+                poster = poster,
+                genres = genres,
+                name = name,
+                status = ListAnimeStatus.HISTORY
+            )
+        )
+    }
+
+    private fun moveAnimeToList(
+        id: Int,
+        poster: String,
+        genres: String,
+        name: String,
+        newStatus: ListAnimeStatus
+    ) {
+        viewModelScope.launch(dispatcherIo) {
+            listsRepository.moveAnimeToStatus(
+                ListsAnimeEntity(
+                    id = id,
+                    poster = poster,
+                    genres = genres,
+                    name = name,
+                    status = newStatus
+                )
+            )
+        }
+    }
+
     private fun updateScreenState(state: AnimeScreenState) {
         _animeScreenState.value = state
     }
@@ -105,6 +134,8 @@ class AnimeScreenVM @Inject constructor(
         when (intent) {
             is AnimeScreenIntent.FetchAnime -> fetchAnime(intent.id)
             is AnimeScreenIntent.ObserveWatchedEps -> observeWatchedEps(intent.id)
+
+            is AnimeScreenIntent.MoveAnimeToList -> moveAnimeToList(intent.id, intent.poster, intent.genres, intent.name, intent.newStatus)
 
             is AnimeScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
         }
