@@ -33,6 +33,7 @@ import com.example.anime_screen.sections.DescriptionSection
 import com.example.anime_screen.sections.EpisodeItem
 import com.example.anime_screen.sections.GenresLR
 import com.example.anime_screen.sections.Header
+import com.example.anime_screen.sections.ListsBS
 import com.example.anime_screen.sections.TorrentsSection
 import com.example.common.auth.AuthIntent
 import com.example.common.auth.AuthState
@@ -80,7 +81,13 @@ fun AnimeScreen(
                 isLoading = screenState.isLoading or authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
                 isError = screenState.isError,
-                onArchiveClick = {}, // TODO
+                onArchiveClick = {
+                    viewModel.sendIntent(
+                        AnimeScreenIntent.UpdateScreenState(
+                            screenState.copy(isListsBSOpened = true)
+                        )
+                    )
+                },
                 onNavClick = { navController.navigateUp() }
             )
         },
@@ -104,69 +111,97 @@ fun AnimeScreen(
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        if (authState.isAuthBSOpened) {
-            AuthBS(
-                email = authState.email,
-                password = authState.password,
-                isPasswordVisible = authState.isPasswordVisible,
-                incorrectEmail = authState.incorrectEmail,
-                incorrectPassword = authState.incorrectPassword,
-                onVisibleClick = {
-                    authVM.sendIntent(
-                        AuthIntent.UpdateAuthState(
-                            authState.copy(isPasswordVisible = !authState.isPasswordVisible)
-                        )
-                    )
-                },
-                onDismissRequest = {
-                    authVM.sendIntent(
-                        AuthIntent.UpdateAuthState(
-                            authState.copy(isAuthBSOpened = false)
-                        )
-                    )
-                },
-                onAuthClick = {
-                    authVM.sendIntent(
-                        AuthIntent.GetSessionToken
-                    )
-                },
-                onPasswordChange = {
-                    authVM.sendIntent(
-                        AuthIntent.UpdateAuthState(
-                            authState.copy(password = it)
-                        )
-                    )
-                },
-                onEmailChange = {
-                    authVM.sendIntent(
-                        AuthIntent.UpdateAuthState(
-                            authState.copy(email = it)
-                        )
-                    )
-                }
-            )
-        }
-
         if (screenState.isError) {
             ErrorSection(modifier = Modifier.fillMaxSize())
         } else {
-            val lazyListState = rememberLazyListState()
-            val directionalLazyListState = rememberDirectionalLazyListState(
-                lazyListState
-            )
-            LaunchedEffect(directionalLazyListState.scrollDirection) {
-                viewModel.sendIntent(
-                    AnimeScreenIntent.UpdateScreenState(
-                        screenState.copy(scrollDirection = directionalLazyListState.scrollDirection)
+            anime?.let {
+                if (screenState.isListsBSOpened) {
+                    ListsBS(
+                        onDismissRequest = {
+                            viewModel.sendIntent(
+                                AnimeScreenIntent.UpdateScreenState(
+                                    screenState.copy(isListsBSOpened = false)
+                                )
+                            )
+                        },
+                        onStatusSelected = { selectedStatus ->
+                            viewModel.sendIntent(
+                                AnimeScreenIntent.MoveAnimeToList(
+                                    id = animeId,
+                                    poster = anime.posters.small.url,
+                                    genres = anime.genres.joinToString(", "),
+                                    name = anime.names.ru,
+                                    newStatus = selectedStatus
+                                )
+                            )
+                            viewModel.sendIntent(
+                                AnimeScreenIntent.UpdateScreenState(
+                                    screenState.copy(isListsBSOpened = false)
+                                )
+                            )
+                        }
                     )
-                )
-            }
+                }
 
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                state = lazyListState
-            ) {
-                anime?.let {
+                if (authState.isAuthBSOpened) {
+                    AuthBS(
+                        email = authState.email,
+                        password = authState.password,
+                        isPasswordVisible = authState.isPasswordVisible,
+                        incorrectEmail = authState.incorrectEmail,
+                        incorrectPassword = authState.incorrectPassword,
+                        onVisibleClick = {
+                            authVM.sendIntent(
+                                AuthIntent.UpdateAuthState(
+                                    authState.copy(isPasswordVisible = !authState.isPasswordVisible)
+                                )
+                            )
+                        },
+                        onDismissRequest = {
+                            authVM.sendIntent(
+                                AuthIntent.UpdateAuthState(
+                                    authState.copy(isAuthBSOpened = false)
+                                )
+                            )
+                        },
+                        onAuthClick = {
+                            authVM.sendIntent(
+                                AuthIntent.GetSessionToken
+                            )
+                        },
+                        onPasswordChange = {
+                            authVM.sendIntent(
+                                AuthIntent.UpdateAuthState(
+                                    authState.copy(password = it)
+                                )
+                            )
+                        },
+                        onEmailChange = {
+                            authVM.sendIntent(
+                                AuthIntent.UpdateAuthState(
+                                    authState.copy(email = it)
+                                )
+                            )
+                        }
+                    )
+                }
+
+                val lazyListState = rememberLazyListState()
+                val directionalLazyListState = rememberDirectionalLazyListState(
+                    lazyListState
+                )
+                LaunchedEffect(directionalLazyListState.scrollDirection) {
+                    viewModel.sendIntent(
+                        AnimeScreenIntent.UpdateScreenState(
+                            screenState.copy(scrollDirection = directionalLazyListState.scrollDirection)
+                        )
+                    )
+                }
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    state = lazyListState
+                ) {
                     item(key = "header") {
                         Header(
                             nameEnglish = anime.names.en,

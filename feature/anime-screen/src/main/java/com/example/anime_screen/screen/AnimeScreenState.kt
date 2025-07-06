@@ -12,5 +12,7 @@ data class AnimeScreenState(
 
     val isInLikes: Boolean = false,
 
-    val watchedEps: List<Int> = emptyList()
+    val watchedEps: List<Int> = emptyList(),
+
+    val isListsBSOpened: Boolean = false
 )

@@ -27,6 +27,7 @@ object LibriaNowIcons {
     val AutoPlay = R.drawable.ic_auto_play
     val Crop = R.drawable.ic_crop
     val Hourglass = R.drawable.ic_hourglass
+    val CheckCircle = R.drawable.ic_check_cirlce
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
@@ -39,6 +40,7 @@ object LibriaNowIcons {
     val CheckFilled = R.drawable.ic_check_filled
     val PlayFilled = R.drawable.ic_play_filled
     val PauseFilled = R.drawable.ic_pause_filled
+    val SingleArrowRightFilled = R.drawable.ic_single_arrow_filled
 
     // Animated
     val HomeAnimated = R.drawable.ic_home_animated
