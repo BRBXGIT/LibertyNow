@@ -29,6 +29,7 @@ import com.example.local.db.lists_db.ListAnimeStatus
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsBS(
+    currentLists: List<ListAnimeStatus>,
     onDismissRequest: () -> Unit,
     onStatusSelected: (ListAnimeStatus) -> Unit
 ) {
@@ -54,7 +55,7 @@ fun ListsBS(
 
                     ListItem(
                         name = name,
-                        selected = false,
+                        selected = status in currentLists,
                         onClick = { onStatusSelected(status) }
                     )
                 }

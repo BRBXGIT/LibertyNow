@@ -23,4 +23,8 @@ class ListsRepoImpl @Inject constructor(
         dao.deleteAnimeIfNotHistory(anime.id)
         dao.insertAnime(anime)
     }
+
+    override fun getStatusesByAnimeId(id: Int): Flow<List<ListAnimeStatus>> {
+        return dao.getStatusesByAnimeId(id)
+    }
 }

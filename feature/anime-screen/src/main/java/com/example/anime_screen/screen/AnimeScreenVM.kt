@@ -49,6 +49,14 @@ class AnimeScreenVM @Inject constructor(
         }
     }
 
+    private suspend fun observeStatuses(titleId: Int) {
+        listsRepository.getStatusesByAnimeId(titleId).collect { lists ->
+            _animeScreenState.update { state ->
+                state.copy(currentAnimeLists = lists)
+            }
+        }
+    }
+
     private fun fetchAnime(id: Int) {
         viewModelScope.launch(dispatcherIo) {
             _animeScreenState.update { state ->
@@ -69,6 +77,7 @@ class AnimeScreenVM @Inject constructor(
                     )
                 }
                 addAnimeToHistory(id, anime.posters.small.url, anime.genres.joinToString(", "), anime.names.ru)
+                observeStatuses(id)
             } else {
                 _animeScreenState.update { state ->
                     state.copy(
