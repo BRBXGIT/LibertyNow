@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.design_system.theme.LibriaNowTheme
+import com.example.local.datastore.app_theme.ThemeState
 import com.example.local.datastore.onboarding.OnBoardingState
 import com.example.navbar_screens.home_screen.navigation.HomeScreenRoute
 import com.example.onboarding_screen.navigation.OnBoardingScreenRoute
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Avoid bug when theme doesn't want to change after splashscreen
-//        setTheme(R.style.Theme_LibriaNow)
+        setTheme(R.style.Theme_LibriaNow)
 
         enableEdgeToEdge()
         setContent {
@@ -29,10 +30,9 @@ class MainActivity : ComponentActivity() {
 
             val splashScreen = installSplashScreen()
             splashScreen.setKeepOnScreenCondition {
-//                (appStartingState.onBoardingState is OnBoardingState.Loading) and
-//                        (appStartingState.themeState is ThemeState.Loaded) and
-//                        (appStartingState.colorSystemState is ThemeState.Loaded)
-                true
+                (appStartingState.onBoardingState is OnBoardingState.Loading) and
+                        (appStartingState.themeState is ThemeState.Loaded) and
+                        (appStartingState.colorSystemState is ThemeState.Loaded)
             }
 
             LibriaNowTheme(

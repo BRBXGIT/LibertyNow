@@ -28,6 +28,7 @@ object LibriaNowIcons {
     val Crop = R.drawable.ic_crop
     val Hourglass = R.drawable.ic_hourglass
     val CheckCircle = R.drawable.ic_check_cirlce
+    val Info = R.drawable.ic_info
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled
@@ -66,6 +67,6 @@ object LibriaNowIcons {
     val DonationAlertsMulticolored = R.drawable.ic_donationalerts_multicolored
 
     // Images
-    val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light
-    val OnBoardingBackgroundDark = R.drawable.on_boarding_background_dark
+    val OnBoardingBackgroundLight = R.drawable.on_boarding_background_dark
+    val OnBoardingBackgroundDark = R.drawable.on_boarding_background_light
 }

@@ -42,7 +42,8 @@ data class MoreItem(
 fun MoreLC(
     onProjectTeamClick: () -> Unit,
     onSupportClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onInfoClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -59,6 +60,21 @@ fun MoreLC(
             label = "Поддержать",
             fromLink = false
         )
+    )
+
+    val settingsItems = listOf(
+        MoreItem(
+            onClick = onSettingsClick,
+            icon = LibriaNowIcons.Settings,
+            label = "Настройки",
+            fromLink = false
+        ),
+        MoreItem(
+            onClick = onInfoClick,
+            icon = LibriaNowIcons.Info,
+            label = "Информация",
+            fromLink = false
+        ),
     )
 
     val linksItems = listOf(
@@ -116,12 +132,12 @@ fun MoreLC(
 
         item { HorizontalDivider() }
 
-        item {
+        items(settingsItems) { settingsItem ->
             MoreItemUi(
-                onClick = onSettingsClick,
-                icon = LibriaNowIcons.Settings,
-                label = "Настройки",
-                fromLink = false
+                onClick = settingsItem.onClick,
+                icon = settingsItem.icon,
+                label = settingsItem.label,
+                fromLink = settingsItem.fromLink
             )
         }
 

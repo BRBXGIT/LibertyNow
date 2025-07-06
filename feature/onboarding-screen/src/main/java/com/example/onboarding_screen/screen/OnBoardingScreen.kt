@@ -1,5 +1,6 @@
 package com.example.onboarding_screen.screen
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import com.example.onboarding_screen.sections.StartButton
 fun OnBoardingScreen(
     viewModel: OnBoardingScreenVM
 ) {
+    val darkTheme = isSystemInDarkTheme()
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -33,7 +36,9 @@ fun OnBoardingScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .paint(
-                    painter = painterResource(LibriaNowIcons.OnBoardingBackgroundDark), // TODO
+                    painter = painterResource(
+                        if (darkTheme) LibriaNowIcons.OnBoardingBackgroundDark else LibriaNowIcons.OnBoardingBackgroundLight
+                    ),
                     contentScale = ContentScale.Crop
                 )
                 .padding(
