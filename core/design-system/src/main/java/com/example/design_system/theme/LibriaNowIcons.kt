@@ -47,7 +47,7 @@ object LibriaNowIcons {
     val HomeAnimated = R.drawable.ic_home_animated
     val HeartAnimated = R.drawable.ic_heart_animated
     val BookAnimated = R.drawable.ic_book_animated
-    val MagnifierAnimated = R.drawable.ic_magnifier_animated
+    val SearchAnimated = R.drawable.ic_search_animated
     val MoreAnimated = R.drawable.ic_more_animated
     val ArrowDownAnimated = R.drawable.ic_arrow_down_animated
     val EyeAnimated = R.drawable.ic_eye_animated

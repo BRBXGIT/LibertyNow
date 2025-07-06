@@ -31,7 +31,7 @@ val navItems = listOf(
     ),
     NavItem(
         label = "Поиск",
-        icon = LibriaNowIcons.MagnifierAnimated,
+        icon = LibriaNowIcons.SearchAnimated,
         destination = SearchScreenRoute
     ),
     NavItem(

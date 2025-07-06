@@ -14,14 +14,14 @@
                 android:fillColor="#1c274c"
                 android:fillAlpha="0"
                 android:strokeColor="#1c274c"
-                android:strokeWidth="1"/>
+                android:strokeWidth="1.5"/>
             <path
                 android:name="path_1"
                 android:pathData="M 8.106 18.247 C 5.298 16.083 2 13.542 2 9.137 C 2 4.274 7.5 0.825 12 5.501 C 16.5 0.825 22 4.274 22 9.137 C 22 9.971 21.882 10.738 21.671 11.448 C 20.952 10.87 20.051 10.506 19.052 10.5 C 18.162 10.495 17.294 10.774 16.499 11.31 C 15.11 10.377 13.543 10.252 12.17 10.915 C 10.534 11.704 9.5 13.47 9.5 15.399 C 9.5 17.705 10.649 19.322 11.841 20.494 C 10.894 20.418 9.945 19.686 8.962 18.911 C 8.685 18.692 8.398 18.472 8.106 18.247 Z"
                 android:fillColor="#1c274c"
                 android:fillAlpha="0"
                 android:strokeColor="#1c274c"
-                android:strokeWidth="1"/>
+                android:strokeWidth="1.5"/>
         </vector>
     </aapt:attr>
     <target android:name="path">

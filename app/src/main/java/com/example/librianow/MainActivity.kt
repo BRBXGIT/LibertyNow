@@ -19,6 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Avoid bug when theme doesn't want to change after splashscreen
+        setTheme(R.style.Theme_LibriaNow)
+
         enableEdgeToEdge()
         setContent {
             val appStartingVM = hiltViewModel<AppStartingVM>()
