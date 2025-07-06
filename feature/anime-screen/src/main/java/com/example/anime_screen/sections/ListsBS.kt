@@ -43,22 +43,19 @@ fun ListsBS(
             contentPadding = PaddingValues(12.dp)
         ) {
             items(ListAnimeStatus.entries) { status ->
-                if (status != ListAnimeStatus.HISTORY) {
-                    val name = when(status) {
-                        ListAnimeStatus.WATCHING -> "Смотрю"
-                        ListAnimeStatus.COMPLETED -> "Просмотрено"
-                        ListAnimeStatus.PLANNED -> "В планах"
-                        ListAnimeStatus.ON_HOLD -> "Отложено"
-                        ListAnimeStatus.DROPPED -> "Брошено"
-                        else -> ""
-                    }
-
-                    ListItem(
-                        name = name,
-                        selected = status in currentLists,
-                        onClick = { onStatusSelected(status) }
-                    )
+                val name = when(status) {
+                    ListAnimeStatus.WATCHING -> "Смотрю"
+                    ListAnimeStatus.COMPLETED -> "Просмотрено"
+                    ListAnimeStatus.PLANNED -> "В планах"
+                    ListAnimeStatus.ON_HOLD -> "Отложено"
+                    ListAnimeStatus.DROPPED -> "Брошено"
                 }
+
+                ListItem(
+                    name = name,
+                    selected = status in currentLists,
+                    onClick = { onStatusSelected(status) }
+                )
             }
         }
     }

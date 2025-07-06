@@ -34,7 +34,7 @@ class AnimeScreenVM @Inject constructor(
     private val _animeScreenState = MutableStateFlow(AnimeScreenState())
     val animeScreenState = _animeScreenState.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5_000),
+        SharingStarted.WhileSubscribed(1),
         AnimeScreenState()
     )
 
@@ -52,7 +52,7 @@ class AnimeScreenVM @Inject constructor(
     private suspend fun observeStatuses(titleId: Int) {
         listsRepository.getStatusesByAnimeId(titleId).collect { lists ->
             _animeScreenState.update { state ->
-                state.copy(currentAnimeLists = lists)
+                state.copy(currentListsAnimeIn = lists)
             }
         }
     }
@@ -76,7 +76,6 @@ class AnimeScreenVM @Inject constructor(
                         isLoading = false
                     )
                 }
-                addAnimeToHistory(id, anime.posters.small.url, anime.genres.joinToString(", "), anime.names.ru)
                 observeStatuses(id)
             } else {
                 _animeScreenState.update { state ->
@@ -96,23 +95,6 @@ class AnimeScreenVM @Inject constructor(
                 )
             }
         }
-    }
-
-    private suspend fun addAnimeToHistory(
-        id: Int,
-        poster: String,
-        genres: String,
-        name: String,
-    ) {
-        listsRepository.insertAnime(
-            ListsAnimeEntity(
-                id = id,
-                poster = poster,
-                genres = genres,
-                name = name,
-                status = ListAnimeStatus.HISTORY
-            )
-        )
     }
 
     private fun moveAnimeToList(

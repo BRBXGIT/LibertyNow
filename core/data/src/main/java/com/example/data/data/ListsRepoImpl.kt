@@ -20,7 +20,7 @@ class ListsRepoImpl @Inject constructor(
     }
 
     override suspend fun moveAnimeToStatus(anime: ListsAnimeEntity) {
-        dao.deleteAnimeIfNotHistory(anime.id)
+        dao.deleteAnimeFromList(anime.id)
         dao.insertAnime(anime)
     }
 

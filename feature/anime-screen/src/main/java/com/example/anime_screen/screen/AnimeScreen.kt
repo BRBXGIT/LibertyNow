@@ -117,7 +117,7 @@ fun AnimeScreen(
             anime?.let {
                 if (screenState.isListsBSOpened) {
                     ListsBS(
-                        currentLists = screenState.currentAnimeLists,
+                        currentLists = screenState.currentListsAnimeIn,
                         onDismissRequest = {
                             viewModel.sendIntent(
                                 AnimeScreenIntent.UpdateScreenState(

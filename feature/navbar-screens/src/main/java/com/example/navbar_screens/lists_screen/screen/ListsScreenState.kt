@@ -10,5 +10,5 @@ data class ListsScreenState(
     val query: String = "",
 
     val selectedTabIndex: Int = 0,
-    val selectedStatus: ListAnimeStatus = ListAnimeStatus.HISTORY
+    val selectedStatus: ListAnimeStatus = ListAnimeStatus.COMPLETED
 )

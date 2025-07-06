@@ -15,8 +15,8 @@ interface ListsAnimeDao {
     @Query("SELECT * FROM listsanimeentity WHERE status = :status")
     fun getAnimeByStatus(status: ListAnimeStatus): Flow<List<ListsAnimeEntity>>
 
-    @Query("DELETE FROM listsanimeentity WHERE id = :id AND status != :historyStatus")
-    suspend fun deleteAnimeIfNotHistory(id: Int, historyStatus: ListAnimeStatus = ListAnimeStatus.HISTORY)
+    @Query("DELETE FROM listsanimeentity WHERE id = :id")
+    suspend fun deleteAnimeFromList(id: Int)
 
     @Query("SELECT status FROM listsanimeentity WHERE id = :id")
     fun getStatusesByAnimeId(id: Int): Flow<List<ListAnimeStatus>>

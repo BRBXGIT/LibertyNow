@@ -6,5 +6,4 @@ enum class ListAnimeStatus {
     PLANNED,
     ON_HOLD,
     DROPPED,
-    HISTORY
 }

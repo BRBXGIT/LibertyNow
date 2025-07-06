@@ -60,7 +60,6 @@ fun ListsTabRow(
                 ListAnimeStatus.PLANNED -> "В планах"
                 ListAnimeStatus.ON_HOLD -> "Отложено"
                 ListAnimeStatus.DROPPED -> "Брошено"
-                ListAnimeStatus.HISTORY -> "История"
             }
             Tab(
                 selected = index == selectedTabIndex,
