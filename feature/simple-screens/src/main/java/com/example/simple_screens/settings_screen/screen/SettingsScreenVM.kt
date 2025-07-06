@@ -44,9 +44,9 @@ class SettingsScreenVM @Inject constructor(
             ) { videoQuality, autoPlay, isCropped, showSkipOpeningButton ->
                 PlayerFeaturePrefs(
                     videoQuality = videoQuality ?: 1080,
-                    autoPlay = autoPlay == true,
-                    isCropped = isCropped == true,
-                    showSkipOpeningButton = showSkipOpeningButton == true
+                    autoPlay = autoPlay != false,
+                    isCropped = isCropped != false,
+                    showSkipOpeningButton = showSkipOpeningButton != false
                 )
             }.collect { prefs ->
                 _settingsScreenState.update { state ->

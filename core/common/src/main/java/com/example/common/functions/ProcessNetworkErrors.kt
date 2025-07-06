@@ -25,16 +25,16 @@ fun processNetworkErrors(statusCode: Int): NetworkError {
 
 fun processNetworkErrorsForUi(error: NetworkError): String {
     return when (error) {
-        NetworkErrors.SUCCESS -> "All is successful"
-        NetworkErrors.UNAUTHORIZED -> "Seems you are an unauthorized person"
-        NetworkErrors.REQUEST_TIMEOUT -> "Timeout, please retry"
-        NetworkErrors.CONFLICT -> "Seems something conflict"
-        NetworkErrors.PAYLOAD_TOO_LARGE -> "Payload too large"
-        NetworkErrors.TOO_MANY_REQUESTS -> "Too many requests, give AniLibria a little rest :)"
-        NetworkErrors.SERVER_ERROR -> "Server error"
-        NetworkErrors.INTERNET -> "Please connect to internet :)"
-        NetworkErrors.SERIALIZATION -> "Hmmm... Problem with serialization"
-        else -> "Mystic and unknown error"
+        NetworkErrors.SUCCESS -> "Всё отлично"
+        NetworkErrors.UNAUTHORIZED -> "Кажется вы не авторизованы"
+        NetworkErrors.REQUEST_TIMEOUT -> "Таймаут апи, попробуйте перезагрузить"
+        NetworkErrors.CONFLICT -> "Кажется что-то конфликтует"
+        NetworkErrors.PAYLOAD_TOO_LARGE -> "Нагрузка на сервер слишком большая"
+        NetworkErrors.TOO_MANY_REQUESTS -> "Слишком много запросов, дайте AniLiberty немного отдохнуть"
+        NetworkErrors.SERVER_ERROR -> "Ошибка сервера"
+        NetworkErrors.INTERNET -> "Пожалуйста подключитесь к сети :)"
+        NetworkErrors.SERIALIZATION -> "Проблема с сериализацией"
+        else -> "Неизвестная ошибка, попробуйте с впн"
     }
 }
 
