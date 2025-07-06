@@ -252,10 +252,20 @@ fun AnimeScreen(
                                 authVM.sendIntent(
                                     AuthIntent.AddLike(currentAnime)
                                 )
+                                viewModel.sendIntent(
+                                    AnimeScreenIntent.UpdateScreenState(
+                                        screenState.copy(isInLikes = true)
+                                    )
+                                )
                             },
                             onPopClick = {
                                 authVM.sendIntent(
                                     AuthIntent.RemoveLike(currentAnime)
+                                )
+                                viewModel.sendIntent(
+                                    AnimeScreenIntent.UpdateScreenState(
+                                        screenState.copy(isInLikes = false)
+                                    )
                                 )
                             },
                             isLogged = when (authState.isLogged) {
