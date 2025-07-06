@@ -128,6 +128,8 @@ fun ListsScreen(
                 )
 
                 ListPager(
+                    query = screenState.query,
+                    isSearching = screenState.isSearching,
                     pagerState = pagerState,
                     animeByStatus = screenState.animeByStatus,
                     onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) },

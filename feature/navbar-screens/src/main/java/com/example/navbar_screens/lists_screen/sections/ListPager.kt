@@ -8,6 +8,8 @@ import com.example.local.db.lists_db.ListsAnimeEntity
 
 @Composable
 fun ListPager(
+    query: String,
+    isSearching: Boolean,
     pagerState: PagerState,
     animeByStatus: Map<ListAnimeStatus, List<ListsAnimeEntity>>,
     onAnimeClick: (Int) -> Unit
@@ -16,7 +18,13 @@ fun ListPager(
 
     HorizontalPager(state = pagerState) { page ->
         val status = statuses[page]
-        val list = animeByStatus[status].orEmpty()
+        val list = if (isSearching) {
+            animeByStatus[status].orEmpty().filter {
+                it.name.contains(query, ignoreCase = true) == true
+            }
+        } else {
+            animeByStatus[status].orEmpty()
+        }
 
         ListLVG(
             list = list,
