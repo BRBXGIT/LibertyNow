@@ -88,7 +88,8 @@ fun AnimeScreen(
                         )
                     )
                 },
-                onNavClick = { navController.navigateUp() }
+                onNavClick = { navController.navigateUp() },
+                animeInList = screenState.currentListsAnimeIn.isNotEmpty()
             )
         },
         floatingActionButton = {

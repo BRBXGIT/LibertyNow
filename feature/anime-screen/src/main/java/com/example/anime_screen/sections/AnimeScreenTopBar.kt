@@ -35,6 +35,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimeScreenTopBar(
+    animeInList: Boolean,
     isError: Boolean,
     animeTitle: String?,
     isLoading: Boolean,
@@ -67,7 +68,9 @@ fun AnimeScreenTopBar(
         actions = {
             IconButton(onClick = onArchiveClick) {
                 Icon(
-                    painter = painterResource(LibriaNowIcons.Archive),
+                    painter = painterResource(
+                        if (animeInList) LibriaNowIcons.ListCheckedFilled else LibriaNowIcons.Archive
+                    ),
                     contentDescription = null
                 )
             }
@@ -157,7 +160,8 @@ private fun AnimeScreenTopBaPreview() {
             scrollBehavior = scrollBehavior,
             isError = false,
             onArchiveClick = {},
-            onNavClick = {}
+            onNavClick = {},
+            animeInList = true
         )
     }
 }

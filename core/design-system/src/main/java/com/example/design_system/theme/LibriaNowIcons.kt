@@ -41,6 +41,7 @@ object LibriaNowIcons {
     val PlayFilled = R.drawable.ic_play_filled
     val PauseFilled = R.drawable.ic_pause_filled
     val SingleArrowRightFilled = R.drawable.ic_single_arrow_filled
+    val ListCheckedFilled = R.drawable.ic_list_checked_filled
 
     // Animated
     val HomeAnimated = R.drawable.ic_home_animated
