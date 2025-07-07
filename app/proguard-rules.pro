@@ -50,6 +50,8 @@
 -keep class com.example.network.auth.models.** { *; }
 -keep class com.example.network.home_screen.models.** { *; }
 -keep class com.example.network.project_team_screen.models.** { *; }
+-keep class com.example.local.db.lists_db.** { *; }
+-keep class com.example.local.db.watched_eps_db.** { *; }
 
 # Retrofit
 -keep class retrofit2.** { *; }
@@ -63,3 +65,11 @@
 
 # Clases with gson annotations
 -keep class com.google.gson.** { *; }
+
+# Сохраняем generic информацию TypeToken
+-keepattributes Signature
+-keep class com.google.gson.reflect.TypeToken
+-keep class com.google.gson.reflect.TypeToken$* { *; }
+
+# Это поможет сохранить параметризацию generic классов
+-keep class * extends com.google.gson.reflect.TypeToken

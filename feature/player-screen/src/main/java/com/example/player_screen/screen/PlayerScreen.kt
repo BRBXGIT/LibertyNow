@@ -42,8 +42,8 @@ import com.example.player_screen.sections.SelectEpisodeAD
 import com.example.player_screen.sections.SkipOpeningButton
 import com.example.player_screen.sections.UnlockButton
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 var videoViewBounds = Rect()
 
@@ -102,7 +102,7 @@ fun PlayerScreen(
                 else -> true
             }
             val firstEpisode = screenState.currentEpisodeId == 0
-            val lastEpisode = screenState.currentEpisodeId < screenState.links.size
+            val lastEpisode = screenState.currentEpisodeId == screenState.links.size - 1
             updatedPipParams(context, isPlayingNow, firstEpisode, lastEpisode)?.let { params ->
                 activity.setPictureInPictureParams(params)
             }
@@ -317,7 +317,7 @@ fun PlayerScreen(
                                     )
                                 )
                                 val firstEpisode = screenState.currentEpisodeId == 0
-                                val lastEpisode = screenState.currentEpisodeId < screenState.links.size
+                                val lastEpisode = screenState.currentEpisodeId == screenState.links.size - 1
                                 updatedPipParams(
                                     context = context,
                                     isPlaying = when(screenState.isPlaying) {

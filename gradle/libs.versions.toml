@@ -18,8 +18,8 @@ hiltAndroid = "2.56.2"
 hiltNavigationCompose = "1.2.0"
 
 # Navigation & serialization
-composeNavigation = "2.9.0"
-serialization = "1.8.0"
+composeNavigation = "2.9.1"
+serialization = "1.8.1"
 
 # Room
 roomKtx = "2.7.2"
