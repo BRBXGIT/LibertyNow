@@ -37,7 +37,7 @@ private val EasingEmphasizedCubicBezier = CubicBezierEasing(0.2f, 0.0f, 0.0f, 1.
 private val ExtendedFabMinimumWidth = 80.dp
 private val ExtendedFabIconSize = 24.0.dp
 private val ExtendedFabIconPadding = 12.dp
-private val ExtendedFabTextPadding = 20.dp
+private val ExtendedFabTextPadding = 16.dp
 
 private val ExtendedFabCollapseAnimation = fadeOut(
     animationSpec = tween(
@@ -145,6 +145,18 @@ fun ContinueWatchFABWrapper(
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun ContinueWatchFABPreview() {
+    LibriaNowTheme {
+        ContinueWatchFAB(
+            start = false,
+            expanded = true,
+            onClick = {},
+        )
     }
 }
 
