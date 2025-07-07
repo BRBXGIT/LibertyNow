@@ -16,14 +16,14 @@ fun AboutAppSection() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Привет в LibriaNow",
+            text = "Привет в LibertyNow",
             style = mTypography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold
             )
         )
 
         Text(
-            text = "LibriaNow это неофициальный андроид клиент AniLibria, здесь вы можете смотреть аниме " +
+            text = "LibertyNow это неофициальный андроид клиент AniLiberty, здесь вы можете смотреть аниме " +
                     "в их озвучке. Если данные грузятся слишком долго, или у вас не " +
                     "подгружаются картинки, попробуйте включить DPI спуфер или VPN",
             style = mTypography.bodyLarge
