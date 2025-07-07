@@ -23,13 +23,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.CommonConstants
-import com.example.design_system.theme.mColors
 import com.example.network.anime_screen.models.anime_response.X1
 import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Footer
@@ -115,7 +115,7 @@ fun PlayerScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(mColors.background)
+                .background(Color(0xFF000000))
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
