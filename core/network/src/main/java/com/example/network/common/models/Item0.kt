@@ -1,4 +1,4 @@
-package com.example.network.common.titles_list_response
+package com.example.network.common.models
 
 import com.google.gson.annotations.SerializedName
 

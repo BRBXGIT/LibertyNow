@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.LibriaNowTheme
-import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.models.Item0
 
 @Composable
 fun LikesLVG(

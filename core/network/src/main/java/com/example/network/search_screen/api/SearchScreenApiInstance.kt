@@ -1,6 +1,6 @@
 package com.example.network.search_screen.api
 
-import com.example.network.common.titles_list_response.TitlesListResponse
+import com.example.network.common.models.TitlesListResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

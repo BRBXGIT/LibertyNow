@@ -7,7 +7,7 @@ import com.example.common.functions.NetworkException
 import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptionsForPaging
-import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.models.Item0
 import com.example.network.search_screen.api.SearchScreenApiInstance
 import java.io.IOException
 

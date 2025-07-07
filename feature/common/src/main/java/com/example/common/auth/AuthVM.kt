@@ -13,8 +13,8 @@ import com.example.design_system.snackbars.SnackbarEvent
 import com.example.local.datastore.auth.LoggingState
 import com.example.network.auth.models.likes_amount_response.LikesAmountResponse
 import com.example.network.auth.models.session_token_response.SessionTokenResponse
-import com.example.network.common.titles_list_response.Item0
-import com.example.network.common.titles_list_response.TitlesListResponse
+import com.example.network.common.models.Item0
+import com.example.network.common.models.TitlesListResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

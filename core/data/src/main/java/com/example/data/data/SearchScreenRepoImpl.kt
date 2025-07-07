@@ -9,7 +9,7 @@ import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptions
 import com.example.data.domain.SearchScreenRepo
-import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.models.Item0
 import com.example.network.search_screen.api.SearchScreenApiInstance
 import com.example.network.search_screen.paging.TitlesByFiltersPagingSource
 import kotlinx.coroutines.flow.Flow

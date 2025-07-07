@@ -2,7 +2,7 @@ package com.example.network.auth.api
 
 import com.example.network.auth.models.add_like_response.ActionLikeResponse
 import com.example.network.auth.models.likes_amount_response.LikesAmountResponse
-import com.example.network.common.titles_list_response.TitlesListResponse
+import com.example.network.common.models.TitlesListResponse
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET

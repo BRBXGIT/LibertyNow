@@ -25,7 +25,7 @@ import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mShapes
-import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.models.Item0
 import kotlinx.coroutines.flow.flowOf
 
 @Composable

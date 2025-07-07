@@ -1,6 +1,6 @@
 package com.example.common.auth
 
-import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.models.Item0
 
 sealed interface AuthIntent {
     data object GetSessionToken: AuthIntent

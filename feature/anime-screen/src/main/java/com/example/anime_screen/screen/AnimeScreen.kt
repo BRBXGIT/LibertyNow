@@ -44,12 +44,12 @@ import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
 import com.example.local.datastore.auth.LoggingState
-import com.example.network.common.titles_list_response.Item0
-import com.example.network.common.titles_list_response.Medium
-import com.example.network.common.titles_list_response.Names
-import com.example.network.common.titles_list_response.Original
-import com.example.network.common.titles_list_response.Posters
-import com.example.network.common.titles_list_response.Small
+import com.example.network.common.models.Item0
+import com.example.network.common.models.Medium
+import com.example.network.common.models.Names
+import com.example.network.common.models.Original
+import com.example.network.common.models.Posters
+import com.example.network.common.models.Small
 import com.example.player_screen.navigation.PlayerScreenRoute
 import com.google.gson.Gson
 

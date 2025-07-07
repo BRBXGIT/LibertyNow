@@ -1,7 +1,7 @@
 package com.example.common.auth
 
 import com.example.local.datastore.auth.LoggingState
-import com.example.network.common.titles_list_response.Item0
+import com.example.network.common.models.Item0
 
 data class AuthState(
     val isLogged: LoggingState = LoggingState.Loading,

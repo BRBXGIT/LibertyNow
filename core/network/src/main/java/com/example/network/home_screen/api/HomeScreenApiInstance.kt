@@ -1,6 +1,6 @@
 package com.example.network.home_screen.api
 
-import com.example.network.common.titles_list_response.TitlesListResponse
+import com.example.network.common.models.TitlesListResponse
 import com.example.network.home_screen.models.RandomTitleResponse
 import retrofit2.Response
 import retrofit2.http.GET

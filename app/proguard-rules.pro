@@ -46,11 +46,10 @@
 
 # Keep model data classes
 -keep class com.example.network.anime_screen.models.** { *; }
--keep class com.example.network.auth.models.** { *; }
 -keep class com.example.network.common.models.** { *; }
+-keep class com.example.network.auth.models.** { *; }
 -keep class com.example.network.home_screen.models.** { *; }
 -keep class com.example.network.project_team_screen.models.** { *; }
--keep class com.example.network.search_screen.models.** { *; }
 
 # Retrofit
 -keep class retrofit2.** { *; }
