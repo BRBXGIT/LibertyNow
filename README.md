@@ -30,5 +30,8 @@
 - [Paging](https://developer.android.com/jetpack/androidx/releases/paging)
 - [Haze](https://chrisbanes.github.io/haze/latest/)
 - [Material Design 3](https://m3.material.io/)
+## Some issues
+- РКН очень любит блокировать аниме сервисы, поэтому войти в аккаунт можно только с впн
+- Также если у вас не грузятся какие-то данные, например картинки, попробуйте подключить впн или dpi спуфер
 ## App preview
-TODO
+https://github.com/user-attachments/assets/2eedc439-b503-49e0-929c-e30061b91116
