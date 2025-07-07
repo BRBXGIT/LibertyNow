@@ -37,7 +37,7 @@ fun MoreScreenTopBar(
                 )
 
                 Text(
-                    text = "LibriaNow"
+                    text = "LibertyNow"
                 )
             }
         },
