@@ -29,7 +29,7 @@ fun ScreenHeader() {
                 fontSize = 16.sp,
             )
         ) {
-            append("Powered by LibertyNow api")
+            append("Powered by AniLiberty api")
         }
     }
 
