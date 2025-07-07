@@ -21,7 +21,7 @@ fun ScreenHeader() {
                 fontWeight = FontWeight.Bold,
             )
         ) {
-            append("LibriaNow\n")
+            append("LibertyNow\n")
         }
         withStyle(
             style = SpanStyle(
@@ -29,7 +29,7 @@ fun ScreenHeader() {
                 fontSize = 16.sp,
             )
         ) {
-            append("Powered by AniLibria api")
+            append("Powered by LibertyNow api")
         }
     }
 
