@@ -27,11 +27,11 @@ import androidx.navigation.NavController
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mTypography
+import com.example.simple_screens.common.SimpleTopBar
 import com.example.simple_screens.support_screen.sections.AboutAniLibriaSection
 import com.example.simple_screens.support_screen.sections.AniLibriaDefinitionSection
 import com.example.simple_screens.support_screen.sections.DonateItemUi
 import com.example.simple_screens.support_screen.sections.JoinTeamBS
-import com.example.simple_screens.support_screen.sections.SupportScreenTopBar
 import com.example.simple_screens.support_screen.sections.WhatsBadSection
 
 data class DonateItem(
@@ -71,8 +71,9 @@ fun SupportScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            SupportScreenTopBar(
-                onNavIconClick = { navController.navigateUp() },
+            SimpleTopBar(
+                title = "Поддержать",
+                onBackClick = { navController.navigateUp() },
                 scrollBehavior = topBarScrollBehavior
             )
         },

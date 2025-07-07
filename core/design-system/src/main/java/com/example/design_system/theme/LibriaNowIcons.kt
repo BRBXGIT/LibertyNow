@@ -67,6 +67,6 @@ object LibriaNowIcons {
     val DonationAlertsMulticolored = R.drawable.ic_donationalerts_multicolored
 
     // Images
-    val OnBoardingBackgroundLight = R.drawable.on_boarding_background_dark
-    val OnBoardingBackgroundDark = R.drawable.on_boarding_background_light
+    val OnBoardingBackgroundLight = R.drawable.on_boarding_background_light
+    val OnBoardingBackgroundDark = R.drawable.on_boarding_background_dark
 }

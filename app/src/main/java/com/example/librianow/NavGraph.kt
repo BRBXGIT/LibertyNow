@@ -93,6 +93,6 @@ fun NavGraph(
 
         settingsScreen(navController)
 
-        infoScreen()
+        infoScreen(navController)
     }
 }

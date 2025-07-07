@@ -14,9 +14,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.mColors
+import com.example.simple_screens.common.SimpleTopBar
 import com.example.simple_screens.settings_screen.sections.PlayerSettingsItemType
 import com.example.simple_screens.settings_screen.sections.SettingsLCSection
-import com.example.simple_screens.settings_screen.sections.SettingsScreenTopBar
 import com.example.simple_screens.settings_screen.sections.VideoQualityBS
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +30,8 @@ fun SettingsScreen(
     val topBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
-            SettingsScreenTopBar(
+            SimpleTopBar(
+                title = "Настройки",
                 onBackClick = { navController.navigateUp() },
                 scrollBehavior = topBarScrollBehavior
             )
