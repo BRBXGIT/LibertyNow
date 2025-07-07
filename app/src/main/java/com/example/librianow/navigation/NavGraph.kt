@@ -1,4 +1,4 @@
-package com.example.librianow
+package com.example.librianow.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,12 +32,12 @@ fun NavGraph(
     val navController = rememberNavController()
 
     // Initialize here to don't recompose values
-    val commonVM = hiltViewModel<CommonVM>()
+    val commonVM = viewModel<CommonVM>()
     val authVM = hiltViewModel<AuthVM>()
 
     val homeScreenVM = hiltViewModel<HomeScreenVM>()
     val searchScreenVM = hiltViewModel<SearchScreenVM>()
-    val likesScreenVM = hiltViewModel<LikesScreenVM>()
+    val likesScreenVM = viewModel<LikesScreenVM>()
     val listsScreenVM = hiltViewModel<ListsScreenVM>()
     val moreScreenVM = viewModel<MoreScreenVM>()
     NavHost(
@@ -78,14 +78,9 @@ fun NavGraph(
             authVM = authVM
         )
 
-        animeScreen(
-            navController = navController,
-            authVM = authVM
-        )
+        animeScreen(navController, authVM)
 
-        playerScreen(
-            navController = navController
-        )
+        playerScreen(navController)
 
         projectTeamScreen(navController)
 

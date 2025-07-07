@@ -62,7 +62,8 @@ class AnimeScreenVM @Inject constructor(
             _animeScreenState.update { state ->
                 state.copy(
                     isLoading = true,
-                    isError = false
+                    isError = false,
+                    animeId = id
                 )
             }
 

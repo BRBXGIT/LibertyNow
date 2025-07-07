@@ -118,30 +118,8 @@ fun AnimeScreen(
             anime?.let {
                 if (screenState.isListsBSOpened) {
                     ListsBS(
-                        currentLists = screenState.currentListsAnimeIn,
-                        onDismissRequest = {
-                            viewModel.sendIntent(
-                                AnimeScreenIntent.UpdateScreenState(
-                                    screenState.copy(isListsBSOpened = false)
-                                )
-                            )
-                        },
-                        onStatusSelected = { selectedStatus ->
-                            viewModel.sendIntent(
-                                AnimeScreenIntent.MoveAnimeToList(
-                                    id = animeId,
-                                    poster = anime.posters.small.url,
-                                    genres = anime.genres.joinToString(", "),
-                                    name = anime.names.ru,
-                                    newStatus = selectedStatus
-                                )
-                            )
-                            viewModel.sendIntent(
-                                AnimeScreenIntent.UpdateScreenState(
-                                    screenState.copy(isListsBSOpened = false)
-                                )
-                            )
-                        }
+                        screenState = screenState,
+                        viewModel = viewModel
                     )
                 }
 

@@ -59,7 +59,7 @@ fun DonateItemUi(
 
 @Preview
 @Composable
-fun DonateItemUiPreview() {
+private fun DonateItemUiPreview() {
     LibriaNowTheme {
         DonateItemUi(
             onClick = {},

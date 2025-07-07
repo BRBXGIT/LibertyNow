@@ -88,7 +88,7 @@ private fun ColumnScope.ActionButtons(
 
 @Preview
 @Composable
-fun QuitAccountADPreview() {
+private fun QuitAccountADPreview() {
     LibriaNowTheme {
         QuitAccountAD(
             onConfirmClick = {},

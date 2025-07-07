@@ -35,7 +35,7 @@ fun BoxScope.SkipOpeningButton(
 
 @Preview
 @Composable
-fun SkipOpeningButtonPreview() {
+private fun SkipOpeningButtonPreview() {
     LibriaNowTheme {
         Box {
             SkipOpeningButton(

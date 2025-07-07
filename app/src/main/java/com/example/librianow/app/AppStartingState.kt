@@ -1,4 +1,4 @@
-package com.example.librianow
+package com.example.librianow.app
 
 import com.example.local.datastore.app_theme.ThemeState
 import com.example.local.datastore.onboarding.OnBoardingState

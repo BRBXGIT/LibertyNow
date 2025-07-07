@@ -5,6 +5,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mShapes
 
 @Composable
@@ -18,6 +20,16 @@ fun StartButton(
     ) {
         Text(
             text = "Начать"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun StartButtonPreview() {
+    LibriaNowTheme {
+        StartButton(
+            onClick = {}
         )
     }
 }

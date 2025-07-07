@@ -2,16 +2,11 @@ package com.example.common.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
-class CommonVM @Inject constructor(
-
-): ViewModel() {
+class CommonVM: ViewModel() {
     private val _commonState = MutableStateFlow(CommonState())
     val commonState = _commonState.stateIn(
         viewModelScope,

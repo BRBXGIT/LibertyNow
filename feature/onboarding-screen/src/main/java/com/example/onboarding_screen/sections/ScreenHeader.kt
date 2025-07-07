@@ -40,7 +40,7 @@ fun ScreenHeader() {
 
 @Preview
 @Composable
-fun ScreenHeaderPreview() {
+private fun ScreenHeaderPreview() {
     LibriaNowTheme {
         ScreenHeader()
     }

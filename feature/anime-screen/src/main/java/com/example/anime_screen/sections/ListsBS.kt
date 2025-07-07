@@ -20,6 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.anime_screen.screen.AnimeScreenIntent
+import com.example.anime_screen.screen.AnimeScreenState
+import com.example.anime_screen.screen.AnimeScreenVM
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mShapes
@@ -29,12 +32,17 @@ import com.example.local.db.lists_db.ListAnimeStatus
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListsBS(
-    currentLists: List<ListAnimeStatus>,
-    onDismissRequest: () -> Unit,
-    onStatusSelected: (ListAnimeStatus) -> Unit
+    viewModel: AnimeScreenVM,
+    screenState: AnimeScreenState
 ) {
     ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = {
+            viewModel.sendIntent(
+                AnimeScreenIntent.UpdateScreenState(
+                    screenState.copy(isListsBSOpened = false)
+                )
+            )
+        },
         shape = mShapes.small,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ) {
@@ -53,8 +61,24 @@ fun ListsBS(
 
                 ListItem(
                     name = name,
-                    selected = status in currentLists,
-                    onClick = { onStatusSelected(status) }
+                    selected = status in screenState.currentListsAnimeIn,
+                    onClick = {
+                        val anime = screenState.anime!!
+                        viewModel.sendIntent(
+                            AnimeScreenIntent.MoveAnimeToList(
+                                id = screenState.animeId,
+                                poster = anime.posters.small.url,
+                                genres = anime.genres.joinToString(", "),
+                                name = anime.names.ru,
+                                newStatus = status
+                            )
+                        )
+                        viewModel.sendIntent(
+                            AnimeScreenIntent.UpdateScreenState(
+                                screenState.copy(isListsBSOpened = false)
+                            )
+                        )
+                    }
                 )
             }
         }
@@ -62,7 +86,7 @@ fun ListsBS(
 }
 
 @Composable
-fun ListItem(
+private fun ListItem(
     name: String,
     selected: Boolean,
     onClick: () -> Unit
@@ -94,7 +118,7 @@ fun ListItem(
 
 @Preview
 @Composable
-fun ListItemPreview() {
+private fun ListItemPreview() {
     LibriaNowTheme {
         ListItem(
             name = "Просмотрено",

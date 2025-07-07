@@ -88,7 +88,7 @@ fun JoinTeamBS(onDismissRequest: () -> Unit) {
 }
 
 @Composable
-fun rolesDescription(roles: List<Role>): AnnotatedString {
+private fun rolesDescription(roles: List<Role>): AnnotatedString {
     val baseTextStyle = SpanStyle(
         fontSize = mTypography.bodyLarge.fontSize,
         fontFamily = mTypography.bodyLarge.fontFamily
@@ -111,7 +111,7 @@ fun rolesDescription(roles: List<Role>): AnnotatedString {
 }
 
 @Composable
-fun LinkButton(icon: Painter, text: String, url: String) {
+private fun LinkButton(icon: Painter, text: String, url: String) {
     val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -138,7 +138,7 @@ fun LinkButton(icon: Painter, text: String, url: String) {
 
 @Preview
 @Composable
-fun LinkButtonPreview() {
+private fun LinkButtonPreview() {
     LibriaNowTheme {
         LinkButton(
             icon = painterResource(LibriaNowIcons.TelegramMulticolored),
@@ -150,7 +150,7 @@ fun LinkButtonPreview() {
 
 @Preview
 @Composable
-fun JoinTeamBSPreview() {
+private fun JoinTeamBSPreview() {
     LibriaNowTheme {
         JoinTeamBS(
             onDismissRequest = {}

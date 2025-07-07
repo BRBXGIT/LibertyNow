@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.theme.DesignUtils
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.network.common.titles_list_response.Item0
 
 @Composable
@@ -34,5 +36,16 @@ fun LikesLVG(
                 modifier = Modifier.animateItem()
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun LikesLVGPreview() {
+    LibriaNowTheme {
+        LikesLVG(
+            likes = emptyList(),
+            onAnimeClick = {}
+        )
     }
 }

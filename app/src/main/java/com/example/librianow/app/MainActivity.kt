@@ -1,4 +1,4 @@
-package com.example.librianow
+package com.example.librianow.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,6 +9,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.design_system.theme.LibriaNowTheme
+import com.example.librianow.navigation.NavGraph
+import com.example.librianow.R
 import com.example.local.datastore.app_theme.ThemeState
 import com.example.local.datastore.onboarding.OnBoardingState
 import com.example.navbar_screens.home_screen.navigation.HomeScreenRoute

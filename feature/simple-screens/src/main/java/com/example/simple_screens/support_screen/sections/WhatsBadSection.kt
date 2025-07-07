@@ -44,7 +44,7 @@ fun WhatsBadSection() {
 
 @Preview
 @Composable
-fun WhatsBadSectionPreview() {
+private fun WhatsBadSectionPreview() {
     LibriaNowTheme {
         WhatsBadSection()
     }

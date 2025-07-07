@@ -62,7 +62,7 @@ fun ProjectTeamScreenTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ProjectTeamScreenTopBarPreview() {
+private fun ProjectTeamScreenTopBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     LibriaNowTheme {

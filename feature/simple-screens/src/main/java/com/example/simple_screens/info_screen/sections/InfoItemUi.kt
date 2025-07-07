@@ -9,7 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
@@ -38,6 +40,18 @@ fun InfoItemUi(
             style = mTypography.bodySmall.copy(
                 color = mColors.primary
             )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun InfoItemUiPreview() {
+    LibriaNowTheme {
+        InfoItemUi(
+            onClick = {},
+            name = "Версия",
+            label = "Stable 1.0.0 (07.07.2025 03:00)"
         )
     }
 }

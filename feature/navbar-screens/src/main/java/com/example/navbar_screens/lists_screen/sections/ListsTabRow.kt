@@ -123,7 +123,7 @@ private fun Modifier.customTabIndicatorOffset(
 
 @Preview
 @Composable
-fun ListsTabRowPreview() {
+private fun ListsTabRowPreview() {
     LibriaNowTheme {
         ListsTabRow(
             selectedTabIndex = 1,

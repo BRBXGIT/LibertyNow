@@ -73,7 +73,7 @@ fun ContinueWatchFABWrapper(
 
 @Preview
 @Composable
-fun ContinueWatchFABWrapperPreview() {
+private fun ContinueWatchFABWrapperPreview() {
     LibriaNowTheme {
         ContinueWatchFABWrapper(
             screenState = AnimeScreenState(),

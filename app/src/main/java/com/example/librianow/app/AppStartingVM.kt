@@ -1,4 +1,4 @@
-package com.example.librianow
+package com.example.librianow.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -48,7 +48,7 @@ fun AboutAniLibriaSection() {
 
 @Preview
 @Composable
-fun AboutAniLibriaSectionPreview() {
+private fun AboutAniLibriaSectionPreview() {
     LibriaNowTheme {
         AboutAniLibriaSection()
     }

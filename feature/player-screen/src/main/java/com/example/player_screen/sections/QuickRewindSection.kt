@@ -97,7 +97,7 @@ private fun QuickRewindBox(
 
 @Preview
 @Composable
-fun QuickRewindSectionPreview() {
+private fun QuickRewindSectionPreview() {
     LibriaNowTheme {
         Box(
             modifier = Modifier.fillMaxSize()
