@@ -40,7 +40,7 @@ object RetrofitModule {
         @Named("main_okhttp") okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.anilibria.tv/v3/")
+            .baseUrl("https://anilibria.top/api/v1/")
             .addConverterFactory(gson)
             .client(okHttpClient)
             .build()
