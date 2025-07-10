@@ -161,9 +161,9 @@ fun HomeScreen(
 
                             anime?.let {
                                 AnimeCard(
-                                    posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.small.url,
-                                    genresString = anime.genres.joinToString(", "),
-                                    title = anime.names.ru,
+                                    posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.optimized.preview,
+                                    genresString = anime.genres.joinToString(", ") { it.name },
+                                    title = anime.name.main,
                                     modifier = Modifier.animateItem(),
                                     onCardClick = { navController.navigate(AnimeScreenRoute(anime.id)) },
                                 )
@@ -193,7 +193,7 @@ fun HomeScreen(
                         items(screenState.titlesUpdates, key = { it.id }) { anime ->
                             AnimeCard(
                                 posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.optimized.preview,
-                                genresString = anime.genres.joinToString(", "),
+                                genresString = anime.genres.joinToString(", ") { it.name },
                                 title = anime.name.main,
                                 modifier = Modifier.animateItem(),
                                 onCardClick = { navController.navigate(AnimeScreenRoute(anime.id)) },

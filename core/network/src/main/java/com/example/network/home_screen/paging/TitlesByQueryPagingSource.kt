@@ -7,27 +7,27 @@ import com.example.common.functions.NetworkException
 import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptionsForPaging
-import com.example.network.common.models.Item0
+import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.network.home_screen.api.HomeScreenApiInstance
 import java.io.IOException
 
 class TitlesByQueryPagingSource(
     private val apiInstance: HomeScreenApiInstance,
     private val query: String
-): PagingSource<Int, Item0>() {
+): PagingSource<Int, Data>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Item0>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Data>): Int? {
         return state.anchorPosition
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Item0> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Data> {
         val startPage = params.key ?: 1
         val perPage = params.loadSize
 
         return try {
             val response = apiInstance.getTitlesByQuery(
                 page = startPage,
-                itemsPerPage = perPage,
+                limit = perPage,
                 query = query
             )
 
@@ -35,9 +35,9 @@ class TitlesByQueryPagingSource(
                 val body = response.body()
                 if (body != null) {
                     LoadResult.Page(
-                        data = body.list,
-                        prevKey = if (body.pagination.currentPage > 1) body.pagination.currentPage - 1 else null,
-                        nextKey = body.pagination.currentPage + 1
+                        data = body.data,
+                        prevKey = if (body.meta.pagination.currentPage > 1) body.meta.pagination.currentPage - 1 else null,
+                        nextKey = body.meta.pagination.currentPage + 1
                     )
                 } else {
                     val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
@@ -49,7 +49,7 @@ class TitlesByQueryPagingSource(
                 LoadResult.Error(NetworkException(exception, label))
             }
         } catch (e: IOException) {
-            processNetworkExceptionsForPaging<Int, Item0>(e)
+            processNetworkExceptionsForPaging<Int, Data>(e)
         }
     }
 }
