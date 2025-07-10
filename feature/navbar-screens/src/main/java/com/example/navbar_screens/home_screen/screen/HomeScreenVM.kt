@@ -11,7 +11,6 @@ import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.network.common.models.anime_list_response.AnimeListResponse
-import com.example.network.home_screen.models.RandomTitleResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -102,7 +101,7 @@ class HomeScreenVM @Inject constructor(
             val response = repository.getRandomTitle()
             if (response.error == NetworkErrors.SUCCESS) {
                 withContext(dispatcherMain) {
-                    onComplete((response.response as RandomTitleResponse).id)
+                    onComplete((response.response as AnimeListResponse)[0].id)
                 }
             } else {
                 SnackbarController.sendEvent(
