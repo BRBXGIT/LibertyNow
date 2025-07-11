@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -24,15 +26,18 @@ import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
 import com.example.common.functions.NetworkException
+import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.snackbars.SnackbarObserver
+import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.common.SearchableTopBar
 import com.example.navbar_screens.home_screen.sections.NothingHereSection
+import com.example.navbar_screens.home_screen.sections.RandomAnimeButton
 import com.example.navbar_screens.home_screen.sections.TitlesUpdatesLVG
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +47,6 @@ fun HomeScreen(
     commonVM: CommonVM,
     navController: NavController
 ) {
-    val titlesUpdates = viewModel.titlesUpdates.collectAsLazyPagingItems()
     val titlesByQuery = viewModel.titlesByQuery.collectAsLazyPagingItems()
 
     val commonState by commonVM.commonState.collectAsStateWithLifecycle()
@@ -51,41 +55,6 @@ fun HomeScreen(
     // Snackbars stuff
     val snackbarHostState = remember { SnackbarHostState() }
     SnackbarObserver(snackbarHostState)
-
-    // Check titles updates errors
-    LaunchedEffect(titlesUpdates.loadState) {
-        if (titlesUpdates.loadState.hasError) {
-            val error = (titlesUpdates.loadState.refresh as LoadState.Error).error as NetworkException
-
-            SnackbarController.sendEvent(
-                SnackbarEvent(
-                    message = error.label,
-                    action = SnackbarAction(
-                        name = "Retry",
-                        action = { titlesUpdates.retry() }
-                    )
-                )
-            )
-        }
-
-        if (titlesUpdates.loadState.refresh is LoadState.Loading) {
-            viewModel.sendIntent(
-                HomeScreenIntent.UpdateScreenState(
-                    screenState.copy(
-                        isLoading = true
-                    )
-                )
-            )
-        } else {
-            viewModel.sendIntent(
-                HomeScreenIntent.UpdateScreenState(
-                    screenState.copy(
-                        isLoading = false
-                    )
-                )
-            )
-        }
-    }
 
     // Check titles by query errors
     LaunchedEffect(titlesByQuery.loadState, screenState.isSearching, screenState.query) {
@@ -186,39 +155,51 @@ fun HomeScreen(
                 } else if (titlesByQuery.loadState.refresh is LoadState.Error) {
                     ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    TitlesUpdatesLVG(
-                        titlesUpdates = titlesByQuery,
-                        showRandomButton = false,
-                        onAnimeClick = { animeId ->
-                            navController.navigate(
-                                AnimeScreenRoute(animeId)
-                            )
+                    TitlesUpdatesLVG {
+                        items(titlesByQuery.itemCount, key = { it }) { index ->
+                            val anime = titlesByQuery[index]
+
+                            anime?.let {
+                                AnimeCard(
+                                    posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.optimized.preview,
+                                    genresString = anime.genres.joinToString(", ") { it.name },
+                                    title = anime.name.main,
+                                    modifier = Modifier.animateItem(),
+                                    onCardClick = { navController.navigate(AnimeScreenRoute(anime.id)) },
+                                )
+                            }
                         }
-                    )
+                    }
                 }
             } else {
-                if (titlesUpdates.loadState.refresh is LoadState.Error) {
+                if (screenState.isError) {
                     ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    TitlesUpdatesLVG(
-                        titlesUpdates = titlesUpdates,
-                        onAnimeClick = { animeId ->
-                            navController.navigate(
-                                AnimeScreenRoute(animeId)
-                            )
-                        },
-                        onRandomClick = {
-                            viewModel.sendIntent(
-                                HomeScreenIntent.FetchRandomTitle(
-                                    onComplete = { animeId ->
-                                        navController.navigate(
-                                            AnimeScreenRoute(animeId)
+                    TitlesUpdatesLVG {
+                        item(
+                            span = { GridItemSpan(maxLineSpan) }
+                        ) {
+                            RandomAnimeButton(
+                                onClick = {
+                                    viewModel.sendIntent(
+                                        HomeScreenIntent.FetchRandomTitle(
+                                            onComplete = { navController.navigate(AnimeScreenRoute(it)) }
                                         )
-                                    }
-                                )
+                                    )
+                                }
                             )
                         }
-                    )
+
+                        items(screenState.titlesUpdates, key = { it.id }) { anime ->
+                            AnimeCard(
+                                posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.optimized.preview,
+                                genresString = anime.genres.joinToString(", ") { it.name },
+                                title = anime.name.main,
+                                modifier = Modifier.animateItem(),
+                                onCardClick = { navController.navigate(AnimeScreenRoute(anime.id)) },
+                            )
+                        }
+                    }
                 }
             }
         }
