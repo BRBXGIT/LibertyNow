@@ -44,12 +44,6 @@ import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
 import com.example.local.datastore.auth.LoggingState
-import com.example.network.common.models.Item0
-import com.example.network.common.models.Medium
-import com.example.network.common.models.Names
-import com.example.network.common.models.Original
-import com.example.network.common.models.Posters
-import com.example.network.common.models.Small
 import com.example.player_screen.navigation.PlayerScreenRoute
 import com.google.gson.Gson
 
@@ -77,7 +71,7 @@ fun AnimeScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             AnimeScreenTopBar(
-                animeTitle = screenState.anime?.names?.ru,
+                animeTitle = screenState.anime?.name?.main,
                 isLoading = screenState.isLoading or authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
                 isError = screenState.isError,
@@ -184,67 +178,42 @@ fun AnimeScreen(
                 ) {
                     item(key = "header") {
                         Header(
-                            nameEnglish = anime.names.en,
-                            season = "${anime.season.string} ${anime.season.year}",
-                            type = anime.type.string,
-                            episodes = anime.player.list.values.size,
-                            releaseState = anime.status.string,
-                            posterPath = DesignUtils.POSTERS_BASE_URL + anime.posters.original.url,
+                            nameEnglish = anime.name.english,
+                            season = "${anime.season.description} ${anime.year}",
+                            type = anime.type.description,
+                            episodes = anime.episodes.size,
+                            releaseState = if (anime.isOngoing) "Онгоинг" else "Завершено",
+                            posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.preview,
                             topInnerPadding = innerPadding.calculateTopPadding() + 12.dp,
                             modifier = Modifier.animateItem()
                         )
                     }
 
+                    // TODO
                     item(key = "addToLikeButton") {
-                        val names = Names(
-                            alternative = anime.names.alternative,
-                            en = anime.names.en,
-                            ru = anime.names.ru
-                        )
-                        val posters = Posters(
-                            medium = Medium(
-                                rawBase64File = anime.posters.medium.rawBase64File,
-                                url = anime.posters.medium.url
-                            ),
-                            original = Original(
-                                rawBase64File = anime.posters.original.rawBase64File,
-                                url = anime.posters.original.url
-                            ),
-                            small = Small(
-                                rawBase64File = anime.posters.small.rawBase64File,
-                                url = anime.posters.small.url
-                            )
-                        )
-                        val currentAnime = Item0(
-                            id = animeId,
-                            genres = anime.genres,
-                            names = names,
-                            posters = posters
-                        )
-
                         AddToLikesButton(
                             modifier = Modifier.animateItem(),
                             alreadyInLikes = screenState.isInLikes,
                             isLoading = authState.isLoading,
                             onAddClick = {
-                                authVM.sendIntent(
-                                    AuthIntent.AddLike(currentAnime)
-                                )
-                                viewModel.sendIntent(
-                                    AnimeScreenIntent.UpdateScreenState(
-                                        screenState.copy(isInLikes = true)
-                                    )
-                                )
+//                                authVM.sendIntent(
+//                                    AuthIntent.AddLike(currentAnime)
+//                                )
+//                                viewModel.sendIntent(
+//                                    AnimeScreenIntent.UpdateScreenState(
+//                                        screenState.copy(isInLikes = true)
+//                                    )
+//                                )
                             },
                             onPopClick = {
-                                authVM.sendIntent(
-                                    AuthIntent.RemoveLike(currentAnime)
-                                )
-                                viewModel.sendIntent(
-                                    AnimeScreenIntent.UpdateScreenState(
-                                        screenState.copy(isInLikes = false)
-                                    )
-                                )
+//                                authVM.sendIntent(
+//                                    AuthIntent.RemoveLike(currentAnime)
+//                                )
+//                                viewModel.sendIntent(
+//                                    AnimeScreenIntent.UpdateScreenState(
+//                                        screenState.copy(isInLikes = false)
+//                                    )
+//                                )
                             },
                             isLogged = when (authState.isLogged) {
                                 LoggingState.LoggedIn -> true
@@ -262,7 +231,7 @@ fun AnimeScreen(
 
                     item(key = "genresLR") {
                         GenresLR(
-                            genres = anime.genres,
+                            genres = anime.genres.map { it.name },
                             modifier = Modifier.animateItem()
                         )
                     }
@@ -272,9 +241,9 @@ fun AnimeScreen(
                             modifier = Modifier.animateItem(),
                             description = anime.description,
                             isExpanded = screenState.isDescriptionExpanded,
-                            voiceActors = anime.team.voice.joinToString(", "),
-                            timingWorkers = anime.team.timing.joinToString(", "),
-                            subtitlesWorkers = anime.team.decor.joinToString(", "),
+                            voiceActors = anime.members.filter { it.role.value == "voicing" }.joinToString(", ") { it.nickname },
+                            timingWorkers = anime.members.filter { it.role.value == "timing" }.joinToString(", ") { it.nickname },
+                            subtitlesWorkers = anime.members.filter { it.role.value == "decorating" }.joinToString(", ") { it.nickname },
                             onExpandClick = {
                                 viewModel.sendIntent(
                                     AnimeScreenIntent.UpdateScreenState(
@@ -311,25 +280,25 @@ fun AnimeScreen(
                     }
 
                     itemsIndexed(
-                        items = anime.player.list.values.toList(),
+                        items = anime.episodes,
                         key = { index, episode -> index }
                     ) { index, episode ->
                         val isWatched = index in screenState.watchedEps
 
                         EpisodeItem(
                             modifier = Modifier.animateItem(),
-                            episode = episode.episode,
+                            episode = index,
                             name = episode.name ?: "Без названия",
                             isWatched = isWatched,
                             onClick = {
-                                val links = anime.player.list.values.toList()
+                                val links = anime.episodes.map { it.hls480 + it.hls720 + it.hls1080 }
                                 val linksString = Gson().toJson(links)
 
                                 navController.navigate(
                                     PlayerScreenRoute(
                                         currentEpisodeId = index,
                                         gsonLinks = linksString,
-                                        host = anime.player.host,
+                                        host = "",
                                         animeId = animeId
                                     )
                                 )

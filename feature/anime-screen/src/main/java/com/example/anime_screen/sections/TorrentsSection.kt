@@ -13,32 +13,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
-import com.example.network.anime_screen.models.anime_response.Torrents
+import com.example.network.anime_screen.models.anime_details_response.Torrent
 
 @Composable
 fun TorrentsSection(
     modifier: Modifier = Modifier,
-    torrents: Torrents,
+    torrents: List<Torrent>,
     onDownloadClick: (String) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        torrents.list.forEach { torrent ->
+        torrents.forEach { torrent ->
             TorrentItem(
-                quality = torrent.quality.string,
-                episodes = torrent.episodes.string,
-                size = torrent.sizeString,
+                label = torrent.label,
+                size = (torrent.size / 8 / 1024 / 1024).toInt(),
                 leechers = torrent.leechers,
                 seeders = torrent.seeders,
-                onDownloadCLick = { onDownloadClick(torrent.url) }
+                onDownloadCLick = { onDownloadClick(torrent.magnet) }
             )
         }
     }
@@ -46,9 +46,8 @@ fun TorrentsSection(
 
 @Composable
 private fun TorrentItem(
-    quality: String,
-    episodes: String,
-    size: String,
+    size: Int,
+    label: String,
     leechers: Int,
     seeders: Int,
     onDownloadCLick: () -> Unit
@@ -60,17 +59,21 @@ private fun TorrentItem(
             .fillMaxWidth()
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             Text(
-                text = "$episodes $quality ",
-                style = mTypography.bodyLarge
+                text = label,
+                style = mTypography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$size  ",
+                    text = "$size mb",
                     style = mTypography.bodyLarge
                 )
 
@@ -111,23 +114,11 @@ private fun TorrentItem(
 
 @Preview
 @Composable
-private fun TorrentsSectionPreview() {
-    LibriaNowTheme {
-        TorrentsSection(
-            torrents = Torrents(),
-            onDownloadClick = {}
-        )
-    }
-}
-
-@Preview
-@Composable
 private fun TorrentItemPreview() {
     LibriaNowTheme {
         TorrentItem(
-            quality = "1080p",
-            episodes = "12 ep.",
-            size = "488kb",
+            label = "Sword Art Online- Alicization - AniLibria.TOP [HDTVRip 1080p][AVC][1-24]",
+            size = 488,
             leechers = 24,
             seeders = 13,
             onDownloadCLick = {}

@@ -14,7 +14,7 @@ import com.example.design_system.snackbars.SnackbarEvent
 import com.example.local.db.lists_db.ListAnimeStatus
 import com.example.local.db.lists_db.ListsAnimeEntity
 import com.example.local.db.watched_eps_db.TitleEntity
-import com.example.network.anime_screen.models.anime_response.AnimeResponse
+import com.example.network.anime_screen.models.anime_details_response.AnimeDetailsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +69,7 @@ class AnimeScreenVM @Inject constructor(
 
             val response = repository.getAnime(id)
             if (response.error == NetworkErrors.SUCCESS) {
-                val anime = response.response as AnimeResponse
+                val anime = response.response as AnimeDetailsResponse
                 _animeScreenState.update { state ->
                     state.copy(
                         anime = anime,
