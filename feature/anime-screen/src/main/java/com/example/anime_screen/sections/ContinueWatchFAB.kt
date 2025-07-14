@@ -122,7 +122,7 @@ private fun ContinueWatchFAB(
 @Composable
 fun ContinueWatchFABWrapper(
     screenState: AnimeScreenState,
-    onClick: (Int, String, String, Int) -> Unit,
+    onClick: (Int, String, Int) -> Unit,
     animeId: Int
 ) {
     if (screenState.anime?.episodes != null) {
@@ -141,7 +141,7 @@ fun ContinueWatchFABWrapper(
                     val links = anime.episodes
                     val linksString = Gson().toJson(links)
 
-                    onClick(currentEpisodeId, linksString, "", animeId)
+                    onClick(currentEpisodeId, linksString, animeId)
                 }
             )
         }
@@ -167,7 +167,7 @@ private fun ContinueWatchFABWrapperPreview() {
         ContinueWatchFABWrapper(
             screenState = AnimeScreenState(),
             animeId = 9934,
-            onClick = { currentEpisodeId, linksString, host, animeId ->
+            onClick = { currentEpisodeId, linksString, animeId ->
 
             }
         )

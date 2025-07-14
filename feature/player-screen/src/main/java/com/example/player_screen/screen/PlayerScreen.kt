@@ -30,7 +30,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.design_system.theme.CommonConstants
-import com.example.network.anime_screen.models.anime_response.X1
+import com.example.network.anime_screen.models.anime_details_response.Episode
 import com.example.player_screen.sections.CentralButtonsSection
 import com.example.player_screen.sections.Footer
 import com.example.player_screen.sections.Header
@@ -49,15 +49,14 @@ var videoViewBounds = Rect()
 
 @Composable
 fun PlayerScreen(
-    host: String,
     animeId: Int,
     currentEpisodeId: Int,
     gsonLinks: String,
     viewModel: PlayerScreenVM,
     navController: NavController
 ) {
-    val type = object : TypeToken<List<X1>>() {}.type
-    val links: List<X1> = Gson().fromJson(gsonLinks, type)
+    val type = object : TypeToken<List<Episode>>() {}.type
+    val links: List<Episode> = Gson().fromJson(gsonLinks, type)
     val context = LocalContext.current
 
     val activity = context as Activity
@@ -75,10 +74,9 @@ fun PlayerScreen(
         viewModel.sendIntent(
             PlayerScreenIntent.UpdateScreenState(
                 screenState.copy(
-                    links = links,
+                    episodes = links,
                     currentEpisodeId = currentEpisodeId,
-                    host = host,
-                    currentLink = links[currentEpisodeId],
+                    currentEpisode = links[currentEpisodeId],
                     animeId = animeId
                 )
             )
@@ -102,7 +100,7 @@ fun PlayerScreen(
                 else -> true
             }
             val firstEpisode = screenState.currentEpisodeId == 0
-            val lastEpisode = screenState.currentEpisodeId == screenState.links.size - 1
+            val lastEpisode = screenState.currentEpisodeId == screenState.episodes.size - 1
             updatedPipParams(context, isPlayingNow, firstEpisode, lastEpisode)?.let { params ->
                 activity.setPictureInPictureParams(params)
             }
@@ -142,7 +140,7 @@ fun PlayerScreen(
             if (screenState.isSelectEpisodeADVisible) {
                 SelectEpisodeAD(
                     currentAnimeId = screenState.currentEpisodeId,
-                    links = screenState.links,
+                    links = screenState.episodes,
                     onDismissRequest = {
                         viewModel.sendIntent(
                             PlayerScreenIntent.UpdateScreenState(
@@ -233,7 +231,7 @@ fun PlayerScreen(
                 ) {
                     Header(
                         episode = screenState.currentEpisodeId,
-                        episodeTitle = screenState.links[screenState.currentEpisodeId].name ?: "Без названия",
+                        episodeTitle = screenState.episodes[screenState.currentEpisodeId].name ?: "Без названия",
                         topPadding = innerPadding.calculateTopPadding(),
                         onBackClick = {
                             viewModel.sendIntent(PlayerScreenIntent.ReleasePlayer)
@@ -253,7 +251,7 @@ fun PlayerScreen(
                     CentralButtonsSection(
                         isPlaying = screenState.isPlaying,
                         firstEpisode = screenState.currentEpisodeId == 0,
-                        lastEpisode = screenState.currentEpisodeId == screenState.links.size - 1,
+                        lastEpisode = screenState.currentEpisodeId == screenState.episodes.size - 1,
                         onPreviousClick = {
                             viewModel.sendIntent(PlayerScreenIntent.SkipEpisode(false))
                         },
@@ -317,7 +315,7 @@ fun PlayerScreen(
                                     )
                                 )
                                 val firstEpisode = screenState.currentEpisodeId == 0
-                                val lastEpisode = screenState.currentEpisodeId == screenState.links.size - 1
+                                val lastEpisode = screenState.currentEpisodeId == screenState.episodes.size - 1
                                 updatedPipParams(
                                     context = context,
                                     isPlaying = when(screenState.isPlaying) {
@@ -359,22 +357,20 @@ fun PlayerScreen(
                 }
             }
 
-            LaunchedEffect(screenState.links, screenState.currentPosition) {
-                if (screenState.links.isNotEmpty()) {
-                    val opening = screenState.links[screenState.currentEpisodeId].skips.opening
-                    if (opening.isNotEmpty()) {
-                        if ((opening[0] != null) && (opening[1] != null)) {
-                            val currentSec = screenState.currentPosition / 1000
-                            val inOpening = currentSec in opening[0]!!..opening[1]!!
+            LaunchedEffect(screenState.episodes, screenState.currentPosition) {
+                if (screenState.episodes.isNotEmpty()) {
+                    val opening = screenState.episodes[screenState.currentEpisodeId].opening
+                    if ((opening.start != null) && (opening.stop != null)) {
+                        val currentSec = screenState.currentPosition / 1000
+                        val inOpening = currentSec in opening.start!!..opening.stop!!
 
-                            if (inOpening) {
-                                if (!screenState.timerStarted) {
-                                    viewModel.sendIntent(PlayerScreenIntent.StartSkipOpeningButtonTimer)
-                                }
-                            } else {
-                                if (screenState.isSkipOpeningButtonVisible) {
-                                    viewModel.sendIntent(PlayerScreenIntent.CancelSkipOpeningButtonTimer)
-                                }
+                        if (inOpening) {
+                            if (!screenState.timerStarted) {
+                                viewModel.sendIntent(PlayerScreenIntent.StartSkipOpeningButtonTimer)
+                            }
+                        } else {
+                            if (screenState.isSkipOpeningButtonVisible) {
+                                viewModel.sendIntent(PlayerScreenIntent.CancelSkipOpeningButtonTimer)
                             }
                         }
                     }
@@ -391,7 +387,7 @@ fun PlayerScreen(
                         onClick = {
                             viewModel.sendIntent(
                                 PlayerScreenIntent.SeekEpisode(
-                                    seekTo = (screenState.links[screenState.currentEpisodeId].skips.opening[1]!! * 1000).toLong()
+                                    seekTo = (screenState.episodes[screenState.currentEpisodeId].opening.stop!! * 1000).toLong()
                                 )
                             )
                             viewModel.sendIntent(

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Opening(
     @SerializedName("start")
-    val start: Int = 0,
+    val start: Int? = null,
     @SerializedName("stop")
-    val stop: Int = 0
+    val stop: Int? = null
 )

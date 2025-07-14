@@ -11,7 +11,6 @@ import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.data.domain.PlayerFeaturesRepo
 import com.example.data.domain.WatchedEpsRepo
-import com.example.design_system.theme.CommonConstants
 import com.example.local.db.watched_eps_db.WatchedEpisodeEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -83,11 +82,11 @@ class PlayerScreenVM @Inject constructor(
 
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
                 val nextId = _playerScreenState.value.currentEpisodeId + 1
-                if (nextId < _playerScreenState.value.links.size) {
+                if (nextId < _playerScreenState.value.episodes.size) {
                     _playerScreenState.update { state ->
                         state.copy(
                             currentEpisodeId = nextId,
-                            currentLink = _playerScreenState.value.links[nextId],
+                            currentEpisode = _playerScreenState.value.episodes[nextId],
                         )
                     }
                 }
@@ -142,12 +141,11 @@ class PlayerScreenVM @Inject constructor(
                 }
 
                 val state = _playerScreenState.value
-                val mediaItems = state.links.map {
-                    val base = CommonConstants.BASE_SCHEME + state.host
+                val mediaItems = state.episodes.map {
                     when (videoQuality) {
-                        480 -> MediaItem.fromUri(base + it.hls.sd)
-                        720 -> MediaItem.fromUri(base + it.hls.hd)
-                        else -> MediaItem.fromUri(base + it.hls.fhd)
+                        480 -> MediaItem.fromUri(it.hls480)
+                        720 -> MediaItem.fromUri(it.hls720)
+                        else -> if (it.hls1080 != null) MediaItem.fromUri(it.hls1080!!) else MediaItem.fromUri(it.hls720) //TODO
                     }
                 }
 
@@ -247,7 +245,7 @@ class PlayerScreenVM @Inject constructor(
     private fun skipEpisode(forward: Boolean) {
         when(forward) {
             true -> {
-                if (_playerScreenState.value.currentEpisodeId < _playerScreenState.value.links.size) {
+                if (_playerScreenState.value.currentEpisodeId < _playerScreenState.value.episodes.size) {
                     player.seekToNextMediaItem()
                     _playerScreenState.update { state ->
                         state.copy(

@@ -90,12 +90,11 @@ fun AnimeScreen(
             ContinueWatchFABWrapper(
                 screenState = screenState,
                 animeId = animeId,
-                onClick = { currentEpisodeId, linksString, host, animeId ->
+                onClick = { currentEpisodeId, linksString, animeId ->
                     navController.navigate(
                         PlayerScreenRoute(
                             currentEpisodeId = currentEpisodeId,
                             gsonLinks = linksString,
-                            host = host,
                             animeId = animeId
                         )
                     )
@@ -291,14 +290,13 @@ fun AnimeScreen(
                             name = episode.name ?: "Без названия",
                             isWatched = isWatched,
                             onClick = {
-                                val links = anime.episodes.map { it.hls480 + it.hls720 + it.hls1080 }
+                                val links = anime.episodes
                                 val linksString = Gson().toJson(links)
 
                                 navController.navigate(
                                     PlayerScreenRoute(
                                         currentEpisodeId = index,
                                         gsonLinks = linksString,
-                                        host = "",
                                         animeId = animeId
                                     )
                                 )
