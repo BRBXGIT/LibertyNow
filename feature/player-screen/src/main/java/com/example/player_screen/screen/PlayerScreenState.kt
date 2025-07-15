@@ -1,6 +1,6 @@
 package com.example.player_screen.screen
 
-import com.example.network.anime_screen.models.anime_response.X1
+import com.example.network.anime_screen.models.anime_details_response.Episode
 
 sealed interface IsPlayingState {
     data object Playing: IsPlayingState
@@ -12,9 +12,8 @@ data class PlayerScreenState(
     val animeId: Int = 0,
 
     val currentEpisodeId: Int = 0,
-    val host: String = "",
-    val links: List<X1> = emptyList(),
-    val currentLink: X1 = X1(),
+    val episodes: List<Episode> = emptyList(),
+    val currentEpisode: Episode = Episode(),
 
     val isPlaying: IsPlayingState = IsPlayingState.Loading,
     val duration: Long = 0L,

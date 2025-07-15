@@ -122,12 +122,12 @@ private fun ContinueWatchFAB(
 @Composable
 fun ContinueWatchFABWrapper(
     screenState: AnimeScreenState,
-    onClick: (Int, String, String, Int) -> Unit,
+    onClick: (Int, String, Int) -> Unit,
     animeId: Int
 ) {
-    if (screenState.anime?.player?.list != null) {
+    if (screenState.anime?.episodes != null) {
         AnimatedVisibility(
-            visible = (!screenState.isLoading) and (screenState.anime.player.list.isNotEmpty()),
+            visible = (!screenState.isLoading) and (screenState.anime.episodes.isNotEmpty()),
             enter = fadeIn(tween(CommonConstants.ANIMATION_DURATION)),
             exit = fadeOut(tween(CommonConstants.ANIMATION_DURATION))
         ) {
@@ -137,11 +137,11 @@ fun ContinueWatchFABWrapper(
                 onClick = {
                     val anime = screenState.anime
                     val currentEpisodeId = (screenState.watchedEps.maxOrNull()?.plus(1) ?: 0)
-                        .coerceAtMost(anime.player.list.size - 1)
-                    val links = anime.player.list.values.toList()
+                        .coerceAtMost(anime.episodes.size - 1)
+                    val links = anime.episodes
                     val linksString = Gson().toJson(links)
 
-                    onClick(currentEpisodeId, linksString, anime.player.host, animeId)
+                    onClick(currentEpisodeId, linksString, animeId)
                 }
             )
         }
@@ -167,7 +167,7 @@ private fun ContinueWatchFABWrapperPreview() {
         ContinueWatchFABWrapper(
             screenState = AnimeScreenState(),
             animeId = 9934,
-            onClick = { currentEpisodeId, linksString, host, animeId ->
+            onClick = { currentEpisodeId, linksString, animeId ->
 
             }
         )

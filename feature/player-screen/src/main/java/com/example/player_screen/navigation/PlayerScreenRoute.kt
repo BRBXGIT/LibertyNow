@@ -18,7 +18,6 @@ data class PlayerScreenRoute(
     val animeId: Int,
     val currentEpisodeId: Int,
     val gsonLinks: String,
-    val host: String
 )
 
 fun NavGraphBuilder.playerScreen(
@@ -29,7 +28,6 @@ fun NavGraphBuilder.playerScreen(
 ) {
     val currentEpisodeId = it.toRoute<PlayerScreenRoute>().currentEpisodeId
     val gsonLinks = it.toRoute<PlayerScreenRoute>().gsonLinks
-    val host = it.toRoute<PlayerScreenRoute>().host
     val animeId = it.toRoute<PlayerScreenRoute>().animeId
 
     val playerScreenVM = hiltViewModel<PlayerScreenVM>()
@@ -37,7 +35,6 @@ fun NavGraphBuilder.playerScreen(
         currentEpisodeId = currentEpisodeId,
         gsonLinks = gsonLinks,
         viewModel = playerScreenVM,
-        host = host,
         navController = navController,
         animeId = animeId
     )

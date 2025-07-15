@@ -38,13 +38,13 @@ import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
-import com.example.network.anime_screen.models.anime_response.X1
+import com.example.network.anime_screen.models.anime_details_response.Episode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectEpisodeAD(
     currentAnimeId: Int,
-    links: List<X1>,
+    links: List<Episode>,
     onDismissRequest: () -> Unit,
     onConfirmClick: (Int) -> Unit
 ) {

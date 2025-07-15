@@ -67,9 +67,9 @@ fun ListsBS(
                         viewModel.sendIntent(
                             AnimeScreenIntent.MoveAnimeToList(
                                 id = screenState.animeId,
-                                poster = anime.posters.small.url,
+                                poster = anime.poster.preview,
                                 genres = anime.genres.joinToString(", "),
-                                name = anime.names.ru,
+                                name = anime.name.main,
                                 newStatus = status
                             )
                         )
