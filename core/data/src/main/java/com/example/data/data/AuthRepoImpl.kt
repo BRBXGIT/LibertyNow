@@ -9,6 +9,7 @@ import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager
 import com.example.local.datastore.auth.LoggingState
 import com.example.network.auth.api.AuthApiInstance
+import com.example.network.auth.models.auth_body_request.AuthBodyRequest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -32,33 +33,29 @@ class AuthRepoImpl @Inject constructor(
     }
 
     override suspend fun getSessionToken(
-        email: String,
+        login: String,
         password: String
     ): NetworkResponse {
         return try {
-            val response = authApiInstance.getSessionToken(email, password)
+            val response = authApiInstance.getSessionToken(
+                AuthBodyRequest(
+                    login = login,
+                    password = password
+                )
+            )
 
             if (response.code() == 200) {
-                val key = response.body()?.key
-                when (key) {
-                    "invalidUser" -> {
-                        NetworkResponse(
-                            response = response.body(),
-                            error = NetworkErrors.INCORRECT_EMAIL
-                        )
-                    }
-                    "wrongPasswd" -> {
-                        NetworkResponse(
-                            response = response.body(),
-                            error = NetworkErrors.INCORRECT_PASSWORD
-                        )
-                    }
-                    else -> {
-                        NetworkResponse(
-                            response = response.body(),
-                            error = NetworkErrors.SUCCESS
-                        )
-                    }
+                val error = response.body()?.error
+                if (error == "Не удалось авторизоваться. Неправильные логин/пароль") {
+                    NetworkResponse(
+                        response = response.body(),
+                        error = NetworkErrors.INCORRECT_EMAIL
+                    )
+                } else {
+                    NetworkResponse(
+                        response = response.body(),
+                        error = NetworkErrors.SUCCESS
+                    )
                 }
             } else {
                 val error = processNetworkErrors(response.code())

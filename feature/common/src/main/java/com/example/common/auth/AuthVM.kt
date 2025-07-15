@@ -78,19 +78,12 @@ class AuthVM @Inject constructor(
             val response = authRepository.getSessionToken(_authState.value.email, _authState.value.password)
             when (response.error) {
                 NetworkErrors.SUCCESS -> {
-                    authRepository.saveUserSessionToken((response.response as SessionTokenResponse).sessionId)
-                }
-                NetworkErrors.INCORRECT_PASSWORD -> {
-                    _authState.update { state ->
-                        state.copy(
-                            incorrectPassword = true,
-                            isAuthBSOpened = true
-                        )
-                    }
+                    authRepository.saveUserSessionToken((response.response as SessionTokenResponse).token!!)
                 }
                 NetworkErrors.INCORRECT_EMAIL -> {
                     _authState.update { state ->
                         state.copy(
+                            incorrectPassword = true,
                             incorrectEmail = true,
                             isAuthBSOpened = true
                         )
