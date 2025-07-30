@@ -8,7 +8,7 @@ interface LikesRepo {
 
     suspend fun getLikes(
         sessionToken: String,
-        itemsPerPage: Int
+        limit: Int
     ): NetworkResponse
 
     suspend fun addLike(

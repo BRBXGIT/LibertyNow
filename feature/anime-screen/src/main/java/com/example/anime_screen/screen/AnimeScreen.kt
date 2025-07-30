@@ -44,6 +44,7 @@ import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.DesignUtils
 import com.example.local.datastore.auth.LoggingState
+import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.player_screen.navigation.PlayerScreenRoute
 import com.google.gson.Gson
 
@@ -190,29 +191,60 @@ fun AnimeScreen(
 
                     // TODO
                     item(key = "addToLikeButton") {
+                        val currentAnime = Data(
+                            addedInAbandonedCollection = anime.addedInAbandonedCollection,
+                            addedInPlannedCollection = anime.addedInPlannedCollection,
+                            addedInPostponedCollection = anime.addedInPostponedCollection,
+                            addedInUsersFavorites = anime.addedInUsersFavorites,
+                            addedInWatchedCollection = anime.addedInWatchedCollection,
+                            addedInWatchingCollection = anime.addedInWatchingCollection,
+                            ageRating = anime.ageRating,
+                            alias = anime.alias,
+                            averageDurationOfEpisode = anime.averageDurationOfEpisode,
+                            createdAt = anime.createdAt,
+                            description = anime.description,
+                            episodesTotal = anime.episodesTotal,
+                            externalPlayer = anime.externalPlayer,
+                            freshAt = anime.freshAt,
+                            genres = anime.genres,
+                            id = anime.id,
+                            isBlockedByCopyrights = anime.isBlockedByCopyrights,
+                            isBlockedByGeo = anime.isBlockedByGeo,
+                            isInProduction = anime.isInProduction,
+                            isOngoing = anime.isOngoing,
+                            name = anime.name,
+                            notification = anime.notification,
+                            poster = anime.poster,
+                            publishDay = anime.publishDay,
+                            season = anime.season,
+                            type = anime.type,
+                            updatedAt = anime.updatedAt,
+                            year = anime.year
+                        )
+
                         AddToLikesButton(
                             modifier = Modifier.animateItem(),
                             alreadyInLikes = screenState.isInLikes,
                             isLoading = authState.isLoading,
                             onAddClick = {
-//                                authVM.sendIntent(
-//                                    AuthIntent.AddLike(currentAnime)
-//                                )
-//                                viewModel.sendIntent(
-//                                    AnimeScreenIntent.UpdateScreenState(
-//                                        screenState.copy(isInLikes = true)
-//                                    )
-//                                )
+                                authVM.sendIntent(
+                                    AuthIntent.AddLike(currentAnime)
+                                )
+                                viewModel.sendIntent(
+                                    AnimeScreenIntent.UpdateScreenState(
+                                        screenState.copy(isInLikes = true)
+                                    )
+                                )
                             },
                             onPopClick = {
-//                                authVM.sendIntent(
-//                                    AuthIntent.RemoveLike(currentAnime)
-//                                )
-//                                viewModel.sendIntent(
-//                                    AnimeScreenIntent.UpdateScreenState(
-//                                        screenState.copy(isInLikes = false)
-//                                    )
-//                                )
+                                authVM.sendIntent(
+                                    AuthIntent.RemoveLike(currentAnime)
+                                )
+                                viewModel.sendIntent(
+                                    AnimeScreenIntent.UpdateScreenState(
+                                        screenState.copy(isInLikes = false)
+                                    )
+                                )
                             },
                             isLogged = when (authState.isLogged) {
                                 LoggingState.LoggedIn -> true

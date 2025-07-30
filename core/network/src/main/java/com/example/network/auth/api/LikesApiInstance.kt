@@ -1,38 +1,37 @@
 package com.example.network.auth.api
 
-import com.example.network.auth.models.add_like_response.ActionLikeResponse
-import com.example.network.auth.models.likes_amount_response.LikesAmountResponse
-import com.example.network.common.models.TitlesListResponse
+import com.example.network.auth.models.add_like_request.LikeRequestItem
+import com.example.network.common.models.anime_list_with_pagination_response.AnimeListWithPaginationResponse
 import retrofit2.Response
-import retrofit2.http.DELETE
+import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.PUT
+import retrofit2.http.HTTP
+import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface LikesApiInstance {
 
-    @GET("user/favorites")
+    @GET("accounts/users/me/favorites/ids")
     suspend fun getLikesAmount(
-        @Query("session") sessionToken: String,
-        @Query("filter") filter: String = "pagination"
-    ): Response<LikesAmountResponse>
+        @Header("Authorization") sessionToken: String,
+    ): Response<List<Int>>
 
-    @GET("user/favorites")
+    @GET("accounts/users/me/favorites/releases")
     suspend fun getLikes(
-        @Query("session") sessionToken: String,
-        @Query("filter") filter: String = "id,posters,genres,names",
-        @Query("items_per_page") itemsPerPage: Int
-    ): Response<TitlesListResponse>
+        @Header("Authorization") sessionToken: String,
+        @Query("limit") limit: Int
+    ): Response<AnimeListWithPaginationResponse>
 
-    @PUT("user/favorites")
+    @POST("accounts/users/me/favorites")
     suspend fun addLike(
-        @Query("session") sessionToken: String,
-        @Query("title_id") titleId: Int
-    ): Response<ActionLikeResponse>
+        @Header("Authorization") sessionToken: String,
+        @Body addLikeRequest: ArrayList<LikeRequestItem>
+    ): Response<List<Int>>
 
-    @DELETE("user/favorites")
+    @HTTP(method = "DELETE", path = "accounts/users/me/favorites", hasBody = true)
     suspend fun removeLike(
-        @Query("session") sessionToken: String,
-        @Query("title_id") titleId: Int
-    ): Response<ActionLikeResponse>
+        @Header("Authorization") sessionToken: String,
+        @Body removeLikeRequest: ArrayList<LikeRequestItem>
+    ): Response<List<Int>>
 }

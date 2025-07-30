@@ -11,10 +11,9 @@ import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.local.datastore.auth.LoggingState
-import com.example.network.auth.models.likes_amount_response.LikesAmountResponse
 import com.example.network.auth.models.session_token_response.SessionTokenResponse
-import com.example.network.common.models.Item0
-import com.example.network.common.models.TitlesListResponse
+import com.example.network.common.models.anime_list_with_pagination_response.AnimeListWithPaginationResponse
+import com.example.network.common.models.anime_list_with_pagination_response.Data
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -121,7 +120,7 @@ class AuthVM @Inject constructor(
             if (response.error == NetworkErrors.SUCCESS) {
                 _authState.update { state ->
                     state.copy(
-                        likesAmount = (response.response as LikesAmountResponse).pagination.totalItems,
+                        likesAmount = (response.response as List<*>).size,
                         isLoading = false
                     )
                 }
@@ -162,7 +161,7 @@ class AuthVM @Inject constructor(
             if (response.error == NetworkErrors.SUCCESS) {
                 _authState.update { state ->
                     state.copy(
-                        likes = (response.response as TitlesListResponse).list,
+                        likes = (response.response as AnimeListWithPaginationResponse).data,
                         isLoading = false
                     )
                 }
@@ -186,7 +185,7 @@ class AuthVM @Inject constructor(
         }
     }
 
-    private fun addLike(title: Item0) {
+    private fun addLike(title: Data) {
         viewModelScope.launch(dispatcherIo) {
             _authState.update { state ->
                 state.copy(isLoading = true)
@@ -224,7 +223,7 @@ class AuthVM @Inject constructor(
         }
     }
 
-    private fun removeLike(title: Item0) {
+    private fun removeLike(title: Data) {
         viewModelScope.launch(dispatcherIo) {
             _authState.update { state ->
                 state.copy(isLoading = true)

@@ -1,6 +1,13 @@
 package com.example.network.common.models.anime_list_response
 
 
+import com.example.network.common.models.common.AgeRating
+import com.example.network.common.models.common.Genre
+import com.example.network.common.models.common.Name
+import com.example.network.common.models.common.Poster
+import com.example.network.common.models.common.PublishDay
+import com.example.network.common.models.common.Season
+import com.example.network.common.models.common.Type
 import com.google.gson.annotations.SerializedName
 
 data class AnimeListResponseItem(

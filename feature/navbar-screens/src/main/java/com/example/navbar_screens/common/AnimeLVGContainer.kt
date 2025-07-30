@@ -1,4 +1,4 @@
-package com.example.navbar_screens.home_screen.sections
+package com.example.navbar_screens.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TitlesUpdatesLVG(
+fun AnimeLVGContainer(
     content: LazyGridScope.() -> Unit
 ) {
     LazyVerticalGrid(

@@ -1,9 +1,9 @@
-package com.example.network.common.models.anime_list_with_pagination_response
+package com.example.network.common.models.common
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Type(
+data class Season(
     @SerializedName("description")
     val description: String = "",
     @SerializedName("value")

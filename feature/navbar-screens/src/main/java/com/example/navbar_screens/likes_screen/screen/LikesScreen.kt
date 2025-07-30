@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -21,12 +22,14 @@ import com.example.common.auth.AuthIntent
 import com.example.common.auth.AuthVM
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
+import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.auth_bs.AuthBS
 import com.example.design_system.snackbars.SnackbarObserver
+import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
+import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.common.SearchableTopBar
-import com.example.navbar_screens.likes_screen.sections.LikesLVG
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSection
 import com.example.local.datastore.auth.LoggingState as UserAuthState
 
@@ -150,17 +153,32 @@ fun LikesScreen(
                 UserAuthState.Loading -> {}
                 UserAuthState.LoggedIn -> {
                     if (screenState.isSearching) {
-                        LikesLVG(
-                            likes = authState.likes.filter {
-                                it.names.ru.contains(screenState.query, ignoreCase = true) == true
-                            },
-                            onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
-                        )
+                        val filteredLikes = authState.likes.filter {
+                            it.name.main.contains(screenState.query, ignoreCase = true) == true
+                        }
+                        AnimeLVGContainer {
+                            items(filteredLikes) { like ->
+                                AnimeCard(
+                                    posterPath = DesignUtils.POSTERS_BASE_URL + like.poster.optimized.preview,
+                                    genresString = like.genres.joinToString(", ") { it.name },
+                                    title = like.name.main,
+                                    modifier = Modifier.animateItem(),
+                                    onCardClick = { navController.navigate(AnimeScreenRoute(like.id)) },
+                                )
+                            }
+                        }
                     } else {
-                        LikesLVG(
-                            likes = authState.likes.reversed(),
-                            onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
-                        )
+                        AnimeLVGContainer {
+                            items(authState.likes.reversed()) { like ->
+                                AnimeCard(
+                                    posterPath = DesignUtils.POSTERS_BASE_URL + like.poster.optimized.preview,
+                                    genresString = like.genres.joinToString(", ") { it.name },
+                                    title = like.name.main,
+                                    modifier = Modifier.animateItem(),
+                                    onCardClick = { navController.navigate(AnimeScreenRoute(like.id)) },
+                                )
+                            }
+                        }
                     }
                 }
                 UserAuthState.LoggedOut -> {

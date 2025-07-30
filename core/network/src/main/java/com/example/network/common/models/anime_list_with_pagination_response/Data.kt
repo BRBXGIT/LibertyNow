@@ -1,6 +1,13 @@
 package com.example.network.common.models.anime_list_with_pagination_response
 
 
+import com.example.network.common.models.common.AgeRating
+import com.example.network.common.models.common.Genre
+import com.example.network.common.models.common.Name
+import com.example.network.common.models.common.Poster
+import com.example.network.common.models.common.PublishDay
+import com.example.network.common.models.common.Season
+import com.example.network.common.models.common.Type
 import com.google.gson.annotations.SerializedName
 
 data class Data(
@@ -29,7 +36,7 @@ data class Data(
     @SerializedName("episodes_total")
     val episodesTotal: Int = 0,
     @SerializedName("external_player")
-    val externalPlayer: String = "",
+    val externalPlayer: String? = null,
     @SerializedName("fresh_at")
     val freshAt: String = "",
     @SerializedName("genres")
@@ -47,7 +54,7 @@ data class Data(
     @SerializedName("name")
     val name: Name = Name(),
     @SerializedName("notification")
-    val notification: String = "",
+    val notification: String? = null,
     @SerializedName("poster")
     val poster: Poster = Poster(),
     @SerializedName("publish_day")
