@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class AnimeListWithPaginationResponse(
     @SerializedName("data")
-    val `data`: List<Data> = listOf(),
+    val data: List<Data> = listOf(),
     @SerializedName("meta")
     val meta: Meta = Meta()
 )

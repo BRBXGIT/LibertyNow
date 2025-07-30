@@ -45,30 +45,4 @@ object RetrofitModule {
             .client(okHttpClient)
             .build()
     }
-
-    @Provides
-    @Singleton
-    @Named("auth_okhttp")
-    fun provideAuthOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .hostnameVerifier { hostname, _ -> hostname == "www.anilibria.tv" }
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    @Named("auth_api")
-    fun provideAuthRetrofit(
-        gson: GsonConverterFactory,
-        @Named("auth_okhttp") okHttpClient: OkHttpClient
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://www.anilibria.tv/")
-            .addConverterFactory(gson)
-            .client(okHttpClient)
-            .build()
-    }
 }

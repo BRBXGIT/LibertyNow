@@ -1,6 +1,7 @@
 package com.example.network.anime_screen.models.anime_details_response
 
 
+import com.example.network.common.models.common.Type
 import com.google.gson.annotations.SerializedName
 
 data class Torrent(
@@ -41,7 +42,7 @@ data class Torrent(
     @SerializedName("sort_order")
     val sortOrder: Int = 0,
     @SerializedName("type")
-    val type: TypeXX = TypeXX(),
+    val type: Type = Type(),
     @SerializedName("updated_at")
     val updatedAt: String = ""
 )

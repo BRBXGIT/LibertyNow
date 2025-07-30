@@ -1,6 +1,13 @@
 package com.example.network.anime_screen.models.anime_details_response
 
 
+import com.example.network.common.models.common.AgeRating
+import com.example.network.common.models.common.Genre
+import com.example.network.common.models.common.Name
+import com.example.network.common.models.common.Poster
+import com.example.network.common.models.common.PublishDay
+import com.example.network.common.models.common.Season
+import com.example.network.common.models.common.Type
 import com.google.gson.annotations.SerializedName
 
 data class AnimeDetailsResponse(
@@ -51,7 +58,7 @@ data class AnimeDetailsResponse(
     @SerializedName("name")
     val name: Name = Name(),
     @SerializedName("notification")
-    val notification: Any? = Any(),
+    val notification: String? = null,
     @SerializedName("poster")
     val poster: Poster = Poster(),
     @SerializedName("publish_day")
@@ -63,7 +70,7 @@ data class AnimeDetailsResponse(
     @SerializedName("torrents")
     val torrents: List<Torrent> = listOf(),
     @SerializedName("type")
-    val type: TypeXX = TypeXX(),
+    val type: Type = Type(),
     @SerializedName("updated_at")
     val updatedAt: String = "",
     @SerializedName("year")

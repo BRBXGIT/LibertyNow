@@ -34,11 +34,11 @@ import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
+import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.common.SearchableTopBar
 import com.example.navbar_screens.home_screen.sections.NothingHereSection
 import com.example.navbar_screens.home_screen.sections.RandomAnimeButton
-import com.example.navbar_screens.home_screen.sections.TitlesUpdatesLVG
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,7 +155,7 @@ fun HomeScreen(
                 } else if (titlesByQuery.loadState.refresh is LoadState.Error) {
                     ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    TitlesUpdatesLVG {
+                    AnimeLVGContainer {
                         items(titlesByQuery.itemCount, key = { it }) { index ->
                             val anime = titlesByQuery[index]
 
@@ -175,7 +175,7 @@ fun HomeScreen(
                 if (screenState.isError) {
                     ErrorSection(modifier = Modifier.align(Alignment.Center))
                 } else {
-                    TitlesUpdatesLVG {
+                    AnimeLVGContainer {
                         item(
                             span = { GridItemSpan(maxLineSpan) }
                         ) {

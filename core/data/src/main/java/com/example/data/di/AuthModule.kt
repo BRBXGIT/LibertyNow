@@ -28,7 +28,7 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthApiInstance(@Named("auth_api") retrofit: Retrofit): AuthApiInstance {
+    fun provideAuthApiInstance(@Named("main_api") retrofit: Retrofit): AuthApiInstance {
         return retrofit.create(AuthApiInstance::class.java)
     }
 

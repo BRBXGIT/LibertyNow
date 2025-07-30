@@ -1,6 +1,12 @@
 package com.example.network.anime_screen.models.anime_details_response
 
 
+import com.example.network.common.models.common.AgeRating
+import com.example.network.common.models.common.Name
+import com.example.network.common.models.common.Poster
+import com.example.network.common.models.common.PublishDay
+import com.example.network.common.models.common.Season
+import com.example.network.common.models.common.Type
 import com.google.gson.annotations.SerializedName
 
 data class Release(
@@ -53,7 +59,7 @@ data class Release(
     @SerializedName("season")
     val season: Season = Season(),
     @SerializedName("type")
-    val type: TypeXX = TypeXX(),
+    val type: Type = Type(),
     @SerializedName("updated_at")
     val updatedAt: String = "",
     @SerializedName("year")

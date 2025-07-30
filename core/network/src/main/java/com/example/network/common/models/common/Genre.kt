@@ -1,6 +1,7 @@
-package com.example.network.anime_screen.models.anime_details_response
+package com.example.network.common.models.common
 
 
+import com.example.network.common.models.anime_list_with_pagination_response.Image
 import com.google.gson.annotations.SerializedName
 
 data class Genre(
