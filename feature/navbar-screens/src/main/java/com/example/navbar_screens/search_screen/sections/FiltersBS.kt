@@ -27,11 +27,11 @@ fun FiltersBS(
     onDismissRequest: () -> Unit,
     onReleaseEndClick: () -> Unit,
     onSortClick: (SortedBy) -> Unit,
-    onYearClick: (Int) -> Unit,
     onSeasonClick: (Season) -> Unit,
     onGenreClick: (Int) -> Unit,
-    onYearsRetryClick: () -> Unit,
-    onGenresRetryClick: () -> Unit
+    onGenresRetryClick: () -> Unit,
+    onFromYearChange: (Int) -> Unit,
+    onToYearChange: (Int) -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -58,12 +58,10 @@ fun FiltersBS(
             )
 
             yearsSection(
-                years = screenState.animeYears,
-                onYearClick = { onYearClick(it) },
-                chosenYears = screenState.chosenAnimeYears,
-                isLoading = screenState.isAnimeYearsLoading,
-                isError = screenState.isAnimeYearsError,
-                onRetryClick = onYearsRetryClick
+                fromYear = screenState.fromYear,
+                toYear = screenState.toYear,
+                onFromYearChange = { onFromYearChange(it) },
+                onToYearChange = { onToYearChange(it) },
             )
 
             seasonSection(

@@ -20,28 +20,6 @@ class SearchScreenRepoImpl @Inject constructor(
     private val apiInstance: SearchScreenApiInstance
 ): SearchScreenRepo {
 
-    override suspend fun getAnimeYears(): NetworkResponse {
-        return try {
-            val response = apiInstance.getAnimeYears()
-
-            if (response.code() == 200) {
-                NetworkResponse(
-                    response = response.body(),
-                    error = NetworkErrors.SUCCESS
-                )
-            } else {
-                val error = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(error)
-                NetworkResponse(
-                    error = error,
-                    label = label
-                )
-            }
-        } catch (e: Exception) {
-            processNetworkExceptions(e)
-        }
-    }
-
     override suspend fun getAnimeGenres(): NetworkResponse {
         return try {
             val response = apiInstance.getAnimeGenres()

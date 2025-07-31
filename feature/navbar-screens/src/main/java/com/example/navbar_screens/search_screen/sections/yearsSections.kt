@@ -1,101 +1,69 @@
 package com.example.navbar_screens.search_screen.sections
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.LibriaNowTheme
-import com.example.design_system.theme.mColors
-import com.example.design_system.theme.mShapes
-import com.example.design_system.theme.mTypography
+import java.time.LocalDateTime
 
 fun LazyGridScope.yearsSection(
-    years: List<Int>,
-    onYearClick: (Int) -> Unit,
-    chosenYears: List<Int>,
-    isLoading: Boolean,
-    isError: Boolean,
-    onRetryClick: () -> Unit
+    fromYear: Int,
+    toYear: Int,
+    onFromYearChange: (Int) -> Unit,
+    onToYearChange: (Int) -> Unit
 ) {
     item(
         span = { GridItemSpan(maxLineSpan) }
     ) {
-        Text(
-            text = "Год",
-            style = mTypography.titleMedium
-        )
-    }
-
-    if (isError) {
-        item(
-            span = { GridItemSpan(maxLineSpan) }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Button(
-                onClick = onRetryClick,
-                shape = mShapes.small
-            ) {
-                Text(
-                    text = "Retry"
-                )
-            }
-        }
-    } else {
-        if(isLoading) {
-            item(
-                span = { GridItemSpan(maxLineSpan) }
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-        } else {
-            items(years) { year ->
-                val surfaceAnimatedColor by animateColorAsState(
-                    targetValue = if(year in chosenYears) mColors.primary else mColors.surfaceContainerHigh,
-                    animationSpec = tween(200)
-                )
-                val onSurfaceAnimatedColor by animateColorAsState(
-                    targetValue = if(year in chosenYears) mColors.onPrimary else mColors.onSurface,
-                    animationSpec = tween(200)
-                )
+            YearTextField(
+                year = fromYear,
+                label = "Начиная с года",
+                onChange = { onFromYearChange(it) },
+            )
 
-                Surface(
-                    color = surfaceAnimatedColor,
-                    shape = mShapes.small,
-                    onClick = { onYearClick(year) }
-                ) {
-                    Text(
-                        color = onSurfaceAnimatedColor,
-                        text = year.toString(),
-                        modifier = Modifier.padding(4.dp),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
+            YearTextField(
+                year = toYear,
+                label = "Заканчивая годом",
+                onChange = { onToYearChange(it) }
+            )
         }
     }
+}
+
+@Composable
+private fun YearTextField(
+    year: Int,
+    label: String,
+    onChange: (Int) -> Unit
+) {
+    OutlinedTextField(
+        value = year.toString(),
+        onValueChange = {
+            if (it != "") {
+                onChange(it.filter { it.isDigit() }.toInt())
+            }
+        },
+        modifier = Modifier.fillMaxWidth(),
+        label = {
+            Text(
+                text = label
+            )
+        }
+    )
 }
 
 @Preview
@@ -110,12 +78,10 @@ private fun YearsSectionPreview() {
             modifier = Modifier.fillMaxWidth()
         ) {
             yearsSection(
-                years = listOf(2005, 2006, 2007),
-                onYearClick = {},
-                chosenYears = listOf(2005, 2006),
-                isLoading = false,
-                isError = false,
-                onRetryClick = {}
+                fromYear = 0,
+                toYear = LocalDateTime.now().year,
+                onFromYearChange = {},
+                onToYearChange = {},
             )
         }
     }

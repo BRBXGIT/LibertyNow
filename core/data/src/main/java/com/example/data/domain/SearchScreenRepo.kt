@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchScreenRepo {
 
-    suspend fun getAnimeYears(): NetworkResponse
-
     suspend fun getAnimeGenres(): NetworkResponse
 
     suspend fun getAnimeByFilters(

@@ -10,9 +10,6 @@ import retrofit2.http.POST
 
 interface SearchScreenApiInstance {
 
-    @GET("years")
-    suspend fun getAnimeYears(): Response<List<Int>>
-
     @GET("anime/genres")
     suspend fun getAnimeGenres(): Response<List<Genre>>
 

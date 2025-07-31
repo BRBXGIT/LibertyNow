@@ -1,6 +1,7 @@
 package com.example.navbar_screens.search_screen.screen
 
 import com.example.network.common.models.common.Genre
+import java.time.LocalDateTime
 
 enum class SortedBy {
     Popularity, Novelty
@@ -11,10 +12,8 @@ enum class Season {
 }
 
 data class SearchScreenState(
-    val animeYears: List<Int> = emptyList(),
-    val isAnimeYearsLoading: Boolean = true,
-    val isAnimeYearsError: Boolean = false,
-    val chosenAnimeYears: List<Int> = emptyList(),
+    val fromYear: Int = 0,
+    val toYear: Int = LocalDateTime.now().year,
 
     val animeGenres: List<Genre> = emptyList(),
     val isAnimeGenresLoading: Boolean = true,
@@ -26,7 +25,7 @@ data class SearchScreenState(
     val animeSeasons: List<Season> = listOf(Season.Winter, Season.Spring, Season.Summer, Season.Autumn),
     val chosenSeasons: List<Season> = emptyList(),
 
-    val releaseEnd: Boolean = false,
+    val releaseEnd: Boolean = true,
 
     val isFilterBSOpened: Boolean = false,
 

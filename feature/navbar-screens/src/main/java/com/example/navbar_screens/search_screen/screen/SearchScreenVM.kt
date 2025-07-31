@@ -43,11 +43,12 @@ class SearchScreenVM @Inject constructor(
     private val _searchParams = _searchScreenState
         .map { state ->
             AnimeByFilterParams(
-                chosenAnimeYears = state.chosenAnimeYears,
                 chosenAnimeGenres = state.chosenAnimeGenres,
                 sortedBy = state.sortedBy,
                 chosenSeasons = state.chosenSeasons,
-                releaseEnd = state.releaseEnd
+                releaseEnd = state.releaseEnd,
+                toYear = state.toYear,
+                fromYear = state.fromYear
             )
         }
         .distinctUntilChanged()
@@ -55,7 +56,6 @@ class SearchScreenVM @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val animeByFilters = _searchParams
         .flatMapLatest { state ->
-
             val seasonCodes = state.chosenSeasons.map {
                 when (it) {
                     Season.Winter -> "winter"
@@ -75,7 +75,7 @@ class SearchScreenVM @Inject constructor(
             }
             val requestBody = AnimeByFiltersRequest(
                 f = F(
-                    years = Years(fromYear = 1995, toYear = 2025),
+                    years = Years(fromYear = state.fromYear, toYear = state.toYear),
                     genres = state.chosenAnimeGenres,
                     publishStatuses = listOf(publishStatuses),
                     seasons = seasonCodes,
@@ -88,35 +88,6 @@ class SearchScreenVM @Inject constructor(
 
             repository.getAnimeByFilters(requestBody)
         }.cachedIn(viewModelScope)
-
-    private fun fetchAnimeYears() {
-        viewModelScope.launch(dispatcherIo) {
-            _searchScreenState.update { state ->
-                state.copy(
-                    isAnimeYearsLoading = true,
-                    isAnimeYearsError = false
-                )
-            }
-
-            val response = repository.getAnimeYears()
-            if (response.error == NetworkErrors.SUCCESS) {
-                _searchScreenState.update { state ->
-                    state.copy(
-                        animeYears = (response.response as? List<*>)?.filterIsInstance<Int>()!!,
-                        isAnimeYearsLoading = false,
-                        isAnimeYearsError = false
-                    )
-                }
-            } else {
-                _searchScreenState.update { state ->
-                    state.copy(
-                        isAnimeYearsLoading = false,
-                        isAnimeYearsError = true
-                    )
-                }
-            }
-        }
-    }
 
     private fun fetchAnimeGenres() {
         viewModelScope.launch(dispatcherIo) {
@@ -149,14 +120,12 @@ class SearchScreenVM @Inject constructor(
 
     fun sendIntent(intent: SearchScreenIntent) {
         when (intent) {
-            is SearchScreenIntent.FetchAnimeYears -> fetchAnimeYears()
             is SearchScreenIntent.FetchAnimeGenres -> fetchAnimeGenres()
             is SearchScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
         }
     }
 
     init {
-        fetchAnimeYears()
         fetchAnimeGenres()
     }
 }

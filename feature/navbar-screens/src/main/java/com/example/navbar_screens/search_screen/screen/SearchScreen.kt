@@ -132,16 +132,6 @@ fun SearchScreen(
                         SearchScreenIntent.UpdateScreenState(screenState.copy(sortedBy = it))
                     )
                 },
-                onYearClick = {
-                    val currentYears = screenState.chosenAnimeYears.toMutableList()
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(
-                            screenState.copy(
-                                chosenAnimeYears = if (it in currentYears) currentYears - it else currentYears + it
-                            )
-                        )
-                    )
-                },
                 onSeasonClick = {
                     val currentSeasons = screenState.chosenSeasons.toMutableList()
                     viewModel.sendIntent(
@@ -162,11 +152,22 @@ fun SearchScreen(
                         )
                     )
                 },
-                onYearsRetryClick = {
-                    viewModel.sendIntent(SearchScreenIntent.FetchAnimeYears)
-                },
                 onGenresRetryClick = {
                     viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres)
+                },
+                onFromYearChange = {
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(
+                            screenState.copy(fromYear = it)
+                        )
+                    )
+                },
+                onToYearChange = {
+                    viewModel.sendIntent(
+                        SearchScreenIntent.UpdateScreenState(
+                            screenState.copy(toYear = it)
+                        )
+                    )
                 },
             )
         }
