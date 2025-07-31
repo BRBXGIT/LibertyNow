@@ -24,14 +24,16 @@ import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
 import com.example.common.functions.NetworkException
+import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.snackbars.SnackbarObserver
+import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
+import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.common.BottomNavBar
-import com.example.navbar_screens.search_screen.sections.AnimeByFiltersLVG
 import com.example.navbar_screens.search_screen.sections.FiltersBS
 import com.example.navbar_screens.search_screen.sections.SearchScreenTopBar
 
@@ -178,10 +180,21 @@ fun SearchScreen(
             if (animeByFilters.loadState.refresh is LoadState.Error) {
                 ErrorSection(modifier = Modifier.align(Alignment.Center))
             } else {
-                AnimeByFiltersLVG(
-                    animeByFilters = animeByFilters,
-                    onAnimeClick = { navController.navigate(AnimeScreenRoute(it)) }
-                )
+                AnimeLVGContainer {
+                    items(animeByFilters.itemCount) { index ->
+                        val anime = animeByFilters[index]
+
+                        anime?.let {
+                            AnimeCard(
+                                posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.optimized.preview,
+                                genresString = anime.genres.joinToString(", ") { it.name },
+                                title = anime.name.main,
+                                onCardClick = { navController.navigate(AnimeScreenRoute(it.id)) },
+                                modifier = Modifier.animateItem()
+                            )
+                        }
+                    }
+                }
             }
         }
     }

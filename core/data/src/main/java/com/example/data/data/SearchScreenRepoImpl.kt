@@ -9,8 +9,9 @@ import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptions
 import com.example.data.domain.SearchScreenRepo
-import com.example.network.common.models.Item0
+import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.network.search_screen.api.SearchScreenApiInstance
+import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
 import com.example.network.search_screen.paging.TitlesByFiltersPagingSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -64,12 +65,11 @@ class SearchScreenRepoImpl @Inject constructor(
     }
 
     override suspend fun getAnimeByFilters(
-        query: String,
-        orderBy: String
-    ): Flow<PagingData<Item0>> {
+        requestBody: AnimeByFiltersRequest
+    ): Flow<PagingData<Data>> {
         return Pager(
             config = PagingConfig(pageSize = 5, enablePlaceholders = false),
-            pagingSourceFactory = { TitlesByFiltersPagingSource(apiInstance, query, orderBy) }
+            pagingSourceFactory = { TitlesByFiltersPagingSource(apiInstance, requestBody) }
         ).flow
     }
 }

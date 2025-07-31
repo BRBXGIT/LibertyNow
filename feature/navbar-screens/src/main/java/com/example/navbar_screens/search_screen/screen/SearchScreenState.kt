@@ -1,5 +1,7 @@
 package com.example.navbar_screens.search_screen.screen
 
+import com.example.network.common.models.common.Genre
+
 enum class SortedBy {
     Popularity, Novelty
 }
@@ -14,10 +16,10 @@ data class SearchScreenState(
     val isAnimeYearsError: Boolean = false,
     val chosenAnimeYears: List<Int> = emptyList(),
 
-    val animeGenres: List<String> = emptyList(),
+    val animeGenres: List<Genre> = emptyList(),
     val isAnimeGenresLoading: Boolean = true,
     val isAnimeGenresError: Boolean = false,
-    val chosenAnimeGenres: List<String> = emptyList(),
+    val chosenAnimeGenres: List<Int> = emptyList(),
 
     val sortedBy: SortedBy = SortedBy.Popularity,
 

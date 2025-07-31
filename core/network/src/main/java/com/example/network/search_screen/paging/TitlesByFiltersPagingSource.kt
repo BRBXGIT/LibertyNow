@@ -7,39 +7,41 @@ import com.example.common.functions.NetworkException
 import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptionsForPaging
-import com.example.network.common.models.Item0
+import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.network.search_screen.api.SearchScreenApiInstance
+import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
 import java.io.IOException
 
 class TitlesByFiltersPagingSource(
     private val apiInstance: SearchScreenApiInstance,
-    private val query: String,
-    private val orderBy: String
-): PagingSource<Int, Item0>() {
+    private val requestBody: AnimeByFiltersRequest
+): PagingSource<Int, Data>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Item0>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Data>): Int? {
         return state.anchorPosition
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Item0> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Data> {
         val startPage = params.key ?: 1
         val perPage = params.loadSize
 
         return try {
+            val body = requestBody.copy(
+                limit = perPage,
+                page = startPage
+            )
+
             val response = apiInstance.getAnimeByFilters(
-                page = startPage,
-                itemsPerPage = perPage,
-                query = query,
-                orderBy = orderBy
+                animeByFiltersRequest = body
             )
 
             if (response.code() == 200) {
                 val body = response.body()
                 if (body != null) {
                     LoadResult.Page(
-                        data = body.list,
-                        prevKey = if (body.pagination.currentPage > 1) body.pagination.currentPage - 1 else null,
-                        nextKey = body.pagination.currentPage + 1
+                        data = body.data,
+                        prevKey = if (body.meta.pagination.currentPage > 1) body.meta.pagination.currentPage - 1 else null,
+                        nextKey = body.meta.pagination.currentPage + 1
                     )
                 } else {
                     val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
@@ -51,7 +53,7 @@ class TitlesByFiltersPagingSource(
                 LoadResult.Error(NetworkException(exception, label))
             }
         } catch (e: IOException) {
-            processNetworkExceptionsForPaging<Int, Item0>(e)
+            processNetworkExceptionsForPaging<Int, Data>(e)
         }
     }
 }

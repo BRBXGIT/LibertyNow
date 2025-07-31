@@ -29,7 +29,7 @@ fun FiltersBS(
     onSortClick: (SortedBy) -> Unit,
     onYearClick: (Int) -> Unit,
     onSeasonClick: (Season) -> Unit,
-    onGenreClick: (String) -> Unit,
+    onGenreClick: (Int) -> Unit,
     onYearsRetryClick: () -> Unit,
     onGenresRetryClick: () -> Unit
 ) {

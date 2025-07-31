@@ -28,11 +28,12 @@ import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
+import com.example.network.common.models.common.Genre
 
 fun LazyGridScope.genresSection(
-    genres: List<String>,
-    onGenreClick: (String) -> Unit,
-    chosenGenres: List<String>,
+    genres: List<Genre>,
+    onGenreClick: (Int) -> Unit,
+    chosenGenres: List<Int>,
     isLoading: Boolean,
     isError: Boolean,
     onGenresRetryClick: () -> Unit
@@ -72,22 +73,22 @@ fun LazyGridScope.genresSection(
         } else {
             items(genres) { genre ->
                 val surfaceAnimatedColor by animateColorAsState(
-                    targetValue = if(genre in chosenGenres) mColors.primary else mColors.surfaceContainerHigh,
+                    targetValue = if(genre.id in chosenGenres) mColors.primary else mColors.surfaceContainerHigh,
                     animationSpec = tween(200)
                 )
                 val onSurfaceAnimatedColor by animateColorAsState(
-                    targetValue = if(genre in chosenGenres) mColors.onPrimary else mColors.onSurface,
+                    targetValue = if(genre.id in chosenGenres) mColors.onPrimary else mColors.onSurface,
                     animationSpec = tween(200)
                 )
 
                 Surface(
                     color = surfaceAnimatedColor,
                     shape = mShapes.small,
-                    onClick = { onGenreClick(genre) }
+                    onClick = { onGenreClick(genre.id) }
                 ) {
                     Text(
                         color = onSurfaceAnimatedColor,
-                        text = genre,
+                        text = genre.name,
                         modifier = Modifier.padding(4.dp),
                         textAlign = TextAlign.Center,
                         maxLines = 1,
@@ -111,9 +112,9 @@ private fun GenresSectionPreview() {
             modifier = Modifier.fillMaxWidth()
         ) {
             genresSection(
-                genres = listOf("Сёнен", "Детектив", "Фантастика", "Киберпанк", "Романтика"),
+                genres = listOf(),
                 onGenreClick = {},
-                chosenGenres = listOf("Детектив", "Киберпанк"),
+                chosenGenres = listOf(),
                 isLoading = false,
                 isError = false,
                 onGenresRetryClick = {}

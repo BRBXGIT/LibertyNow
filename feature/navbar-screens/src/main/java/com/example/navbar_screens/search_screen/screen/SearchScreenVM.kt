@@ -7,6 +7,10 @@ import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.functions.NetworkErrors
 import com.example.data.domain.SearchScreenRepo
+import com.example.network.common.models.common.Genre
+import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
+import com.example.network.search_screen.models.anime_by_filters_request.F
+import com.example.network.search_screen.models.anime_by_filters_request.Years
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,41 +58,35 @@ class SearchScreenVM @Inject constructor(
 
             val seasonCodes = state.chosenSeasons.map {
                 when (it) {
-                    Season.Winter -> 1
-                    Season.Spring -> 2
-                    Season.Summer -> 3
-                    Season.Autumn -> 4
+                    Season.Winter -> "winter"
+                    Season.Spring -> "spring"
+                    Season.Summer -> "summer"
+                    Season.Autumn -> "autumn"
                 }
             }
 
-            val queryParts = mutableListOf<String>()
-
-            if (state.chosenAnimeYears.isNotEmpty()) {
-                val yearsQuery = "({season.year}==${state.chosenAnimeYears.joinToString(" or {season.year}==")})"
-                queryParts += yearsQuery
+            val publishStatuses = when(state.releaseEnd) {
+                true -> "IS_NOT_ONGOING"
+                else -> "IS_ONGOING"
             }
-
-            if (seasonCodes.isNotEmpty()) {
-                val seasonQuery = "({season.code}==${seasonCodes.joinToString(" or {season.code}==")})"
-                queryParts += seasonQuery
+            val sorting = when(state.sortedBy) {
+                SortedBy.Popularity -> "FRESH_AT_DESC"
+                SortedBy.Novelty -> "RATING_DESC"
             }
+            val requestBody = AnimeByFiltersRequest(
+                f = F(
+                    years = Years(fromYear = 1995, toYear = 2025),
+                    genres = state.chosenAnimeGenres,
+                    publishStatuses = listOf(publishStatuses),
+                    seasons = seasonCodes,
+                    sorting = sorting,
+                    types = listOf("TV", "WEB"),
+                    ageRatings = emptyList(),
+                    productionStatuses = emptyList(),
+                )
+            )
 
-            if (state.chosenAnimeGenres.isNotEmpty()) {
-                val genresQuery = "(${state.chosenAnimeGenres.joinToString(" or ") { "\"$it\" in {genres}" }})"
-                queryParts += genresQuery
-            }
-
-            // Always include releaseEnd
-            queryParts += "(released==${state.releaseEnd})"
-
-            val query = queryParts.joinToString(" and ")
-
-            val orderBy = when (state.sortedBy) {
-                SortedBy.Popularity -> "in_favorites"
-                SortedBy.Novelty -> "-updated"
-            }
-
-            repository.getAnimeByFilters(query, orderBy)
+            repository.getAnimeByFilters(requestBody)
         }.cachedIn(viewModelScope)
 
     private fun fetchAnimeYears() {
@@ -133,7 +131,7 @@ class SearchScreenVM @Inject constructor(
             if (response.error == NetworkErrors.SUCCESS) {
                 _searchScreenState.update { state ->
                     state.copy(
-                        animeGenres = (response.response as? List<*>)?.filterIsInstance<String>()!!,
+                        animeGenres = (response.response as? List<*>)?.filterIsInstance<Genre>()!!,
                         isAnimeGenresLoading = false,
                         isAnimeGenresError = false
                     )
