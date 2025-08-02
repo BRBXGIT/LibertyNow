@@ -189,7 +189,6 @@ fun AnimeScreen(
                         )
                     }
 
-                    // TODO
                     item(key = "addToLikeButton") {
                         val currentAnime = Data(
                             addedInAbandonedCollection = anime.addedInAbandonedCollection,

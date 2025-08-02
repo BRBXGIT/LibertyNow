@@ -1,5 +1,6 @@
 package com.example.anime_screen.sections
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -59,6 +60,7 @@ fun ListsBS(
                     ListAnimeStatus.DROPPED -> "Брошено"
                 }
 
+                Log.d("CCCC", screenState.currentListsAnimeIn.toString())
                 ListItem(
                     name = name,
                     selected = status in screenState.currentListsAnimeIn,
@@ -66,7 +68,7 @@ fun ListsBS(
                         val anime = screenState.anime!!
                         viewModel.sendIntent(
                             AnimeScreenIntent.MoveAnimeToList(
-                                id = screenState.animeId,
+                                id = anime.id,
                                 poster = anime.poster.preview,
                                 genres = anime.genres.joinToString(", ") { it.name },
                                 name = anime.name.main,
