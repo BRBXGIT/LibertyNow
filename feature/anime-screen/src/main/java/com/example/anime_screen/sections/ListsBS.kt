@@ -68,7 +68,7 @@ fun ListsBS(
                             AnimeScreenIntent.MoveAnimeToList(
                                 id = screenState.animeId,
                                 poster = anime.poster.preview,
-                                genres = anime.genres.joinToString(", "),
+                                genres = anime.genres.joinToString(", ") { it.name },
                                 name = anime.name.main,
                                 newStatus = status
                             )

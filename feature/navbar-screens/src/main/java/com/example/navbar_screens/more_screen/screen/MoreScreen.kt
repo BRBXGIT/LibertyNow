@@ -26,7 +26,6 @@ import com.example.navbar_screens.more_screen.sections.MoreLC
 import com.example.navbar_screens.more_screen.sections.MoreScreenTopBar
 import com.example.navbar_screens.more_screen.sections.QuitAccountAD
 import com.example.simple_screens.info_screen.navigation.InfoScreenRoute
-import com.example.simple_screens.project_team_screen.navigation.ProjectTeamScreenRoute
 import com.example.simple_screens.settings_screen.navigation.SettingsScreenRoute
 import com.example.simple_screens.support_screen.navigation.SupportScreenRoute
 import kotlinx.coroutines.launch
@@ -105,7 +104,6 @@ fun MoreScreen(
             }
 
             MoreLC(
-                onProjectTeamClick = { navController.navigate(ProjectTeamScreenRoute) },
                 onSupportClick = { navController.navigate(SupportScreenRoute) },
                 onSettingsClick = { navController.navigate(SettingsScreenRoute) },
                 onInfoClick = { navController.navigate(InfoScreenRoute) }

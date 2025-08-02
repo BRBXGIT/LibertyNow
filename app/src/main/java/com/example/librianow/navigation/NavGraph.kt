@@ -21,7 +21,6 @@ import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 import com.example.onboarding_screen.navigation.onBoardingScreen
 import com.example.player_screen.navigation.playerScreen
 import com.example.simple_screens.info_screen.navigation.infoScreen
-import com.example.simple_screens.project_team_screen.navigation.projectTeamScreen
 import com.example.simple_screens.settings_screen.navigation.settingsScreen
 import com.example.simple_screens.support_screen.navigation.supportScreen
 
@@ -81,8 +80,6 @@ fun NavGraph(
         animeScreen(navController, authVM)
 
         playerScreen(navController)
-
-        projectTeamScreen(navController)
 
         supportScreen(navController)
 

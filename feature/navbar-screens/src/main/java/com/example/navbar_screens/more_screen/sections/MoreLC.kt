@@ -40,7 +40,6 @@ data class MoreItem(
 
 @Composable
 fun MoreLC(
-    onProjectTeamClick: () -> Unit,
     onSupportClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onInfoClick: () -> Unit
@@ -48,12 +47,6 @@ fun MoreLC(
     val context = LocalContext.current
 
     val aniLibertyItems = listOf(
-        MoreItem(
-            onClick = onProjectTeamClick,
-            icon = LibriaNowIcons.Group,
-            label = "Команда проекта",
-            fromLink = false
-        ),
         MoreItem(
             onClick = onSupportClick,
             icon = LibriaNowIcons.Gift,
