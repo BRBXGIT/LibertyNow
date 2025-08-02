@@ -9,6 +9,8 @@ import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptionsForPaging
 import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.network.home_screen.api.HomeScreenApiInstance
+import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
+import com.example.network.search_screen.models.anime_by_filters_request.F
 import java.io.IOException
 
 class TitlesByQueryPagingSource(
@@ -25,10 +27,15 @@ class TitlesByQueryPagingSource(
         val perPage = params.loadSize
 
         return try {
-            val response = apiInstance.getTitlesByQuery(
-                page = startPage,
+            val request = AnimeByFiltersRequest(
                 limit = perPage,
-                query = query
+                page = startPage,
+                f = F(
+                    search = query
+                )
+            )
+            val response = apiInstance.getTitlesByQuery(
+                animeByTitleRequest = request
             )
 
             if (response.code() == 200) {
