@@ -42,7 +42,7 @@ fun InfoScreen(
 
     val clipboardManager = LocalClipboardManager.current
     val versionText = "Версия"
-    val versionCodeText = "Stable 1.0.0 (07.07.2025 03:00)"
+    val versionCodeText = "Stable 1.1.0 (02.08.2025 18:47)"
 
     val infoItems = listOf(
         InfoItem(
@@ -57,7 +57,7 @@ fun InfoScreen(
                 context.startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        "https://github.com/anilibria/docs/blob/master/api_v3.md".toUri()
+                        "https://anilibria.top/api/docs/v1".toUri()
                     )
                 )
             },
