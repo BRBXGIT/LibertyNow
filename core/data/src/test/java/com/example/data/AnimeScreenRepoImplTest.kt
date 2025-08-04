@@ -14,6 +14,7 @@ import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
+import java.net.UnknownHostException
 
 class AnimeScreenRepoImplTest {
 
@@ -49,5 +50,15 @@ class AnimeScreenRepoImplTest {
 
         assertEquals(NetworkErrors.UNAUTHORIZED, result.error)
         assertEquals("Кажется вы не авторизованы", result.label)
+    }
+
+    @Test
+    fun `return internet exception if there is no connection`() = runTest {
+        coEvery { api.getAnime(1) } throws UnknownHostException()
+
+        val result = repo.getAnime(1)
+
+        assertEquals(NetworkErrors.INTERNET, result.error)
+        assertEquals("Пожалуйста подключитесь к сети :)", result.label)
     }
 }
