@@ -1,6 +1,5 @@
 package com.example.data.data
 
-import android.util.Log
 import com.example.common.functions.NetworkErrors
 import com.example.common.functions.NetworkResponse
 import com.example.common.functions.processNetworkErrors
@@ -97,7 +96,6 @@ class LikesRepoImpl @Inject constructor(
                     error = NetworkErrors.SUCCESS
                 )
             } else {
-                Log.d("CCCC", response.code().toString())
                 val error = processNetworkErrors(response.code())
                 val label = processNetworkErrorsForUi(error)
                 NetworkResponse(
@@ -106,7 +104,6 @@ class LikesRepoImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            Log.d("CCCC", e.toString())
             processNetworkExceptions(e)
         }
     }

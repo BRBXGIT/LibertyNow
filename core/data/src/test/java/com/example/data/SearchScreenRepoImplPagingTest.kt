@@ -4,14 +4,16 @@ import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.LoadState
 import com.example.common.functions.NetworkErrors
 import com.example.common.functions.NetworkException
-import com.example.data.data.HomeScreenRepoImpl
-import com.example.data.domain.HomeScreenRepo
+import com.example.data.data.SearchScreenRepoImpl
+import com.example.data.domain.SearchScreenRepo
 import com.example.network.common.models.anime_list_with_pagination_response.AnimeListWithPaginationResponse
 import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.network.common.models.anime_list_with_pagination_response.Meta
 import com.example.network.common.models.anime_list_with_pagination_response.Pagination
-import com.example.network.common.models.common.Name
-import com.example.network.home_screen.api.HomeScreenApiInstance
+import com.example.network.common.models.common.Genre
+import com.example.network.search_screen.api.SearchScreenApiInstance
+import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
+import com.example.network.search_screen.models.anime_by_filters_request.F
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -32,10 +34,10 @@ import org.junit.Test
 import retrofit2.Response
 import java.net.UnknownHostException
 
-class HomeScreenRepoImplPagingTest {
+class SearchScreenRepoImplPagingTest {
 
-    private val api = mockk<HomeScreenApiInstance>()
-    private lateinit var repo: HomeScreenRepo
+    private val api = mockk<SearchScreenApiInstance>()
+    private lateinit var repo: SearchScreenRepo
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -43,7 +45,7 @@ class HomeScreenRepoImplPagingTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        repo = HomeScreenRepoImpl(api)
+        repo = SearchScreenRepoImpl(api)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -54,23 +56,28 @@ class HomeScreenRepoImplPagingTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `get titles by query returns correct paging data`() = runTest {
-        // Given
-        val query = "Наруто"
+    fun `get titles by filters returns correct paging data`() = runTest {
+        val query = AnimeByFiltersRequest(
+            f = F(
+                genres = listOf(0, 1)
+            ),
+            limit = 2,
+            page = 1
+        )
         val mockDataList = listOf(
-            Data(id = 1, name = Name(main = "Наруто")),
-            Data(id = 2, name = Name(main = "Наруто шиппуден"))
+            Data(id = 0, genres = listOf(Genre(id = 0))),
+            Data(id = 1, genres = listOf(Genre(id = 1)))
         )
         val mockResponse = AnimeListWithPaginationResponse(
             data = mockDataList,
-            meta = Meta(Pagination(currentPage = 1))
+            meta = Meta(Pagination(currentPage = 1, count = 2))
         )
 
         coEvery {
-            api.getTitlesByQuery(any())
+            api.getAnimeByFilters(any())
         } returns Response.success(mockResponse)
 
-        val flow = repo.getTitlesByQuery(query)
+        val flow = repo.getAnimeByFilters(query)
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = DiffCallback(),
@@ -89,23 +96,30 @@ class HomeScreenRepoImplPagingTest {
 
         // Then
         assertEquals(2, differ.itemCount)
-        assertEquals("Наруто", differ.snapshot()[0]?.name?.main)
-        assertEquals("Наруто шиппуден", differ.snapshot()[1]?.name?.main)
+        assertEquals(0, differ.snapshot()[0]?.id)
+        assertEquals(0, differ.snapshot()[0]?.genres[0]?.id)
+        assertEquals(1, differ.snapshot()[1]?.id)
+        assertEquals(1, differ.snapshot()[1]?.genres[0]?.id)
 
         job.cancel()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `get titles by query returns NetworkError if code is not 200`() = runTest {
-        val query = "Наруто"
-
+    fun `get titles by filters returns NetworkError if code is not 200`() = runTest {
         val body = ResponseBody.create(MediaType.get("application/json"), "")
         val response = Response.error<AnimeListWithPaginationResponse>(401, body)
 
-        coEvery { api.getTitlesByQuery(any()) } returns response
+        coEvery { api.getAnimeByFilters(any()) } returns response
 
-        val flow = repo.getTitlesByQuery(query)
+        val query = AnimeByFiltersRequest(
+            f = F(
+                genres = listOf(0, 1)
+            ),
+            limit = 2,
+            page = 1
+        )
+        val flow = repo.getAnimeByFilters(query)
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = DiffCallback(),
@@ -122,8 +136,6 @@ class HomeScreenRepoImplPagingTest {
 
         advanceUntilIdle()
 
-        // Then
-        assertEquals(0, differ.itemCount)
         assertEquals(NetworkErrors.UNAUTHORIZED, ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).error)
         assertEquals("Кажется вы не авторизованы", ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).label)
 
@@ -133,11 +145,16 @@ class HomeScreenRepoImplPagingTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun `get titles by query returns internet exception if there is no connection`() = runTest {
-        val query = "Наруто"
+        coEvery { api.getAnimeByFilters(any()) } throws UnknownHostException()
 
-        coEvery { api.getTitlesByQuery(any()) } throws UnknownHostException()
-
-        val flow = repo.getTitlesByQuery(query)
+        val query = AnimeByFiltersRequest(
+            f = F(
+                genres = listOf(0, 1)
+            ),
+            limit = 2,
+            page = 1
+        )
+        val flow = repo.getAnimeByFilters(query)
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = DiffCallback(),
@@ -153,7 +170,6 @@ class HomeScreenRepoImplPagingTest {
         }
 
         advanceUntilIdle()
-
         // Then
         assertEquals(0, differ.itemCount)
         assertEquals(NetworkErrors.INTERNET, ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).error)

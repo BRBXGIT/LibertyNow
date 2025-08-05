@@ -79,7 +79,7 @@ class AuthVM @Inject constructor(
                 NetworkErrors.SUCCESS -> {
                     authRepository.saveUserSessionToken((response.response as SessionTokenResponse).token!!)
                 }
-                NetworkErrors.INCORRECT_EMAIL -> {
+                NetworkErrors.INCORRECT_EMAIL_OR_PASSWORD -> {
                     _authState.update { state ->
                         state.copy(
                             incorrectPassword = true,

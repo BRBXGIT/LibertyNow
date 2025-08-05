@@ -49,7 +49,7 @@ class AuthRepoImpl @Inject constructor(
                 if (error == "Не удалось авторизоваться. Неправильные логин/пароль") {
                     NetworkResponse(
                         response = response.body(),
-                        error = NetworkErrors.INCORRECT_EMAIL
+                        error = NetworkErrors.INCORRECT_EMAIL_OR_PASSWORD
                     )
                 } else {
                     NetworkResponse(
