@@ -1,8 +1,11 @@
 package com.example.data
 
 import androidx.paging.AsyncPagingDataDiffer
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
+import com.example.common.functions.NetworkErrors
+import com.example.common.functions.NetworkException
 import com.example.data.data.HomeScreenRepoImpl
 import com.example.data.domain.HomeScreenRepo
 import com.example.network.common.models.anime_list_with_pagination_response.AnimeListWithPaginationResponse
@@ -17,15 +20,19 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
+import java.net.UnknownHostException
 
 class HomeScreenRepoImplPagingTest {
 
@@ -49,7 +56,7 @@ class HomeScreenRepoImplPagingTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun getTitlesByQueryReturnsCorrectPagingData() = runTest {
+    fun `get titles by query returns correct paging data`() = runTest {
         // Given
         val query = "Наруто"
         val mockDataList = listOf(
@@ -65,15 +72,20 @@ class HomeScreenRepoImplPagingTest {
             api.getTitlesByQuery(any())
         } returns Response.success(mockResponse)
 
-        val pagingData = repo.getTitlesByQuery(query).first()
+        val flow = repo.getTitlesByQuery(query)
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = DiffCallback(),
             updateCallback = NoopListCallback(),
-            workerDispatcher = Dispatchers.Main
+            workerDispatcher = testDispatcher,
+            mainDispatcher = testDispatcher
         )
 
-        differ.submitData(pagingData)
+        val job = launch {
+            flow.collect {
+                differ.submitData(it)
+            }
+        }
 
         advanceUntilIdle()
 
@@ -81,6 +93,75 @@ class HomeScreenRepoImplPagingTest {
         assertEquals(2, differ.itemCount)
         assertEquals("Наруто", differ.snapshot()[0]?.name?.main)
         assertEquals("Наруто шиппуден", differ.snapshot()[1]?.name?.main)
+
+        job.cancel()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get titles by query returns NetworkError if code is not 200`() = runTest {
+        val query = "Наруто"
+
+        val body = ResponseBody.create(MediaType.get("application/json"), "")
+        val response = Response.error<AnimeListWithPaginationResponse>(401, body)
+
+        coEvery { api.getTitlesByQuery(any()) } returns response
+
+        val flow = repo.getTitlesByQuery(query)
+
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = DiffCallback(),
+            updateCallback = NoopListCallback(),
+            workerDispatcher = testDispatcher,
+            mainDispatcher = testDispatcher
+        )
+
+        val job = launch {
+            flow.collect {
+                differ.submitData(it)
+            }
+        }
+
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(0, differ.itemCount)
+        assertEquals(NetworkErrors.UNAUTHORIZED, ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).error)
+        assertEquals("Кажется вы не авторизованы", ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).label)
+
+        job.cancel()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `get titles by query returns internet exception if there is no connection`() = runTest {
+        val query = "Наруто"
+
+        coEvery { api.getTitlesByQuery(any()) } throws UnknownHostException()
+
+        val flow = repo.getTitlesByQuery(query)
+
+        val differ = AsyncPagingDataDiffer(
+            diffCallback = DiffCallback(),
+            updateCallback = NoopListCallback(),
+            workerDispatcher = testDispatcher,
+            mainDispatcher = testDispatcher
+        )
+
+        val job = launch {
+            flow.collect {
+                differ.submitData(it)
+            }
+        }
+
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(0, differ.itemCount)
+        assertEquals(NetworkErrors.INTERNET, ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).error)
+        assertEquals("Пожалуйста подключитесь к сети :)", ((differ.loadStateFlow.first().refresh as LoadState.Error).error as NetworkException).label)
+
+        job.cancel()
     }
 
     // Dummy callback, Paging needs it

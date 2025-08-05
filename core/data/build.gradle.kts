@@ -11,6 +11,13 @@ android {
     namespace = "com.example.data"
     compileSdk = 35
 
+    packaging {
+        resources {
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/LICENSE-notice.md"
+        }
+    }
+
     defaultConfig {
         minSdk = 28
 
@@ -51,7 +58,4 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
-    androidTestImplementation(libs.junit)
-    androidTestImplementation(libs.mockk)
-    androidTestImplementation(libs.coroutines.test)
 }
