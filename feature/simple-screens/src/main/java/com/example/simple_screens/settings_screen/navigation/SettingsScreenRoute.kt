@@ -16,7 +16,8 @@ import kotlinx.serialization.Serializable
 data object SettingsScreenRoute
 
 fun NavGraphBuilder.settingsScreen(
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) = composable<SettingsScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
@@ -25,6 +26,7 @@ fun NavGraphBuilder.settingsScreen(
 
     SettingsScreen(
         viewModel = settingsScreenVM,
-        navController = navController
+        navController = navController,
+        useExpressive = useExpressive
     )
 }

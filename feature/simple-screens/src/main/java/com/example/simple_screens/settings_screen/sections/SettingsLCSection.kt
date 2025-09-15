@@ -31,7 +31,7 @@ import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
 
 enum class PlayerSettingsItemType {
-    VideoQuality, ShowSkipOpeningButton, Crop, AutoPlay
+    VideoQuality, ShowSkipOpeningButton, Crop, AutoPlay, UseExpressive
 }
 
 data class PlayerSettingsItem(
@@ -44,6 +44,7 @@ data class PlayerSettingsItem(
 
 @Composable
 fun SettingsLCSection(
+    useExpressive: Boolean,
     chosenTheme: String,
     chosenColorSystem: String,
     videoQuality: Int,
@@ -67,22 +68,29 @@ fun SettingsLCSection(
             name = "Кнопка пропуска",
             label = "Показывать кнопку пропуска опенинга",
             type = PlayerSettingsItemType.ShowSkipOpeningButton,
-            isActive = showSkipOpeningButton == true,
+            isActive = showSkipOpeningButton,
             icon = LibriaNowIcons.RewindCircle
         ),
         PlayerSettingsItem(
             name = "Автовоспроизведение",
             label = "Автоматически воспроизводить следующий эпизод",
             type = PlayerSettingsItemType.AutoPlay,
-            isActive = autoPlay == true,
+            isActive = autoPlay,
             icon = LibriaNowIcons.AutoPlay
         ),
         PlayerSettingsItem(
             name = "Полный экран",
             label = "Воспроизведение на полный экран",
             type = PlayerSettingsItemType.Crop,
-            isActive = isCropped == true,
+            isActive = isCropped,
             icon = LibriaNowIcons.Crop
+        ),
+        PlayerSettingsItem(
+            name = "Material 3 Expressive",
+            label = "Использование expressive темы вместо обычной",
+            type = PlayerSettingsItemType.UseExpressive,
+            isActive = useExpressive,
+            icon = LibriaNowIcons.Colour
         )
     )
 
@@ -193,7 +201,8 @@ fun SettingsLCSectionPreview() {
             bottomPadding = 16.dp,
             onThemeChange = {},
             onColorSystemChange = {},
-            onCheckChange = {}
+            onCheckChange = {},
+            useExpressive = true
         )
     }
 }

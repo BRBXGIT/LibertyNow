@@ -8,6 +8,7 @@ data class SettingsScreenState(
 
     val theme: String = "default",
     val colorSystem: String = "default",
+    val useExpressive: Boolean = false,
 
     val isQualityBSVisible: Boolean = false
 )

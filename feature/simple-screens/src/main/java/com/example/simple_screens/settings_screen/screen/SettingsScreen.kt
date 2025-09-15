@@ -23,7 +23,8 @@ import com.example.simple_screens.settings_screen.sections.VideoQualityBS
 @Composable
 fun SettingsScreen(
     viewModel: SettingsScreenVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) {
     val screenState by viewModel.settingsScreenState.collectAsStateWithLifecycle()
 
@@ -67,6 +68,7 @@ fun SettingsScreen(
                 .padding(top = innerPadding.calculateTopPadding())
         ) {
             SettingsLCSection(
+                useExpressive = useExpressive,
                 chosenTheme = screenState.theme,
                 chosenColorSystem = screenState.colorSystem,
                 videoQuality = screenState.videoQuality,
@@ -107,6 +109,13 @@ fun SettingsScreen(
                             viewModel.sendIntent(
                                 SettingsScreenIntent.SetPlayerFeature(
                                     type = PlayerSettingsItemType.AutoPlay
+                                )
+                            )
+                        }
+                        PlayerSettingsItemType.UseExpressive -> {
+                            viewModel.sendIntent(
+                                SettingsScreenIntent.SetPlayerFeature(
+                                    type = PlayerSettingsItemType.UseExpressive
                                 )
                             )
                         }

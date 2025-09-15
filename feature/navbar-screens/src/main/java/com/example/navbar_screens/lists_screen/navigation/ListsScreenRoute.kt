@@ -18,7 +18,8 @@ data object ListsScreenRoute
 fun NavGraphBuilder.listsScreen(
     listsScreenVM: ListsScreenVM,
     commonVM: CommonVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) = composable<ListsScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
@@ -26,6 +27,7 @@ fun NavGraphBuilder.listsScreen(
     ListsScreen(
         commonVM = commonVM,
         navController = navController,
-        viewModel = listsScreenVM
+        viewModel = listsScreenVM,
+        useExpressive = useExpressive
     )
 }

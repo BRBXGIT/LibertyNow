@@ -29,6 +29,7 @@ object LibriaNowIcons {
     val Hourglass = R.drawable.ic_hourglass
     val CheckCircle = R.drawable.ic_check_cirlce
     val Info = R.drawable.ic_info
+    val Colour = R.drawable.ic_colour
 
     // Filled
     val ArrowLeftFilled = R.drawable.ic_arrow_left_filled

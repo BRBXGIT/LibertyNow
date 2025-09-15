@@ -65,14 +65,16 @@ class SettingsScreenVM @Inject constructor(
         viewModelScope.launch(dispatcherIo) {
             combine(
                 themeRepo.theme,
-                themeRepo.colorSystem
-            ) { theme, colorSystem ->
-                theme to colorSystem
-            }.collect { (theme, colorSystem) ->
+                themeRepo.colorSystem,
+                themeRepo.useExpressive
+            ) { theme, colorSystem, useExpressive ->
+                Triple(theme, colorSystem, useExpressive)
+            }.collect { (theme, colorSystem, useExpressive) ->
                 _settingsScreenState.update { state ->
                     state.copy(
                         theme = theme ?: "default",
-                        colorSystem = colorSystem ?: "default"
+                        colorSystem = colorSystem ?: "default",
+                        useExpressive = useExpressive ?: false
                     )
                 }
             }
@@ -88,6 +90,12 @@ class SettingsScreenVM @Inject constructor(
     private fun setColorSystem(colorSystem: String) {
         viewModelScope.launch(dispatcherIo) {
             themeRepo.saveColorSystem(colorSystem)
+        }
+    }
+
+    private fun setUseExpressive() {
+        viewModelScope.launch {
+            themeRepo.saveUseExpressive(!_settingsScreenState.value.useExpressive)
         }
     }
 
@@ -107,6 +115,7 @@ class SettingsScreenVM @Inject constructor(
                 PlayerSettingsItemType.AutoPlay -> {
                     playerFeaturesRepo.saveAutoplay(!_settingsScreenState.value.autoPlay)
                 }
+                PlayerSettingsItemType.UseExpressive -> setUseExpressive()
             }
         }
     }

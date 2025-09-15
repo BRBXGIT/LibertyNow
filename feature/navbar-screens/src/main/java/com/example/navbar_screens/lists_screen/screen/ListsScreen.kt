@@ -33,7 +33,8 @@ import kotlinx.coroutines.launch
 fun ListsScreen(
     viewModel: ListsScreenVM,
     commonVM: CommonVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) {
     val commonState by commonVM.commonState.collectAsStateWithLifecycle()
     val screenState by viewModel.listsScreenState.collectAsStateWithLifecycle()
@@ -68,7 +69,8 @@ fun ListsScreen(
                             screenState.copy(query = "")
                         )
                     )
-                }
+                },
+                useExpressive = useExpressive
             )
         },
         bottomBar = {

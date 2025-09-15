@@ -65,6 +65,7 @@ fun NavGraph(
             commonVM = commonVM,
             listsScreenVM = listsScreenVM,
             navController = navController,
+            useExpressive = useExpressive
         )
 
         searchScreen(
@@ -83,14 +84,11 @@ fun NavGraph(
 
         animeScreen(navController, authVM)
 
-        playerScreen(
-            navController = navController,
-            useExpressive = useExpressive
-        )
+        playerScreen(navController, useExpressive)
 
         supportScreen(navController)
 
-        settingsScreen(navController)
+        settingsScreen(navController, useExpressive)
 
         infoScreen(navController)
     }
