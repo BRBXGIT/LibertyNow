@@ -1,6 +1,5 @@
 package com.example.data
 
-import com.example.common.functions.NetworkErrors
 import com.example.data.data.AnimeScreenRepoImpl
 import com.example.data.domain.AnimeScreenRepo
 import com.example.network.anime_screen.api.AnimeScreenApiInstance

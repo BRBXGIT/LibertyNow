@@ -27,11 +27,11 @@ interface LikesApiInstance {
     suspend fun addLike(
         @Header("Authorization") sessionToken: String,
         @Body addLikeRequest: ArrayList<LikeRequestItem>
-    ): Response<List<Int>>
+    ): Response<Unit>
 
     @HTTP(method = "DELETE", path = "accounts/users/me/favorites", hasBody = true)
     suspend fun removeLike(
         @Header("Authorization") sessionToken: String,
         @Body removeLikeRequest: ArrayList<LikeRequestItem>
-    ): Response<List<Int>>
+    ): Response<Unit>
 }

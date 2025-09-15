@@ -1,6 +1,5 @@
 package com.example.data
 
-import com.example.common.functions.NetworkErrors
 import com.example.data.data.HomeScreenRepoImpl
 import com.example.data.domain.HomeScreenRepo
 import com.example.network.common.models.anime_list_response.AnimeListResponse

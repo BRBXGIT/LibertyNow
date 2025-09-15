@@ -1,15 +1,16 @@
 package com.example.data.data
 
-import com.example.common.functions.NetworkErrors
-import com.example.common.functions.NetworkResponse
-import com.example.common.functions.processNetworkErrors
-import com.example.common.functions.processNetworkErrorsForUi
-import com.example.common.functions.processNetworkExceptions
 import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager
 import com.example.local.datastore.auth.LoggingState
 import com.example.network.auth.api.AuthApiInstance
 import com.example.network.auth.models.auth_body_request.AuthBodyRequest
+import com.example.network.auth.models.session_token_response.SessionTokenResponse
+import com.example.network.common.utils.NetworkErrors
+import com.example.network.common.utils.NetworkResponse
+import com.example.network.common.utils.processNetworkErrors
+import com.example.network.common.utils.processNetworkErrorsForUi
+import com.example.network.common.utils.processNetworkExceptions
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -33,13 +34,13 @@ class AuthRepoImpl @Inject constructor(
     }
 
     override suspend fun getSessionToken(
-        login: String,
+        email: String,
         password: String
-    ): NetworkResponse {
+    ): NetworkResponse<SessionTokenResponse> {
         return try {
             val response = authApiInstance.getSessionToken(
                 AuthBodyRequest(
-                    login = login,
+                    login = email,
                     password = password
                 )
             )
@@ -66,7 +67,13 @@ class AuthRepoImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            processNetworkExceptions(e)
+            val error = processNetworkExceptions(e)
+            val label = processNetworkErrorsForUi(error)
+            NetworkResponse(
+                response = null,
+                error = error,
+                label = label
+            )
         }
     }
 }

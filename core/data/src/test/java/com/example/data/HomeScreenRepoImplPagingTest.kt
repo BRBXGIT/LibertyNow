@@ -2,7 +2,6 @@ package com.example.data
 
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.LoadState
-import com.example.common.functions.NetworkErrors
 import com.example.common.functions.NetworkException
 import com.example.data.data.HomeScreenRepoImpl
 import com.example.data.domain.HomeScreenRepo

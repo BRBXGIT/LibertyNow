@@ -1,4 +1,6 @@
-package com.example.common.functions
+package com.example.network.common.utils
+
+interface NetworkError
 
 enum class NetworkErrors: NetworkError {
     SUCCESS,
@@ -10,6 +12,6 @@ enum class NetworkErrors: NetworkError {
     SERVER_ERROR,
     INTERNET,
     SERIALIZATION,
-    INCORRECT_EMAIL_OR_PASSWORD,
-    UNKNOWN
+    UNKNOWN,
+    INCORRECT_EMAIL_OR_PASSWORD
 }

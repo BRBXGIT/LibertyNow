@@ -5,9 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
-import com.example.common.functions.NetworkErrors
 import com.example.data.domain.SearchScreenRepo
-import com.example.network.common.models.common.Genre
+import com.example.network.common.utils.NetworkErrors
 import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
 import com.example.network.search_screen.models.anime_by_filters_request.F
 import com.example.network.search_screen.models.anime_by_filters_request.Years
@@ -102,7 +101,7 @@ class SearchScreenVM @Inject constructor(
             if (response.error == NetworkErrors.SUCCESS) {
                 _searchScreenState.update { state ->
                     state.copy(
-                        animeGenres = (response.response as? List<*>)?.filterIsInstance<Genre>()!!,
+                        animeGenres = response.response!!,
                         isAnimeGenresLoading = false,
                         isAnimeGenresError = false
                     )

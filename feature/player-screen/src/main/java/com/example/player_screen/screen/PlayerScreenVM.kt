@@ -57,7 +57,7 @@ class PlayerScreenVM @Inject constructor(
                 _playerScreenState.update { state ->
                     state.copy(
                         duration = player.contentDuration,
-                        isPlaying = if (_playerScreenState.value.autoPlay != false) {
+                        isPlaying = if (_playerScreenState.value.autoPlay) {
                             IsPlayingState.Playing
                         } else {
                             IsPlayingState.Paused

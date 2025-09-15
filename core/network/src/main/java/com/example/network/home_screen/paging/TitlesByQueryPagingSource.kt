@@ -2,16 +2,13 @@ package com.example.network.home_screen.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.common.functions.NetworkErrors
-import com.example.common.functions.NetworkException
-import com.example.common.functions.processNetworkErrors
-import com.example.common.functions.processNetworkErrorsForUi
-import com.example.common.functions.processNetworkExceptionsForPaging
 import com.example.network.common.models.anime_list_with_pagination_response.Data
+import com.example.network.common.utils.NetworkErrors
+import com.example.network.common.utils.NetworkException
+import com.example.network.common.utils.NetworkRequest
 import com.example.network.home_screen.api.HomeScreenApiInstance
 import com.example.network.search_screen.models.anime_by_filters_request.AnimeByFiltersRequest
 import com.example.network.search_screen.models.anime_by_filters_request.F
-import java.io.IOException
 
 class TitlesByQueryPagingSource(
     private val apiInstance: HomeScreenApiInstance,
@@ -26,37 +23,24 @@ class TitlesByQueryPagingSource(
         val startPage = params.key ?: 1
         val perPage = params.loadSize
 
-        return try {
-            val request = AnimeByFiltersRequest(
-                limit = perPage,
-                page = startPage,
-                f = F(
-                    search = query
-                )
+        val request = AnimeByFiltersRequest(
+            limit = perPage,
+            page = startPage,
+            f = F(
+                search = query
             )
-            val response = apiInstance.getTitlesByQuery(
-                animeByTitleRequest = request
-            )
+        )
 
-            if (response.code() == 200) {
-                val body = response.body()
-                if (body != null) {
-                    LoadResult.Page(
-                        data = body.data,
-                        prevKey = if (body.meta.pagination.currentPage > 1) body.meta.pagination.currentPage - 1 else null,
-                        nextKey = body.meta.pagination.currentPage + 1
-                    )
-                } else {
-                    val label = processNetworkErrorsForUi(NetworkErrors.SERIALIZATION)
-                    LoadResult.Error(NetworkException(NetworkErrors.SERIALIZATION, label))
-                }
-            } else {
-                val exception = processNetworkErrors(response.code())
-                val label = processNetworkErrorsForUi(exception)
-                LoadResult.Error(NetworkException(exception, label))
-            }
-        } catch (e: IOException) {
-            processNetworkExceptionsForPaging<Int, Data>(e)
+        val response = NetworkRequest.exec { apiInstance.getTitlesByQuery(request) }
+        return if (response.error == NetworkErrors.SUCCESS) {
+            val result = response.response!!
+            LoadResult.Page(
+                data = result.data,
+                prevKey = if (result.meta.pagination.currentPage > 1) result.meta.pagination.currentPage - 1 else null,
+                nextKey = result.meta.pagination.currentPage + 1
+            )
+        } else {
+            LoadResult.Error(NetworkException(response.error!!, response.label!!))
         }
     }
 }

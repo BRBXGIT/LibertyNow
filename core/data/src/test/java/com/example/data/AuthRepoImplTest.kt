@@ -1,6 +1,5 @@
 package com.example.data
 
-import com.example.common.functions.NetworkErrors
 import com.example.data.data.AuthRepoImpl
 import com.example.data.domain.AuthRepo
 import com.example.local.datastore.auth.AuthManager

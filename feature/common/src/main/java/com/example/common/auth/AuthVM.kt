@@ -4,16 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
-import com.example.common.functions.NetworkErrors
 import com.example.data.domain.AuthRepo
 import com.example.data.domain.LikesRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.local.datastore.auth.LoggingState
-import com.example.network.auth.models.session_token_response.SessionTokenResponse
-import com.example.network.common.models.anime_list_with_pagination_response.AnimeListWithPaginationResponse
 import com.example.network.common.models.anime_list_with_pagination_response.Data
+import com.example.network.common.utils.NetworkErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,7 +75,7 @@ class AuthVM @Inject constructor(
             val response = authRepository.getSessionToken(_authState.value.email, _authState.value.password)
             when (response.error) {
                 NetworkErrors.SUCCESS -> {
-                    authRepository.saveUserSessionToken((response.response as SessionTokenResponse).token!!)
+                    authRepository.saveUserSessionToken(response.response!!.token!!)
                 }
                 NetworkErrors.INCORRECT_EMAIL_OR_PASSWORD -> {
                     _authState.update { state ->
@@ -120,7 +118,7 @@ class AuthVM @Inject constructor(
             if (response.error == NetworkErrors.SUCCESS) {
                 _authState.update { state ->
                     state.copy(
-                        likesAmount = (response.response as List<*>).size,
+                        likesAmount = response.response!!.size,
                         isLoading = false
                     )
                 }
@@ -161,7 +159,7 @@ class AuthVM @Inject constructor(
             if (response.error == NetworkErrors.SUCCESS) {
                 _authState.update { state ->
                     state.copy(
-                        likes = (response.response as AnimeListWithPaginationResponse).data,
+                        likes = response.response!!.data,
                         isLoading = false
                     )
                 }

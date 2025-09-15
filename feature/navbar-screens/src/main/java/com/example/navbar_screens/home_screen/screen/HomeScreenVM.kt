@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
-import com.example.common.functions.NetworkErrors
 import com.example.data.domain.HomeScreenRepo
 import com.example.design_system.snackbars.SnackbarAction
 import com.example.design_system.snackbars.SnackbarController
 import com.example.design_system.snackbars.SnackbarEvent
 import com.example.network.common.models.anime_list_response.AnimeListResponse
+import com.example.network.common.utils.NetworkErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,7 +66,7 @@ class HomeScreenVM @Inject constructor(
                 _homeScreenState.update { state ->
                     state.copy(
                         isLoading = false,
-                        titlesUpdates = response.response as AnimeListResponse,
+                        titlesUpdates = response.response!!,
                         isError = false
                     )
                 }

@@ -1,6 +1,5 @@
 package com.example.data
 
-import com.example.common.functions.NetworkErrors
 import com.example.data.data.SearchScreenRepoImpl
 import com.example.data.domain.SearchScreenRepo
 import com.example.network.common.models.common.Genre

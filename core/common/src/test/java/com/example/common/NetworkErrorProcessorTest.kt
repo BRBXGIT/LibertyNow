@@ -1,9 +1,7 @@
 package com.example.common
 
 import androidx.paging.PagingSource.LoadResult
-import com.example.common.functions.NetworkErrors
 import com.example.common.functions.NetworkException
-import com.example.common.functions.NetworkResponse
 import com.example.common.functions.processNetworkErrors
 import com.example.common.functions.processNetworkErrorsForUi
 import com.example.common.functions.processNetworkExceptions
