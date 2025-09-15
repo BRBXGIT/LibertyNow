@@ -42,7 +42,8 @@ import com.example.network.common.utils.NetworkException
 fun SearchScreen(
     viewModel: SearchScreenVM,
     commonVM: CommonVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) {
     val animeByFilters = viewModel.animeByFilters.collectAsLazyPagingItems()
 
@@ -98,6 +99,7 @@ fun SearchScreen(
         },
         topBar = {
             SearchScreenTopBar(
+                useExpressive = useExpressive,
                 isLoading = screenState.isAnimeByFiltersLoading,
                 scrollBehavior = topBarScrollBehavior,
                 onFiltersClick = {

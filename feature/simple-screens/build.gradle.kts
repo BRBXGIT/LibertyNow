@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
     // Material 3
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.android)
     // Nav
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)

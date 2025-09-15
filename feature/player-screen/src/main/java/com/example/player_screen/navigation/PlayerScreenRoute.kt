@@ -21,7 +21,8 @@ data class PlayerScreenRoute(
 )
 
 fun NavGraphBuilder.playerScreen(
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) = composable<PlayerScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
@@ -36,6 +37,7 @@ fun NavGraphBuilder.playerScreen(
         gsonLinks = gsonLinks,
         viewModel = playerScreenVM,
         navController = navController,
-        animeId = animeId
+        animeId = animeId,
+        useExpressive = useExpressive
     )
 }

@@ -14,6 +14,8 @@ class ThemeRepoImpl @Inject constructor(
 
     override val colorSystem = appThemeManager.colorSystem
 
+    override val useExpressive = appThemeManager.useMaterialExpressive
+
     override val themeState = theme.map { theme ->
         when(theme) {
             null -> ThemeState.Loading
@@ -34,5 +36,9 @@ class ThemeRepoImpl @Inject constructor(
 
     override suspend fun saveColorSystem(colorSystem: String) {
         appThemeManager.saveColorSystem(colorSystem)
+    }
+
+    override suspend fun saveUseExpressive(use: Boolean) {
+        appThemeManager.saveUseMaterialExpressive(use)
     }
 }

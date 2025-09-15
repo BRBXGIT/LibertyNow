@@ -1,6 +1,7 @@
 package com.example.local.datastore.app_theme
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -16,6 +17,7 @@ class AppThemeManager(
     companion object {
         private val THEME_KEY = stringPreferencesKey("theme")
         private val COLOR_SYSTEM_KEY = stringPreferencesKey("color_system")
+        private val USE_MATERIAL_EXPRESSIVE = booleanPreferencesKey("use_material_expressive")
     }
 
     val theme: Flow<String?> = context.dataStore.data
@@ -33,6 +35,15 @@ class AppThemeManager(
     suspend fun saveColorSystem(colorSystem: String) {
         context.dataStore.edit { preferences ->
             preferences[COLOR_SYSTEM_KEY] = colorSystem
+        }
+    }
+
+    val useMaterialExpressive: Flow<Boolean?> = context.dataStore.data
+        .map { preferences -> preferences[USE_MATERIAL_EXPRESSIVE] }
+
+    suspend fun saveUseMaterialExpressive(use: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[USE_MATERIAL_EXPRESSIVE] = use
         }
     }
 }

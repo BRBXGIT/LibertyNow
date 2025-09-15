@@ -18,7 +18,8 @@ object SearchScreenRoute
 fun NavGraphBuilder.searchScreen(
     searchScreenVM: SearchScreenVM,
     commonVM: CommonVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) = composable<SearchScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
@@ -26,6 +27,7 @@ fun NavGraphBuilder.searchScreen(
     SearchScreen(
         viewModel = searchScreenVM,
         commonVM = commonVM,
-        navController = navController
+        navController = navController,
+        useExpressive = useExpressive
     )
 }

@@ -39,7 +39,8 @@ fun LikesScreen(
     viewModel: LikesScreenVM,
     commonVM: CommonVM,
     authVM: AuthVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) {
     val authState by authVM.authState.collectAsStateWithLifecycle()
     val commonState by commonVM.commonState.collectAsStateWithLifecycle()
@@ -68,6 +69,7 @@ fun LikesScreen(
         },
         topBar = {
             SearchableTopBar(
+                useExpressive = useExpressive,
                 title = "Избранное",
                 query = screenState.query,
                 isSearching = screenState.isSearching,

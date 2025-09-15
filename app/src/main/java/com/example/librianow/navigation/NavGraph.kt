@@ -26,7 +26,8 @@ import com.example.simple_screens.support_screen.navigation.supportScreen
 
 @Composable
 fun NavGraph(
-    startDestination: Any
+    startDestination: Any,
+    useExpressive: Boolean
 ) {
     val navController = rememberNavController()
 
@@ -48,14 +49,16 @@ fun NavGraph(
         homeScreen(
             homeScreenVM = homeScreenVM,
             commonVM = commonVM,
-            navController = navController
+            navController = navController,
+            useExpressive = useExpressive
         )
 
         likesScreen(
             likesScreenVM = likesScreenVM,
             commonVM = commonVM,
             navController = navController,
-            authVM = authVM
+            authVM = authVM,
+            useExpressive = useExpressive
         )
 
         listsScreen(
@@ -67,7 +70,8 @@ fun NavGraph(
         searchScreen(
             searchScreenVM = searchScreenVM,
             commonVM = commonVM,
-            navController = navController
+            navController = navController,
+            useExpressive = useExpressive
         )
 
         moreScreen(
@@ -79,7 +83,10 @@ fun NavGraph(
 
         animeScreen(navController, authVM)
 
-        playerScreen(navController)
+        playerScreen(
+            navController = navController,
+            useExpressive = useExpressive
+        )
 
         supportScreen(navController)
 

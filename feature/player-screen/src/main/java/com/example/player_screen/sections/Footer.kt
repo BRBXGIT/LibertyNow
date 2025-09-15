@@ -1,5 +1,7 @@
 package com.example.player_screen.sections
 
+// noinspection UsingMaterialAndMaterial3Libraries
+// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -11,10 +13,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Slider
-// noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.SliderDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -38,9 +39,11 @@ import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mTypography
 import kotlin.math.absoluteValue
+import androidx.compose.material3.Slider as Material3Slider
 
 @Composable
 fun BoxScope.Footer(
+    useExpressive: Boolean,
     duration: Long,
     currentPosition: Long,
     bottomPadding: Dp,
@@ -69,7 +72,8 @@ fun BoxScope.Footer(
             currentPosition = currentPosition,
             isSeeking = isSeeking,
             onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished
+            onValueChangeFinished = onValueChangeFinished,
+            useExpressive = useExpressive
         )
 
         Row(
@@ -93,13 +97,15 @@ fun BoxScope.Footer(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlaybackSlider(
     duration: Long,
     currentPosition: Long,
     isSeeking: Boolean,
     onValueChange: (Long) -> Unit,
-    onValueChangeFinished: (Long) -> Unit
+    onValueChangeFinished: (Long) -> Unit,
+    useExpressive: Boolean
 ) {
     var sliderPosition by rememberSaveable { mutableFloatStateOf(0f) }
 
@@ -109,22 +115,36 @@ private fun PlaybackSlider(
         }
     }
 
-    Slider(
-        modifier = Modifier.fillMaxWidth(),
-        colors = SliderDefaults.colors(
-            thumbColor = mColors.secondary,
-            activeTrackColor = mColors.secondary,
-            inactiveTrackColor = mColors.secondaryContainer,
-        ),
-        value = sliderPosition,
-        onValueChange = {
-            sliderPosition = it
-            onValueChange((it * duration).toLong())
-        },
-        onValueChangeFinished = {
-            onValueChangeFinished((sliderPosition * duration).toLong())
-        }
-    )
+    if (useExpressive) {
+        Material3Slider(
+            value = sliderPosition,
+            onValueChange = {
+                sliderPosition = it
+                onValueChange((it * duration).toLong())
+            },
+            onValueChangeFinished = {
+                onValueChangeFinished((sliderPosition * duration).toLong())
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    } else {
+        Slider(
+            modifier = Modifier.fillMaxWidth(),
+            colors = SliderDefaults.colors(
+                thumbColor = mColors.secondary,
+                activeTrackColor = mColors.secondary,
+                inactiveTrackColor = mColors.secondaryContainer,
+            ),
+            value = sliderPosition,
+            onValueChange = {
+                sliderPosition = it
+                onValueChange((it * duration).toLong())
+            },
+            onValueChangeFinished = {
+                onValueChangeFinished((sliderPosition * duration).toLong())
+            }
+        )
+    }
 }
 
 @Composable
@@ -211,7 +231,8 @@ fun FooterPreview() {
                 onLockClick = {},
                 onSettingsClick = {},
                 onCropClick = {},
-                onPipClick = {}
+                onPipClick = {},
+                useExpressive = true
             )
         }
     }

@@ -20,7 +20,8 @@ fun NavGraphBuilder.likesScreen(
     likesScreenVM: LikesScreenVM,
     commonVM: CommonVM,
     authVM: AuthVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) = composable<LikesScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
@@ -29,6 +30,7 @@ fun NavGraphBuilder.likesScreen(
         viewModel = likesScreenVM,
         commonVM = commonVM,
         authVM = authVM,
-        navController = navController
+        navController = navController,
+        useExpressive = useExpressive
     )
 }

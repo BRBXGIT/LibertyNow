@@ -45,7 +45,8 @@ import com.example.network.common.utils.NetworkException
 fun HomeScreen(
     viewModel: HomeScreenVM,
     commonVM: CommonVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) {
     val titlesByQuery = viewModel.titlesByQuery.collectAsLazyPagingItems()
 
@@ -98,6 +99,7 @@ fun HomeScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             SearchableTopBar(
+                useExpressive = useExpressive,
                 title = "Последние обновления",
                 query = screenState.query,
                 isSearching = screenState.isSearching,

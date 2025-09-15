@@ -18,7 +18,8 @@ data object HomeScreenRoute
 fun NavGraphBuilder.homeScreen(
     homeScreenVM: HomeScreenVM,
     commonVM: CommonVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) = composable<HomeScreenRoute>(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
@@ -27,5 +28,6 @@ fun NavGraphBuilder.homeScreen(
         viewModel = homeScreenVM,
         navController = navController,
         commonVM = commonVM,
+        useExpressive = useExpressive
     )
 }

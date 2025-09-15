@@ -13,7 +13,11 @@ interface ThemeRepo {
 
     val colorSystemState: Flow<ThemeState>
 
+    val useExpressive: Flow<Boolean?>
+
     suspend fun saveTheme(theme: String)
 
     suspend fun saveColorSystem(colorSystem: String)
+
+    suspend fun saveUseExpressive(use: Boolean)
 }

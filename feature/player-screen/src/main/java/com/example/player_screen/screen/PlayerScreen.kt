@@ -53,7 +53,8 @@ fun PlayerScreen(
     currentEpisodeId: Int,
     gsonLinks: String,
     viewModel: PlayerScreenVM,
-    navController: NavController
+    navController: NavController,
+    useExpressive: Boolean
 ) {
     val type = object : TypeToken<List<Episode>>() {}.type
     val links: List<Episode> = Gson().fromJson(gsonLinks, type)
@@ -328,7 +329,8 @@ fun PlayerScreen(
                                     activity.enterPictureInPictureMode(params)
                                 }
                             }
-                        }
+                        },
+                        useExpressive = useExpressive
                     )
                 }
             }

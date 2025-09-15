@@ -65,7 +65,7 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     // Material 3
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.android)
     // Splashscreen
     implementation(libs.androidx.core.splashscreen)
     // Nav

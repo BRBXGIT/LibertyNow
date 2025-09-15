@@ -30,7 +30,7 @@ android {
 dependencies {
 
     // Material 3
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.android)
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui.tooling.preview)

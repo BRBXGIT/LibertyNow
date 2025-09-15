@@ -9,9 +9,11 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -24,12 +26,13 @@ import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SearchScreenTopBar(
     isLoading: Boolean,
     scrollBehavior: TopAppBarScrollBehavior,
-    onFiltersClick: () -> Unit
+    onFiltersClick: () -> Unit,
+    useExpressive: Boolean
 ) {
     Column {
         TopAppBar(
@@ -57,7 +60,11 @@ fun SearchScreenTopBar(
             enter = fadeIn(tween(animationDuration)) + expandVertically(tween(animationDuration)),
             exit = fadeOut(tween(animationDuration)) + shrinkVertically(tween(animationDuration))
         ) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            if (useExpressive) {
+                LinearWavyProgressIndicator(modifier = Modifier.fillMaxWidth())
+            } else {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
         }
     }
 }
@@ -72,7 +79,8 @@ private fun SearchScreenTopBarPreview() {
         SearchScreenTopBar(
             isLoading = false,
             onFiltersClick = {},
-            scrollBehavior = topBarScrollBehavior
+            scrollBehavior = topBarScrollBehavior,
+            useExpressive = true
         )
     }
 }
