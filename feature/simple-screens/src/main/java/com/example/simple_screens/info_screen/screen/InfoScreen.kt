@@ -42,7 +42,7 @@ fun InfoScreen(
 
     val clipboardManager = LocalClipboardManager.current
     val versionText = "Версия"
-    val versionCodeText = "Stable 1.1.0 (02.08.2025 18:47)"
+    val versionCodeText = "Stable 1.2.0 (16.09.2025 13:42)"
 
     val infoItems = listOf(
         InfoItem(

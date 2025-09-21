@@ -63,8 +63,4 @@ dependencies {
     implementation(libs.converter.gson)
     // Animated icons(compose animation graphics)
     implementation(libs.androidx.animation.graphics)
-    // Testing
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.coroutines.test)
 }
