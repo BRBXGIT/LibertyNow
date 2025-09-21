@@ -41,4 +41,10 @@ dependencies {
     implementation(libs.lottie)
     // Animated icons(compose animation graphics)
     implementation(libs.androidx.animation.graphics)
+
+    // -- Testing --
+    // Android tests
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.test.ext.junit)
 }

@@ -16,15 +16,15 @@ class OnBoardingScreenVM @Inject constructor(
     @Dispatcher(LibriaNowDispatchers.IO) private val dispatcherIo: CoroutineDispatcher
 ): ViewModel() {
 
-    private fun saveIsOnBoardingCompleted(isCompleted: Boolean) {
+    private fun saveIsOnBoardingCompleted() {
         viewModelScope.launch(dispatcherIo) {
-            onBoardingRepo.saveIsOnBoardingCompleted(isCompleted)
+            onBoardingRepo.saveIsOnBoardingCompleted(true)
         }
     }
 
     fun sendIntent(intent: OnBoardingScreenIntent) {
         when (intent) {
-            is OnBoardingScreenIntent.SaveIsOnBoardingCompleted -> saveIsOnBoardingCompleted(intent.isCompleted)
+            OnBoardingScreenIntent.SaveIsOnBoardingCompleted -> saveIsOnBoardingCompleted()
         }
     }
 }

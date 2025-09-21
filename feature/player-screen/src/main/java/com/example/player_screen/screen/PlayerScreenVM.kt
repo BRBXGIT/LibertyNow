@@ -145,7 +145,7 @@ class PlayerScreenVM @Inject constructor(
                     when (videoQuality) {
                         480 -> MediaItem.fromUri(it.hls480)
                         720 -> MediaItem.fromUri(it.hls720)
-                        else -> if (it.hls1080 != null) MediaItem.fromUri(it.hls1080!!) else MediaItem.fromUri(it.hls720) //TODO
+                        else -> if (it.hls1080 != null) MediaItem.fromUri(it.hls1080!!) else MediaItem.fromUri(it.hls720)
                     }
                 }
 
