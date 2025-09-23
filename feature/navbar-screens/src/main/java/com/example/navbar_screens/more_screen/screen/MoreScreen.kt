@@ -49,11 +49,7 @@ fun MoreScreen(
             BottomNavBar(
                 selectedItemIndex = commonState.selectedNavBarIndex,
                 onNavItemClick = { index, route ->
-                    commonVM.sendIntent(
-                        CommonIntent.UpdateState(
-                            commonState.copy(selectedNavBarIndex = index)
-                        )
-                    )
+                    commonVM.sendIntent(CommonIntent.ChangeNavIndex(index))
                     navController.navigate(route)
                 }
             )

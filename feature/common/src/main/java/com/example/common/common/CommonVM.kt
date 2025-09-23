@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class CommonVM: ViewModel() {
     private val _commonState = MutableStateFlow(CommonState())
@@ -14,13 +15,14 @@ class CommonVM: ViewModel() {
         CommonState()
     )
 
-    private fun updateState(state: CommonState) {
-        _commonState.value = state
+    // === Private helpers ===
+    private fun updateState(transform: (CommonState) -> CommonState) {
+        _commonState.update(transform)
     }
 
     fun sendIntent(intent: CommonIntent) {
         when (intent) {
-            is CommonIntent.UpdateState -> updateState(intent.state)
+            is CommonIntent.ChangeNavIndex -> updateState { it.copy(selectedNavBarIndex = intent.index) }
         }
     }
 }
