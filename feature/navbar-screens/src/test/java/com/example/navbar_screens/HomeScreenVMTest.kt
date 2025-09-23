@@ -19,6 +19,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -59,6 +60,53 @@ class HomeScreenVMTest {
     }
 
     // === Data tests ===
+    @Test
+    fun `fetchTitlesUpdates change state correctly on success`() = runTest {
+        val vm = HomeScreenVM(repo, dispatcher, dispatcher)
+        val successResponse = NetworkResponse(
+            response = AnimeListResponse().apply {
+                add(AnimeListResponseItem(id = 0))
+            },
+            error = NetworkErrors.SUCCESS,
+            label = "Success"
+        )
+
+        coEvery { repo.getTitlesUpdates() } returns successResponse
+
+        vm.homeScreenState.test {
+            awaitItem()
+
+            advanceUntilIdle()
+
+            val after = awaitItem()
+            assertEquals(0, after.titlesUpdates[0].id)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `fetchTitlesUpdates sends snackbar on error`() = runTest {
+        val vm = HomeScreenVM(repo, dispatcher, dispatcher)
+        val errorResponse = NetworkResponse(
+            response = AnimeListResponse(),
+            error = NetworkErrors.UNKNOWN,
+            label = "UNKNOWN"
+        )
+
+        coEvery { repo.getTitlesUpdates() } returns errorResponse
+
+        advanceUntilIdle()
+
+        SnackbarController.events.test {
+            val after = awaitItem()
+            assertNotNull(after.action)
+            assertEquals("Retry", after.action?.name)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
     @Test
     fun `titlesByQuery emits data when query change`() = runTest {
         // Data mock
@@ -155,6 +203,8 @@ class HomeScreenVMTest {
             val after = awaitItem()
             assertNotNull(after.action)
             assertEquals("Retry", after.action?.name)
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -162,5 +212,27 @@ class HomeScreenVMTest {
     @Test
     fun `state is default on start`() {
         assertEquals(HomeScreenState(), vm.homeScreenState.value)
+    }
+
+    @Test
+    fun `intents update states correctly`() = runTest {
+        val query = "query"
+
+        vm.homeScreenState.test {
+            awaitItem()
+
+            vm.sendIntent(HomeScreenIntent.ChangeIsLoading(true))
+            vm.sendIntent(HomeScreenIntent.ChangeIsSearching)
+            vm.sendIntent(HomeScreenIntent.ChangeQuery(query))
+
+            advanceUntilIdle()
+
+            val after = awaitItem()
+            assertTrue(after.isLoading)
+            assertTrue(after.isSearching)
+            assertEquals(query, after.query)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }
