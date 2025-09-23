@@ -7,7 +7,6 @@ import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
 import com.example.common.utils.sendRetrySnackbar
 import com.example.data.domain.HomeScreenRepo
-import com.example.network.common.models.anime_list_response.AnimeListResponse
 import com.example.network.common.utils.NetworkErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -73,7 +72,7 @@ class HomeScreenVM @Inject constructor(
             val response = repository.getRandomTitle()
             if (response.error == NetworkErrors.SUCCESS) {
                 withContext(dispatcherMain) {
-                    onComplete((response.response as AnimeListResponse)[0].id)
+                    onComplete(response.response!![0].id)
                 }
             } else {
                 sendRetrySnackbar(
@@ -98,7 +97,7 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenIntent.FetchRandomTitle -> fetchRandomTitle(intent.onComplete)
 
             // States
-            HomeScreenIntent.ChangeIsLoading -> updateState { it.copy(isLoading = !it.isLoading) }
+            is HomeScreenIntent.ChangeIsLoading -> updateState { it.copy(isLoading = intent.isLoading) }
             HomeScreenIntent.ChangeIsSearching -> updateState { it.copy(isSearching = !it.isSearching) }
             is HomeScreenIntent.ChangeQuery -> updateState { it.copy(query = intent.query) }
         }

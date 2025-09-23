@@ -21,7 +21,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
-import com.example.common.utils.PagingErrorContainer
+import com.example.common.utils.PagingStatesContainer
 import com.example.common.utils.sendRetrySnackbar
 import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.mColors
@@ -49,10 +49,13 @@ fun HomeScreen(
     SnackbarObserver(snackbarHostState)
 
     val snackbarScope = rememberCoroutineScope()
-    PagingErrorContainer(
+    PagingStatesContainer(
         items = titlesByQuery,
         onRetryRequest = { label, retry ->
             snackbarScope.launch { sendRetrySnackbar(label, retry) }
+        },
+        onLoadingChange = {
+            viewModel.sendIntent(HomeScreenIntent.ChangeIsLoading(it))
         }
     )
 
