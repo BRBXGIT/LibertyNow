@@ -5,10 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
+import com.example.common.utils.sendRetrySnackbar
 import com.example.data.domain.HomeScreenRepo
-import com.example.design_system.snackbars.SnackbarAction
-import com.example.design_system.snackbars.SnackbarController
-import com.example.design_system.snackbars.SnackbarEvent
 import com.example.network.common.models.anime_list_response.AnimeListResponse
 import com.example.network.common.utils.NetworkErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,6 +37,7 @@ class HomeScreenVM @Inject constructor(
         HomeScreenState()
     )
 
+    // === Data ===
     @OptIn(ExperimentalCoroutinesApi::class)
     val titlesByQuery = _homeScreenState
         .map { it.query }
@@ -48,43 +47,18 @@ class HomeScreenVM @Inject constructor(
             repository.getTitlesByQuery(query)
         }.cachedIn(viewModelScope)
 
-    private fun updateScreenState(state: HomeScreenState) {
-        _homeScreenState.value = state
-    }
-
     private fun fetchTitlesUpdates() {
         viewModelScope.launch(dispatcherIo) {
-            _homeScreenState.update { state ->
-                state.copy(
-                    isLoading = true,
-                    isError = false
-                )
-            }
+            updateState { it.copy(isLoading = true, isError = false) }
 
             val response = repository.getTitlesUpdates()
             if (response.error == NetworkErrors.SUCCESS) {
-                _homeScreenState.update { state ->
-                    state.copy(
-                        isLoading = false,
-                        titlesUpdates = response.response!!,
-                        isError = false
-                    )
-                }
+                updateState { it.copy(isLoading = false, titlesUpdates = response.response!!, isError = false) }
             } else {
-                _homeScreenState.update { state ->
-                    state.copy(
-                        isLoading = false,
-                        isError = true
-                    )
-                }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = response.label!!,
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { fetchTitlesUpdates() }
-                        )
-                    )
+                updateState { it.copy(isLoading = false, isError = true) }
+                sendRetrySnackbar(
+                    label = response.label!!,
+                    action = { fetchTitlesUpdates() }
                 )
             }
         }
@@ -94,9 +68,7 @@ class HomeScreenVM @Inject constructor(
         onComplete: (Int) -> Unit
     ) {
         viewModelScope.launch(dispatcherIo) {
-            _homeScreenState.update { state ->
-                state.copy(isLoading = true)
-            }
+            updateState { it.copy(isLoading = true) }
 
             val response = repository.getRandomTitle()
             if (response.error == NetworkErrors.SUCCESS) {
@@ -104,27 +76,31 @@ class HomeScreenVM @Inject constructor(
                     onComplete((response.response as AnimeListResponse)[0].id)
                 }
             } else {
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = response.label!!,
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { fetchRandomTitle(onComplete) }
-                        )
-                    )
+                sendRetrySnackbar(
+                    label = response.label!!,
+                    action = { fetchRandomTitle(onComplete) }
                 )
             }
 
-            _homeScreenState.update { state ->
-                state.copy(isLoading = false)
-            }
+            updateState { it.copy(isLoading = false) }
         }
     }
 
+    // === Private helpers ===
+    private fun updateState(transform: (HomeScreenState) -> HomeScreenState) {
+        _homeScreenState.update(transform)
+    }
+
+    // === Intents ===
     fun sendIntent(intent: HomeScreenIntent) {
         when (intent) {
-            is HomeScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
+            // Data
             is HomeScreenIntent.FetchRandomTitle -> fetchRandomTitle(intent.onComplete)
+
+            // States
+            HomeScreenIntent.ChangeIsLoading -> updateState { it.copy(isLoading = !it.isLoading) }
+            HomeScreenIntent.ChangeIsSearching -> updateState { it.copy(isSearching = !it.isSearching) }
+            is HomeScreenIntent.ChangeQuery -> updateState { it.copy(query = intent.query) }
         }
     }
 
