@@ -14,6 +14,10 @@ import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
 
+object NothingHereSectionConstants {
+    const val NOTHING_HERE_TEXT = "Пока что ничего нет, начните вводить запрос :)"
+}
+
 @Composable
 fun NothingHereSection() {
     Box(
@@ -23,7 +27,7 @@ fun NothingHereSection() {
             .padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp)
     ) {
         Text(
-            text = "Пока что ничего нет, начните вводить запрос :)",
+            text = NothingHereSectionConstants.NOTHING_HERE_TEXT,
             textAlign = TextAlign.Center,
             style = mTypography.titleMedium
         )

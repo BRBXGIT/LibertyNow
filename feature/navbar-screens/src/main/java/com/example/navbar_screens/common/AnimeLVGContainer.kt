@@ -8,7 +8,12 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+
+object AnimeLVGContainerConstants {
+    const val ANIME_LVG_CONTAINER_TEST_TAG = "AnimeLVGContainerTestTag"
+}
 
 @Composable
 fun AnimeLVGContainer(
@@ -17,9 +22,11 @@ fun AnimeLVGContainer(
     LazyVerticalGrid(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize(),
         columns = GridCells.Adaptive(150.dp),
         contentPadding = PaddingValues(16.dp),
-        content = content
+        content = content,
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(AnimeLVGContainerConstants.ANIME_LVG_CONTAINER_TEST_TAG),
     )
 }

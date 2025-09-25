@@ -48,7 +48,7 @@ fun BoxScope.AnimeUpdatesContent(
                     genresString = anime.genres.joinToString(", ") { it.name },
                     title = anime.name.main,
                     modifier = Modifier.animateItem(),
-                    onCardClick = {  navController.navigate(AnimeScreenRoute(anime.id)) },
+                    onCardClick = { navController.navigate(AnimeScreenRoute(anime.id)) },
                 )
             }
         }

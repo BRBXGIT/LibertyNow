@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,13 +23,19 @@ import com.example.design_system.R
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
 
+object ErrorSectionConstants {
+    const val ERROR_SECTION_TEST_TAG = "ErrorSectionTestTag"
+}
+
 @Composable
 fun ErrorSection(
     modifier: Modifier = Modifier
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error_animation))
     Box(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .testTag(ErrorSectionConstants.ERROR_SECTION_TEST_TAG),
         contentAlignment = Alignment.Center
     ) {
         Column(
