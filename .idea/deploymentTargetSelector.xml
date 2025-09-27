@@ -13,7 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="AboutAppSectionTest">
+      <SelectionState runConfigName="animeUpdatesContent_displays_errorSection_if_error()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="searchingContent_displays_nothingHereSection_if_query_is_empty()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="searchingContent_displays_animeLVGContainer_if_query_is_not_empty()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="searchingContent_displays_errorSection_if_error()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="searchingContent_displays_animeLVGContainer_if_query_is_not_empty_and_calls_onCardClick()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

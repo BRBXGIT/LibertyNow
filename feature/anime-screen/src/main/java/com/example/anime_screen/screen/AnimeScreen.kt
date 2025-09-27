@@ -124,39 +124,11 @@ fun AnimeScreen(
                         isPasswordVisible = authState.isPasswordVisible,
                         incorrectEmail = authState.incorrectEmail,
                         incorrectPassword = authState.incorrectPassword,
-                        onVisibleClick = {
-                            authVM.sendIntent(
-                                AuthIntent.UpdateAuthState(
-                                    authState.copy(isPasswordVisible = !authState.isPasswordVisible)
-                                )
-                            )
-                        },
-                        onDismissRequest = {
-                            authVM.sendIntent(
-                                AuthIntent.UpdateAuthState(
-                                    authState.copy(isAuthBSOpened = false)
-                                )
-                            )
-                        },
-                        onAuthClick = {
-                            authVM.sendIntent(
-                                AuthIntent.GetSessionToken
-                            )
-                        },
-                        onPasswordChange = {
-                            authVM.sendIntent(
-                                AuthIntent.UpdateAuthState(
-                                    authState.copy(password = it)
-                                )
-                            )
-                        },
-                        onEmailChange = {
-                            authVM.sendIntent(
-                                AuthIntent.UpdateAuthState(
-                                    authState.copy(email = it)
-                                )
-                            )
-                        }
+                        onDismissRequest = { authVM.sendIntent(AuthIntent.ChangeIsAuthBsOpened) },
+                        onPasswordChange = { authVM.sendIntent(AuthIntent.ChangePassword(it)) },
+                        onEmailChange = { authVM.sendIntent(AuthIntent.ChangeEmail(it)) },
+                        onAuthClick = { authVM.sendIntent(AuthIntent.GetSessionToken) },
+                        onVisibleClick = { authVM.sendIntent(AuthIntent.ChangeIsPasswordVisible) }
                     )
                 }
 
@@ -249,13 +221,7 @@ fun AnimeScreen(
                                 LoggingState.LoggedIn -> true
                                 else -> false
                             },
-                            onAuthClick = {
-                                authVM.sendIntent(
-                                    AuthIntent.UpdateAuthState(
-                                        authState.copy(isAuthBSOpened = true)
-                                    )
-                                )
-                            },
+                            onAuthClick = { authVM.sendIntent(AuthIntent.ChangeIsAuthBsOpened) },
                         )
                     }
 

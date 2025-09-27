@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class LikesScreenVM: ViewModel() {
 
@@ -15,13 +16,16 @@ class LikesScreenVM: ViewModel() {
         LikesScreenState()
     )
 
-    private fun updateScreenState(state: LikesScreenState) {
-        _likesScreenState.value = state
+    // === Private helpers ===
+    private fun updateState(transform: (LikesScreenState) -> LikesScreenState) {
+        _likesScreenState.update(transform)
     }
 
     fun sendIntent(intent: LikesScreenIntent) {
         when (intent) {
-            is LikesScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
+            LikesScreenIntent.ChangeIsSearching -> updateState { it.copy(isSearching = !it.isSearching) }
+
+            is LikesScreenIntent.ChangeQuery -> updateState { it.copy(query = intent.query) }
         }
     }
 }

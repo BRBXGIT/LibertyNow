@@ -36,10 +36,12 @@ class AuthVM @Inject constructor(
         AuthState()
     )
 
-    private fun updateAuthState(state: AuthState) {
-        _authState.value = state
+    // === Private helpers ===
+    private fun updateState(transform: (AuthState) -> AuthState) {
+        _authState.update(transform)
     }
 
+    // === Auth & data ===
     private fun observeSessionToken() {
         viewModelScope.launch(dispatcherIo) {
             combine(
@@ -105,6 +107,13 @@ class AuthVM @Inject constructor(
         }
     }
 
+    private fun clearSessionToken() {
+        viewModelScope.launch(dispatcherIo) {
+            authRepository.clearUserSessionToken()
+        }
+    }
+
+    // === Likes ===
     private fun fetchLikesAmount() {
         viewModelScope.launch(dispatcherIo) {
             val response = likesRepository.getLikesAmount(_authState.value.sessionToken!!)
@@ -259,19 +268,19 @@ class AuthVM @Inject constructor(
         }
     }
 
-    private fun clearSessionToken() {
-        viewModelScope.launch(dispatcherIo) {
-            authRepository.clearUserSessionToken()
-        }
-    }
-
     fun sendIntent(intent: AuthIntent) {
         when (intent) {
+            // Tokens
             is AuthIntent.GetSessionToken -> getSessionToken()
             is AuthIntent.ClearSessionToken -> clearSessionToken()
 
-            is AuthIntent.UpdateAuthState -> updateAuthState(intent.state)
+            // Ui state
+            AuthIntent.ChangeIsAuthBsOpened -> updateState { it.copy(isAuthBSOpened = !it.isAuthBSOpened) }
+            is AuthIntent.ChangePassword -> updateState { it.copy(password = intent.password) }
+            is AuthIntent.ChangeEmail -> updateState { it.copy(email = intent.email) }
+            AuthIntent.ChangeIsPasswordVisible -> updateState { it.copy(isPasswordVisible = !it.isPasswordVisible) }
 
+            // Likes
             is AuthIntent.AddLike -> addLike(intent.title)
             is AuthIntent.RemoveLike -> removeLike(intent.title)
         }

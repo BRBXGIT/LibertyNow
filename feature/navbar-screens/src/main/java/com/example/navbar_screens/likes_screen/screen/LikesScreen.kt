@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -17,19 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.auth.AuthIntent
 import com.example.common.auth.AuthVM
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
-import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.auth_bs.AuthBS
 import com.example.design_system.snackbars.SnackbarObserver
-import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
-import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.common.SearchableTopBar
+import com.example.navbar_screens.likes_screen.sections.LoggedInSection
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSection
 import com.example.local.datastore.auth.LoggingState as UserAuthState
 
@@ -71,27 +67,9 @@ fun LikesScreen(
                 isSearching = screenState.isSearching,
                 isLoading = authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
-                onSearchClick = {
-                    viewModel.sendIntent(
-                        LikesScreenIntent.UpdateScreenState(
-                            screenState.copy(isSearching = !screenState.isSearching)
-                        )
-                    )
-                },
-                onQueryInput = {
-                    viewModel.sendIntent(
-                        LikesScreenIntent.UpdateScreenState(
-                            screenState.copy(query = it)
-                        )
-                    )
-                },
-                onClearClick = {
-                    viewModel.sendIntent(
-                        LikesScreenIntent.UpdateScreenState(
-                            screenState.copy(query = "")
-                        )
-                    )
-                }
+                onSearchClick = { viewModel.sendIntent(LikesScreenIntent.ChangeIsSearching) },
+                onQueryInput = { viewModel.sendIntent(LikesScreenIntent.ChangeQuery(it)) },
+                onClearClick = { viewModel.sendIntent(LikesScreenIntent.ChangeQuery("")) }
             )
         },
         modifier = Modifier
@@ -111,84 +89,27 @@ fun LikesScreen(
                     isPasswordVisible = authState.isPasswordVisible,
                     incorrectEmail = authState.incorrectEmail,
                     incorrectPassword = authState.incorrectPassword,
-                    onDismissRequest = {
-                        authVM.sendIntent(
-                            AuthIntent.UpdateAuthState(
-                                state = authState.copy(isAuthBSOpened = false)
-                            )
-                        )
-                    },
-                    onPasswordChange = {
-                        authVM.sendIntent(
-                            AuthIntent.UpdateAuthState(
-                                state = authState.copy(password = it)
-                            )
-                        )
-                    },
-                    onEmailChange = {
-                        authVM.sendIntent(
-                            AuthIntent.UpdateAuthState(
-                                state = authState.copy(email = it)
-                            )
-                        )
-                    },
-                    onAuthClick = {
-                        authVM.sendIntent(
-                            AuthIntent.GetSessionToken
-                        )
-                    },
-                    onVisibleClick = {
-                        authVM.sendIntent(
-                            AuthIntent.UpdateAuthState(
-                                state = authState.copy(isPasswordVisible = !authState.isPasswordVisible)
-                            )
-                        )
-                    }
+                    onDismissRequest = { authVM.sendIntent(AuthIntent.ChangeIsAuthBsOpened) },
+                    onPasswordChange = { authVM.sendIntent(AuthIntent.ChangePassword(it)) },
+                    onEmailChange = { authVM.sendIntent(AuthIntent.ChangeEmail(it)) },
+                    onAuthClick = { authVM.sendIntent(AuthIntent.GetSessionToken) },
+                    onVisibleClick = { authVM.sendIntent(AuthIntent.ChangeIsPasswordVisible) }
                 )
             }
 
             when (authState.isLogged) {
                 UserAuthState.Loading -> {}
                 UserAuthState.LoggedIn -> {
-                    if (screenState.isSearching) {
-                        val filteredLikes = authState.likes.filter {
-                            it.name.main.contains(screenState.query, ignoreCase = true) == true
-                        }
-                        AnimeLVGContainer {
-                            items(filteredLikes) { like ->
-                                AnimeCard(
-                                    posterPath = DesignUtils.POSTERS_BASE_URL + like.poster.optimized.preview,
-                                    genresString = like.genres.joinToString(", ") { it.name },
-                                    title = like.name.main,
-                                    modifier = Modifier.animateItem(),
-                                    onCardClick = { navController.navigate(AnimeScreenRoute(like.id)) },
-                                )
-                            }
-                        }
-                    } else {
-                        AnimeLVGContainer {
-                            items(authState.likes.reversed()) { like ->
-                                AnimeCard(
-                                    posterPath = DesignUtils.POSTERS_BASE_URL + like.poster.optimized.preview,
-                                    genresString = like.genres.joinToString(", ") { it.name },
-                                    title = like.name.main,
-                                    modifier = Modifier.animateItem(),
-                                    onCardClick = { navController.navigate(AnimeScreenRoute(like.id)) },
-                                )
-                            }
-                        }
-                    }
+                    LoggedInSection(
+                        screenState = screenState,
+                        authState = authState,
+                        navController = navController
+                    )
                 }
                 UserAuthState.LoggedOut -> {
                     if (!authState.isLoading) {
                         LoggedOutSection(
-                            onAuthClick = {
-                                authVM.sendIntent(
-                                    AuthIntent.UpdateAuthState(
-                                        state = authState.copy(isAuthBSOpened = true)
-                                    )
-                                )
-                            }
+                            onAuthClick = { authVM.sendIntent(AuthIntent.ChangeIsAuthBsOpened) }
                         )
                     }
                 }
