@@ -21,6 +21,7 @@ class LikesScreenVM: ViewModel() {
         _likesScreenState.update(transform)
     }
 
+    // === Intents ===
     fun sendIntent(intent: LikesScreenIntent) {
         when (intent) {
             LikesScreenIntent.ChangeIsSearching -> updateState { it.copy(isSearching = !it.isSearching) }

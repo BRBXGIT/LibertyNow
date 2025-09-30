@@ -10,12 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mTypography
+
+object LoggedOutSectionConstants {
+    const val WHY_NEED_AUTH_TEXT = "Что-бы просматривать избранное и добавлять туда тайтлы нужно авторизоваться :)"
+    const val AUTH_BUTTON_TEXT = "Авторизоваться"
+    const val AUTH_BUTTON_TEST_TAG = "AuthButtonTestTag"
+}
 
 @Composable
 fun LoggedOutSection(
@@ -32,15 +39,16 @@ fun LoggedOutSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Что-бы просматривать избранное и добавлять туда тайтлы нужно авторизоваться :)",
+                text = LoggedOutSectionConstants.WHY_NEED_AUTH_TEXT,
                 style = mTypography.bodyLarge,
                 textAlign = TextAlign.Center
             )
 
             OutlinedButton(
-                onClick = onAuthClick
+                onClick = onAuthClick,
+                modifier = Modifier.testTag(LoggedOutSectionConstants.AUTH_BUTTON_TEST_TAG)
             ) {
-                Text(text = "Авторизоваться")
+                Text(text = LoggedOutSectionConstants.AUTH_BUTTON_TEXT)
             }
         }
     }

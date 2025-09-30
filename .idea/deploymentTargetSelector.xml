@@ -13,16 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="animeUpdatesContent_displays_errorSection_if_error()">
+      <SelectionState runConfigName="authBS_visible_when_state_is_true()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="searchingContent_displays_animeLVGContainer_if_query_is_not_empty()">
+      <SelectionState runConfigName="authBS_visible_when_state_true()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="searchingContent_displays_errorSection_if_error()">
+      <SelectionState runConfigName="loggedOutSection_shows_text_and_calls_onClick()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="searchingContent_displays_animeLVGContainer_if_query_is_not_empty_and_calls_onCardClick()">
+      <SelectionState runConfigName="loggedInSection_filtersLikes_whenSearching()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="loggedInSection_clickNavigatesToAnimeScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
