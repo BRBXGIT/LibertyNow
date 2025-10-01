@@ -10,9 +10,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -23,11 +23,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
+import com.example.common.utils.PagingStatesContainer
+import com.example.common.utils.sendRetrySnackbar
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.error_section.ErrorSection
-import com.example.design_system.snackbars.SnackbarAction
-import com.example.design_system.snackbars.SnackbarController
-import com.example.design_system.snackbars.SnackbarEvent
 import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
@@ -35,7 +34,7 @@ import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.search_screen.sections.FiltersBS
 import com.example.navbar_screens.search_screen.sections.SearchScreenTopBar
-import com.example.network.common.utils.NetworkException
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,28 +49,16 @@ fun SearchScreen(
     val screenState by viewModel.searchScreenState.collectAsStateWithLifecycle()
     val commonState by commonVM.commonState.collectAsStateWithLifecycle()
 
-    // Check load state
-    LaunchedEffect(animeByFilters.loadState) {
-        if (animeByFilters.loadState.hasError) {
-            val error = (animeByFilters.loadState.refresh as LoadState.Error).error as NetworkException
-
-            SnackbarController.sendEvent(
-                SnackbarEvent(
-                    message = error.label,
-                    action = SnackbarAction(
-                        name = "Retry",
-                        action = { animeByFilters.retry() }
-                    )
-                )
-            )
+    val snackbarScope = rememberCoroutineScope()
+    PagingStatesContainer(
+        items = animeByFilters,
+        onRetryRequest = { label, retry ->
+            snackbarScope.launch { sendRetrySnackbar(label, retry) }
+        },
+        onLoadingChange = {
+            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading(it))
         }
-
-        if (animeByFilters.loadState.refresh is LoadState.Loading) {
-            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading)
-        } else {
-            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading)
-        }
-    }
+    )
 
     // Snackbars stuff
     val snackbarHostState = remember { SnackbarHostState() }
@@ -105,28 +92,7 @@ fun SearchScreen(
             FiltersBS(
                 screenState = screenState,
                 topInnerPadding = innerPadding.calculateTopPadding(),
-                onDismissRequest = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) },
-                onReleaseEndClick = { viewModel.sendIntent(SearchScreenIntent.ChangeReleaseEnd) },
-                onSortClick = { viewModel.sendIntent(SearchScreenIntent.ChangeSortedBy(it)) },
-                onSeasonClick = {
-                    val currentSeasons = screenState.chosenSeasons.toMutableList()
-                    viewModel.sendIntent(
-                        SearchScreenIntent.ChangeChosenSeasons(
-                            seasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
-                        )
-                    )
-                },
-                onGenreClick = {
-                    val currentGenres = screenState.chosenAnimeGenres.toMutableList()
-                    viewModel.sendIntent(
-                        SearchScreenIntent.ChangeChosenAnimeGenres(
-                            genres = if (it in currentGenres) currentGenres - it else currentGenres + it
-                        )
-                    )
-                },
-                onGenresRetryClick = { viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres) },
-                onFromYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeFromYear(it)) },
-                onToYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeToYear(it)) },
+                viewModel = viewModel,
             )
         }
 

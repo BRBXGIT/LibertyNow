@@ -121,12 +121,12 @@ class SearchScreenVM @Inject constructor(
             is SearchScreenIntent.FetchAnimeGenres -> fetchAnimeGenres()
 
             // === States ===
-            SearchScreenIntent.ChangeAnimeByFiltersLoading ->
-                updateState { it.copy(isAnimeByFiltersLoading = !it.isAnimeByFiltersLoading) }
             SearchScreenIntent.ChangeFiltersBSVisible ->
                 updateState { it.copy(isFilterBSVisible = !it.isFilterBSVisible) }
             SearchScreenIntent.ChangeReleaseEnd ->
                 updateState { it.copy(releaseEnd = !it.releaseEnd) }
+            is SearchScreenIntent.ChangeAnimeByFiltersLoading ->
+                updateState { it.copy(isAnimeByFiltersLoading = intent.isLoading) }
             is SearchScreenIntent.ChangeSortedBy ->
                 updateState { it.copy(sortedBy = intent.sortedBy) }
             is SearchScreenIntent.ChangeChosenSeasons ->

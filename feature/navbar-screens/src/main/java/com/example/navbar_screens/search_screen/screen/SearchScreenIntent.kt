@@ -6,7 +6,7 @@ sealed interface SearchScreenIntent {
     data object FetchAnimeGenres: SearchScreenIntent
 
     // === States ===
-    data object ChangeAnimeByFiltersLoading: SearchScreenIntent
+    data class ChangeAnimeByFiltersLoading(val isLoading: Boolean): SearchScreenIntent
     data object ChangeFiltersBSVisible: SearchScreenIntent
     data object ChangeReleaseEnd: SearchScreenIntent
     data class ChangeSortedBy(val sortedBy: SortedBy): SearchScreenIntent

@@ -15,26 +15,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mShapes
+import com.example.navbar_screens.search_screen.screen.SearchScreenIntent
 import com.example.navbar_screens.search_screen.screen.SearchScreenState
-import com.example.navbar_screens.search_screen.screen.Season
-import com.example.navbar_screens.search_screen.screen.SortedBy
+import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FiltersBS(
     screenState: SearchScreenState,
     topInnerPadding: Dp,
-    onDismissRequest: () -> Unit,
-    onReleaseEndClick: () -> Unit,
-    onSortClick: (SortedBy) -> Unit,
-    onSeasonClick: (Season) -> Unit,
-    onGenreClick: (Int) -> Unit,
-    onGenresRetryClick: () -> Unit,
-    onFromYearChange: (Int) -> Unit,
-    onToYearChange: (Int) -> Unit
+    viewModel: SearchScreenVM,
 ) {
     ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) },
         shape = mShapes.small,
         modifier = Modifier.padding(top = topInnerPadding)
     ) {
@@ -49,34 +42,48 @@ fun FiltersBS(
         ) {
             filterSection(
                 releaseEnd = screenState.releaseEnd,
-                onReleaseEndClick = onReleaseEndClick
+                onReleaseEndClick = { viewModel.sendIntent(SearchScreenIntent.ChangeReleaseEnd) }
             )
 
             sortSection(
                 sort = screenState.sortedBy,
-                onSortClick = { onSortClick(it) }
+                onSortClick = { viewModel.sendIntent(SearchScreenIntent.ChangeSortedBy(it)) }
             )
 
             yearsSection(
                 fromYear = screenState.fromYear,
                 toYear = screenState.toYear,
-                onFromYearChange = { onFromYearChange(it) },
-                onToYearChange = { onToYearChange(it) },
+                onFromYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeFromYear(it)) },
+                onToYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeToYear(it)) },
             )
 
             seasonSection(
                 seasons = screenState.animeSeasons,
-                onSeasonClick = { onSeasonClick(it) },
-                chosenSeasons = screenState.chosenSeasons
+                chosenSeasons = screenState.chosenSeasons,
+                onSeasonClick = {
+                    val currentSeasons = screenState.chosenSeasons.toMutableList()
+                    viewModel.sendIntent(
+                        SearchScreenIntent.ChangeChosenSeasons(
+                            seasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
+                        )
+                    )
+                }
             )
 
             genresSection(
                 genres = screenState.animeGenres,
-                onGenreClick = { onGenreClick(it) },
                 chosenGenres = screenState.chosenAnimeGenres,
                 isLoading = screenState.isAnimeGenresLoading,
                 isError = screenState.isAnimeGenresError,
-                onGenresRetryClick = onGenresRetryClick
+                onGenresRetryClick = { viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres) },
+                onGenreClick = {
+                    val currentGenres = screenState.chosenAnimeGenres.toMutableList()
+                    viewModel.sendIntent(
+                        SearchScreenIntent.ChangeChosenAnimeGenres(
+                            genres = if (it in currentGenres) currentGenres - it else currentGenres + it
+                        )
+                    )
+                },
             )
         }
     }
