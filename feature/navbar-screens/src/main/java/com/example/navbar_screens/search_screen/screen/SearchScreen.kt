@@ -67,13 +67,9 @@ fun SearchScreen(
         }
 
         if (animeByFilters.loadState.refresh is LoadState.Loading) {
-            viewModel.sendIntent(
-                SearchScreenIntent.UpdateScreenState(screenState.copy(isAnimeByFiltersLoading = true))
-            )
+            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading)
         } else {
-            viewModel.sendIntent(
-                SearchScreenIntent.UpdateScreenState(screenState.copy(isAnimeByFiltersLoading = false))
-            )
+            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading)
         }
     }
 
@@ -98,75 +94,39 @@ fun SearchScreen(
                 useExpressive = useExpressive,
                 isLoading = screenState.isAnimeByFiltersLoading,
                 scrollBehavior = topBarScrollBehavior,
-                onFiltersClick = {
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(
-                            screenState.copy(isFilterBSOpened = true)
-                        )
-                    )
-                }
+                onFiltersClick = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) }
             )
         },
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(topBarScrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
-        if (screenState.isFilterBSOpened) {
+        if (screenState.isFilterBSVisible) {
             FiltersBS(
                 screenState = screenState,
                 topInnerPadding = innerPadding.calculateTopPadding(),
-                onDismissRequest = {
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(screenState.copy(isFilterBSOpened = false))
-                    )
-                },
-                onReleaseEndClick = {
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(screenState.copy(releaseEnd = !screenState.releaseEnd))
-                    )
-                },
-                onSortClick = {
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(screenState.copy(sortedBy = it))
-                    )
-                },
+                onDismissRequest = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) },
+                onReleaseEndClick = { viewModel.sendIntent(SearchScreenIntent.ChangeReleaseEnd) },
+                onSortClick = { viewModel.sendIntent(SearchScreenIntent.ChangeSortedBy(it)) },
                 onSeasonClick = {
                     val currentSeasons = screenState.chosenSeasons.toMutableList()
                     viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(
-                            screenState.copy(
-                                chosenSeasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
-                            )
+                        SearchScreenIntent.ChangeChosenSeasons(
+                            seasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
                         )
                     )
                 },
                 onGenreClick = {
                     val currentGenres = screenState.chosenAnimeGenres.toMutableList()
                     viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(
-                            screenState.copy(
-                                chosenAnimeGenres = if (it in currentGenres) currentGenres - it else currentGenres + it
-                            )
+                        SearchScreenIntent.ChangeChosenAnimeGenres(
+                            genres = if (it in currentGenres) currentGenres - it else currentGenres + it
                         )
                     )
                 },
-                onGenresRetryClick = {
-                    viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres)
-                },
-                onFromYearChange = {
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(
-                            screenState.copy(fromYear = it)
-                        )
-                    )
-                },
-                onToYearChange = {
-                    viewModel.sendIntent(
-                        SearchScreenIntent.UpdateScreenState(
-                            screenState.copy(toYear = it)
-                        )
-                    )
-                },
+                onGenresRetryClick = { viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres) },
+                onFromYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeFromYear(it)) },
+                onToYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeToYear(it)) },
             )
         }
 

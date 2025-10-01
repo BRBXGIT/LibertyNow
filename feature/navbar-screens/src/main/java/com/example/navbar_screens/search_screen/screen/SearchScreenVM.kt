@@ -35,10 +35,12 @@ class SearchScreenVM @Inject constructor(
         SearchScreenState()
     )
 
-    private fun updateScreenState(state: SearchScreenState) {
-        _searchScreenState.value = state
+    // === Private helpers ===
+    private fun updateState(transform: (SearchScreenState) -> SearchScreenState) {
+        _searchScreenState.update(transform)
     }
 
+    // === Data ===
     private val _searchParams = _searchScreenState
         .map { state ->
             AnimeByFilterParams(
@@ -90,25 +92,20 @@ class SearchScreenVM @Inject constructor(
 
     private fun fetchAnimeGenres() {
         viewModelScope.launch(dispatcherIo) {
-            _searchScreenState.update { state ->
-                state.copy(
-                    isAnimeGenresLoading = true,
-                    isAnimeGenresError = false
-                )
-            }
+            updateState { it.copy(isAnimeByFiltersLoading = true, isAnimeGenresError = false) }
 
             val response = repository.getAnimeGenres()
             if (response.error == NetworkErrors.SUCCESS) {
-                _searchScreenState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         animeGenres = response.response!!,
                         isAnimeGenresLoading = false,
                         isAnimeGenresError = false
                     )
                 }
             } else {
-                _searchScreenState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         isAnimeGenresLoading = false,
                         isAnimeGenresError = true
                     )
@@ -117,10 +114,29 @@ class SearchScreenVM @Inject constructor(
         }
     }
 
+    /// === Intents ===
     fun sendIntent(intent: SearchScreenIntent) {
         when (intent) {
+            // === Data ===
             is SearchScreenIntent.FetchAnimeGenres -> fetchAnimeGenres()
-            is SearchScreenIntent.UpdateScreenState -> updateScreenState(intent.state)
+
+            // === States ===
+            SearchScreenIntent.ChangeAnimeByFiltersLoading ->
+                updateState { it.copy(isAnimeByFiltersLoading = !it.isAnimeByFiltersLoading) }
+            SearchScreenIntent.ChangeFiltersBSVisible ->
+                updateState { it.copy(isFilterBSVisible = !it.isFilterBSVisible) }
+            SearchScreenIntent.ChangeReleaseEnd ->
+                updateState { it.copy(releaseEnd = !it.releaseEnd) }
+            is SearchScreenIntent.ChangeSortedBy ->
+                updateState { it.copy(sortedBy = intent.sortedBy) }
+            is SearchScreenIntent.ChangeChosenSeasons ->
+                updateState { it.copy(chosenSeasons = intent.seasons) }
+            is SearchScreenIntent.ChangeChosenAnimeGenres ->
+                updateState { it.copy(chosenAnimeGenres = intent.genres) }
+            is SearchScreenIntent.ChangeFromYear ->
+                updateState { it.copy(fromYear = intent.year) }
+            is SearchScreenIntent.ChangeToYear ->
+                updateState { it.copy(toYear = intent.year) }
         }
     }
 
