@@ -20,18 +20,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
 import com.example.common.utils.PagingStatesContainer
 import com.example.common.utils.sendRetrySnackbar
-import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.snackbars.SnackbarObserver
-import com.example.design_system.theme.DesignUtils
 import com.example.design_system.theme.mColors
-import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.common.BottomNavBar
+import com.example.navbar_screens.search_screen.sections.AnimeByFiltersSection
 import com.example.navbar_screens.search_screen.sections.FiltersBS
 import com.example.navbar_screens.search_screen.sections.SearchScreenTopBar
 import kotlinx.coroutines.launch
@@ -105,21 +102,10 @@ fun SearchScreen(
             if (animeByFilters.loadState.refresh is LoadState.Error) {
                 ErrorSection(modifier = Modifier.align(Alignment.Center))
             } else {
-                AnimeLVGContainer {
-                    items(animeByFilters.itemCount) { index ->
-                        val anime = animeByFilters[index]
-
-                        anime?.let {
-                            AnimeCard(
-                                posterPath = DesignUtils.POSTERS_BASE_URL + anime.poster.optimized.preview,
-                                genresString = anime.genres.joinToString(", ") { it.name },
-                                title = anime.name.main,
-                                onCardClick = { navController.navigate(AnimeScreenRoute(it.id)) },
-                                modifier = Modifier.animateItem()
-                            )
-                        }
-                    }
-                }
+                AnimeByFiltersSection(
+                    animeByFilters = animeByFilters,
+                    navController = navController
+                )
             }
         }
     }
