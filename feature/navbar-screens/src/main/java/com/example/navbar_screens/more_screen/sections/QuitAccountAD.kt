@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,10 @@ import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
+
+object QuitAccountADConstants {
+    const val AD_TEST_TAG = "AdTestTag"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,10 +34,12 @@ fun QuitAccountAD(
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.background(
-            color = mColors.surfaceContainerHigh,
-            shape = mShapes.small
-        )
+        modifier = Modifier
+            .background(
+                color = mColors.surfaceContainerHigh,
+                shape = mShapes.small
+            )
+            .testTag(QuitAccountADConstants.AD_TEST_TAG)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

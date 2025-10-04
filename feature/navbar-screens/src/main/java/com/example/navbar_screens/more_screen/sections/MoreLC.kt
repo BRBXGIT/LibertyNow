@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,10 @@ import com.example.design_system.theme.LibriaNowTheme
 import com.example.design_system.theme.mColors
 import com.example.design_system.theme.mShapes
 import com.example.design_system.theme.mTypography
+
+object MoreLCConstants {
+    const val LC_TEST_TAG = "LCTestTag"
+}
 
 data class MoreItem(
     val onClick: () -> Unit,
@@ -112,7 +117,9 @@ fun MoreLC(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(16.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(MoreLCConstants.LC_TEST_TAG)
     ) {
         items(aniLibertyItems) { aniLibertyItem ->
             MoreItemUi(

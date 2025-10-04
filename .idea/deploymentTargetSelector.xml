@@ -13,24 +13,16 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="filtersBS_visible_if_state_is_true()">
+      <SelectionState runConfigName="quitAdVisible_when_state_is_true()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="searchScreen_shows_animeByFilters_section_if_success()">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-02T13:15:46.639144100Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\egork\.android\avd\Pixel_9.avd" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
-      </SelectionState>
-      <SelectionState runConfigName="searchScreen_isDisplayed()">
+      <SelectionState runConfigName="moreLC_visible()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="showsErrorSection_whenAnimeByFiltersErrorIsTrue()">
+      <SelectionState runConfigName="moreItemUi_calls_onClick()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="moreItemUi_calls_navigate_method()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
