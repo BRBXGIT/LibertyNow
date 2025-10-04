@@ -59,11 +59,7 @@ fun MoreScreen(
                 scrollBehavior = topBarScrollBehavior,
                 onLogOutClick = {
                     if (!authState.isLoading) {
-                        viewModel.sendIntent(
-                            MoreScreenIntent.UpdateScreenState(
-                                screenState.copy(isQuitADVisible = true)
-                            )
-                        )
+                        viewModel.sendIntent(MoreScreenIntent.ChangeIsQuitAdVisible)
                     } else {
                         snackbarScope.launch {
                             SnackbarController.sendEvent(
@@ -86,16 +82,8 @@ fun MoreScreen(
         ) {
             if (screenState.isQuitADVisible) {
                 QuitAccountAD(
-                    onConfirmClick = {
-                        authVM.sendIntent(AuthIntent.ClearSessionToken)
-                    },
-                    onDismissRequest = {
-                        viewModel.sendIntent(
-                            MoreScreenIntent.UpdateScreenState(
-                                screenState.copy(isQuitADVisible = false)
-                            )
-                        )
-                    },
+                    onConfirmClick = { authVM.sendIntent(AuthIntent.ClearSessionToken) },
+                    onDismissRequest = { viewModel.sendIntent(MoreScreenIntent.ChangeIsQuitAdVisible) },
                 )
             }
 
