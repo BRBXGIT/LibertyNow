@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.common.CommonIntent
 import com.example.common.common.CommonVM
@@ -54,6 +53,9 @@ fun SearchScreen(
         },
         onLoadingChange = {
             viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading(it))
+        },
+        onError = {
+            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersError(it))
         }
     )
 
@@ -99,7 +101,7 @@ fun SearchScreen(
                 .background(mColors.background)
                 .padding(innerPadding)
         ) {
-            if (animeByFilters.loadState.refresh is LoadState.Error) {
+            if (screenState.isAnimeByFiltersError) {
                 ErrorSection(modifier = Modifier.align(Alignment.Center))
             } else {
                 AnimeByFiltersSection(

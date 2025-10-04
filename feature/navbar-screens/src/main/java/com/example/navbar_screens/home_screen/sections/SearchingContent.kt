@@ -4,23 +4,23 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.example.design_system.cards.AnimeCard
 import com.example.design_system.sections.error_section.ErrorSection
 import com.example.design_system.theme.DesignUtils
 import com.example.navbar_screens.common.AnimeLVGContainer
+import com.example.navbar_screens.home_screen.screen.HomeScreenState
 import com.example.network.common.models.anime_list_with_pagination_response.Data
 
 @Composable
 fun BoxScope.SearchingContent(
-    query: String,
+    screenState: HomeScreenState,
     titlesByQuery: LazyPagingItems<Data>,
     onCardClick: (Int) -> Unit
 ) {
-    if (query == "") {
+    if (screenState.query == "") {
         NothingHereSection()
-    } else if (titlesByQuery.loadState.refresh is LoadState.Error) {
+    } else if (screenState.isAnimeByQueryError) {
         ErrorSection(modifier = Modifier.align(Alignment.Center))
     } else {
         AnimeLVGContainer {

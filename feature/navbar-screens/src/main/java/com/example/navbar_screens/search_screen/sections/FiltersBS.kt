@@ -11,6 +11,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.design_system.theme.CommonConstants
@@ -18,6 +19,11 @@ import com.example.design_system.theme.mShapes
 import com.example.navbar_screens.search_screen.screen.SearchScreenIntent
 import com.example.navbar_screens.search_screen.screen.SearchScreenState
 import com.example.navbar_screens.search_screen.screen.SearchScreenVM
+
+object FiltersBSConstants {
+    const val BOTTOM_SHEET_TEST_TAG = "BottomSheetTestTag"
+    const val FILTERS_LVG_TEST_TAG = "FiltersLVGTestTag"
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,7 +35,9 @@ fun FiltersBS(
     ModalBottomSheet(
         onDismissRequest = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) },
         shape = mShapes.small,
-        modifier = Modifier.padding(top = topInnerPadding)
+        modifier = Modifier
+            .padding(top = topInnerPadding)
+            .testTag(FiltersBSConstants.BOTTOM_SHEET_TEST_TAG)
     ) {
         HorizontalDivider(modifier = Modifier.padding(horizontal = CommonConstants.HORIZONTAL_PADDING.dp))
 
@@ -38,7 +46,9 @@ fun FiltersBS(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(FiltersBSConstants.FILTERS_LVG_TEST_TAG)
         ) {
             filterSection(
                 releaseEnd = screenState.releaseEnd,

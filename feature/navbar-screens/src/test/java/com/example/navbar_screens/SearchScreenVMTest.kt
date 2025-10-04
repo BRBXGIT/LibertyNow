@@ -48,7 +48,7 @@ class SearchScreenVMTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        vm = SearchScreenVM(repo, dispatcher) // dispatcher у тебя и как main, и как io
+        vm = SearchScreenVM(repo, dispatcher)
     }
 
     @After
@@ -73,6 +73,7 @@ class SearchScreenVMTest {
             vm.sendIntent(SearchScreenIntent.ChangeChosenAnimeGenres(listOf(1)))
             vm.sendIntent(SearchScreenIntent.ChangeFromYear(12))
             vm.sendIntent(SearchScreenIntent.ChangeToYear(13))
+            vm.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersError(true))
 
             advanceUntilIdle()
 
@@ -86,6 +87,7 @@ class SearchScreenVMTest {
             assertEquals(listOf(1), after.chosenAnimeGenres)
             assertEquals(12, after.fromYear)
             assertEquals(13, after.toYear)
+            assertTrue(after.isAnimeByFiltersError)
 
             cancelAndIgnoreRemainingEvents()
         }

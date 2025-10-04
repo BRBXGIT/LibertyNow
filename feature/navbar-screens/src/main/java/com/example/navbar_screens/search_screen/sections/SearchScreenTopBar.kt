@@ -20,11 +20,16 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.LibriaNowIcons
 import com.example.design_system.theme.LibriaNowTheme
+
+object SearchScreenTopBarConstants {
+    const val ACTION_BUTTON_TEST_TAG = "TopBarTestTag"
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -43,7 +48,8 @@ fun SearchScreenTopBar(
             },
             actions = {
                 IconButton(
-                    onClick = onFiltersClick
+                    onClick = onFiltersClick,
+                    modifier = Modifier.testTag(SearchScreenTopBarConstants.ACTION_BUTTON_TEST_TAG)
                 ) {
                     Icon(
                         painter = painterResource(LibriaNowIcons.Filters),

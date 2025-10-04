@@ -22,7 +22,7 @@ fun BoxScope.AnimeUpdatesContent(
     navController: NavController,
     viewModel: HomeScreenVM
 ) {
-    if (screenState.isError) {
+    if (screenState.isAnimeUpdatesError) {
         ErrorSection(modifier = Modifier.align(Alignment.Center))
     } else {
         AnimeLVGContainer {

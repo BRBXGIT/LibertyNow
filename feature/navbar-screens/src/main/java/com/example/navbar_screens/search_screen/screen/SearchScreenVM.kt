@@ -125,6 +125,8 @@ class SearchScreenVM @Inject constructor(
                 updateState { it.copy(isFilterBSVisible = !it.isFilterBSVisible) }
             SearchScreenIntent.ChangeReleaseEnd ->
                 updateState { it.copy(releaseEnd = !it.releaseEnd) }
+            is SearchScreenIntent.ChangeAnimeByFiltersError ->
+                updateState { it.copy(isAnimeByFiltersError = intent.isError) }
             is SearchScreenIntent.ChangeAnimeByFiltersLoading ->
                 updateState { it.copy(isAnimeByFiltersLoading = intent.isLoading) }
             is SearchScreenIntent.ChangeSortedBy ->

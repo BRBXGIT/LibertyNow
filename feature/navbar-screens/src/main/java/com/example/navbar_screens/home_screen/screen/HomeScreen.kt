@@ -56,6 +56,9 @@ fun HomeScreen(
         },
         onLoadingChange = {
             viewModel.sendIntent(HomeScreenIntent.ChangeIsLoading(it))
+        },
+        onError = {
+            viewModel.sendIntent(HomeScreenIntent.ChangeIsAnimeByQueryError(it))
         }
     )
 
@@ -96,7 +99,7 @@ fun HomeScreen(
         ) {
             if (screenState.isSearching) {
                 SearchingContent(
-                    query = screenState.query,
+                    screenState = screenState,
                     titlesByQuery = titlesByQuery,
                     onCardClick = { navController.navigate(AnimeScreenRoute(it)) }
                 )

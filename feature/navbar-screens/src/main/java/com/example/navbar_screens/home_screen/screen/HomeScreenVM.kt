@@ -48,13 +48,13 @@ class HomeScreenVM @Inject constructor(
 
     private fun fetchTitlesUpdates() {
         viewModelScope.launch(dispatcherIo) {
-            updateState { it.copy(isLoading = true, isError = false) }
+            updateState { it.copy(isLoading = true, isAnimeUpdatesError = false) }
 
             val response = repository.getTitlesUpdates()
             if (response.error == NetworkErrors.SUCCESS) {
-                updateState { it.copy(isLoading = false, titlesUpdates = response.response!!, isError = false) }
+                updateState { it.copy(isLoading = false, titlesUpdates = response.response!!, isAnimeUpdatesError = false) }
             } else {
-                updateState { it.copy(isLoading = false, isError = true) }
+                updateState { it.copy(isLoading = false, isAnimeUpdatesError = true) }
                 sendRetrySnackbar(
                     label = response.label!!,
                     action = { fetchTitlesUpdates() }
@@ -100,6 +100,7 @@ class HomeScreenVM @Inject constructor(
             is HomeScreenIntent.ChangeIsLoading -> updateState { it.copy(isLoading = intent.isLoading) }
             HomeScreenIntent.ChangeIsSearching -> updateState { it.copy(isSearching = !it.isSearching) }
             is HomeScreenIntent.ChangeQuery -> updateState { it.copy(query = intent.query) }
+            is HomeScreenIntent.ChangeIsAnimeByQueryError -> updateState { it.copy(isAnimeByQueryError = intent.isError) }
         }
     }
 

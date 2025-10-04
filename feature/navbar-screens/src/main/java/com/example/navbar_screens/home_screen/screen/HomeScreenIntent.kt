@@ -6,4 +6,5 @@ sealed interface HomeScreenIntent {
     data class ChangeIsLoading(val isLoading: Boolean): HomeScreenIntent
     data object ChangeIsSearching: HomeScreenIntent
     data class ChangeQuery(val query: String): HomeScreenIntent
+    data class ChangeIsAnimeByQueryError(val isError: Boolean): HomeScreenIntent
 }

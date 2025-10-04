@@ -8,9 +8,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavController
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -27,7 +24,6 @@ import com.example.navbar_screens.home_screen.sections.RandomAnimeButton
 import com.example.navbar_screens.home_screen.sections.RandomAnimeButtonConstants
 import com.example.navbar_screens.home_screen.sections.SearchingContent
 import com.example.network.common.models.anime_list_with_pagination_response.Data
-import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.flowOf
@@ -68,7 +64,7 @@ class HomeScreenTest {
             LibriaNowTheme {
                 Box {
                     AnimeUpdatesContent(
-                        screenState = HomeScreenState(isError = true),
+                        screenState = HomeScreenState(isAnimeUpdatesError = true),
                         navController = navController,
                         viewModel = vm
                     )
@@ -113,7 +109,7 @@ class HomeScreenTest {
             LibriaNowTheme {
                 Box {
                     SearchingContent(
-                        query = "",
+                        screenState = HomeScreenState(query = ""),
                         titlesByQuery = flowOf(PagingData.empty<Data>()).collectAsLazyPagingItems(),
                         onCardClick = {}
                     )
@@ -134,7 +130,7 @@ class HomeScreenTest {
             LibriaNowTheme {
                 Box {
                     SearchingContent(
-                        query = "query",
+                        screenState = HomeScreenState(query = "query"),
                         titlesByQuery = flowOf(PagingData.from(listOf(testItem))).collectAsLazyPagingItems(),
                         onCardClick = { clicked = it }
                     )
@@ -155,25 +151,11 @@ class HomeScreenTest {
     fun searchingContent_displays_errorSection_if_error() {
         val lazyPagingItems = mockk<LazyPagingItems<Data>>(relaxed = true)
 
-        val combinedLoadStates = CombinedLoadStates(
-            refresh = LoadState.Error(Throwable("Test error")),
-            prepend = LoadState.NotLoading(endOfPaginationReached = false),
-            append = LoadState.NotLoading(endOfPaginationReached = false),
-            source = LoadStates(
-                refresh = LoadState.Error(Throwable("Test error")),
-                prepend = LoadState.NotLoading(endOfPaginationReached = false),
-                append = LoadState.NotLoading(endOfPaginationReached = false),
-            ),
-            mediator = null
-        )
-
-        every { lazyPagingItems.loadState } returns combinedLoadStates
-
         composeTestRule.setContent {
             LibriaNowTheme {
                 Box {
                     SearchingContent(
-                        query = "naruto",
+                        screenState = HomeScreenState(query = "naruto", isAnimeByQueryError = true),
                         titlesByQuery = lazyPagingItems,
                         onCardClick = {}
                     )

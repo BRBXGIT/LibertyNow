@@ -29,5 +29,6 @@ data class SearchScreenState(
 
     val isFilterBSVisible: Boolean = false,
 
-    val isAnimeByFiltersLoading: Boolean = false
+    val isAnimeByFiltersLoading: Boolean = false,
+    val isAnimeByFiltersError: Boolean = false
 )

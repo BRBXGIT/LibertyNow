@@ -11,7 +11,8 @@ import com.example.network.common.utils.NetworkException
 fun <T : Any> PagingStatesContainer(
     items: LazyPagingItems<T>,
     onRetryRequest: (label: String, retry: () -> Unit) -> Unit,
-    onLoadingChange: (Boolean) -> Unit
+    onLoadingChange: (Boolean) -> Unit,
+    onError: (Boolean) -> Unit = {}
 ) {
     val refreshState = items.loadState.refresh
 
@@ -23,5 +24,9 @@ fun <T : Any> PagingStatesContainer(
 
     LaunchedEffect(refreshState) {
         onLoadingChange(refreshState is LoadState.Loading)
+    }
+
+    LaunchedEffect(refreshState) {
+        onError(refreshState is LoadState.Error)
     }
 }
