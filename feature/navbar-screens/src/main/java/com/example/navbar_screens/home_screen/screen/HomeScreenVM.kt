@@ -14,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -40,7 +39,6 @@ class HomeScreenVM @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val titlesByQuery = _homeScreenState
         .map { it.query }
-        .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .flatMapLatest { query ->
             repository.getTitlesByQuery(query)
