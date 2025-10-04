@@ -48,4 +48,11 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     // Paging
     implementation(libs.androidx.paging.compose)
+
+    // === Testing ===
+    // Unit tests
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
 }
