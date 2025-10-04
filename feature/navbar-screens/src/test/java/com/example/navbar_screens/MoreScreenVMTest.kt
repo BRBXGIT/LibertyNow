@@ -34,6 +34,8 @@ class MoreScreenVMTest {
             val after = awaitItem()
 
             assertTrue(after.isQuitADVisible)
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

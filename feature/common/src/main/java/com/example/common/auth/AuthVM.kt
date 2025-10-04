@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.dispatchers.Dispatcher
 import com.example.common.dispatchers.LibriaNowDispatchers
+import com.example.common.utils.sendRetrySnackbar
 import com.example.data.domain.AuthRepo
 import com.example.data.domain.LikesRepo
-import com.example.design_system.snackbars.SnackbarAction
-import com.example.design_system.snackbars.SnackbarController
-import com.example.design_system.snackbars.SnackbarEvent
 import com.example.local.datastore.auth.LoggingState
 import com.example.network.common.models.anime_list_with_pagination_response.Data
 import com.example.network.common.utils.NetworkErrors
@@ -50,8 +48,8 @@ class AuthVM @Inject constructor(
             ) { loggingState, token ->
                 loggingState to token
             }.collect { (loggingState, token) ->
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         isLogged = loggingState,
                         sessionToken = token
                     )
@@ -65,8 +63,8 @@ class AuthVM @Inject constructor(
 
     private fun getSessionToken() {
         viewModelScope.launch(dispatcherIo) {
-            _authState.update { state ->
-                state.copy(
+            updateState {
+                it.copy(
                     isLoading = true,
                     incorrectEmail = false,
                     incorrectPassword = false,
@@ -80,30 +78,23 @@ class AuthVM @Inject constructor(
                     authRepository.saveUserSessionToken(response.response!!.token!!)
                 }
                 NetworkErrors.INCORRECT_EMAIL_OR_PASSWORD -> {
-                    _authState.update { state ->
-                        state.copy(
-                            incorrectPassword = true,
+                    updateState {
+                        it.copy(
                             incorrectEmail = true,
+                            incorrectPassword = true,
                             isAuthBSOpened = true
                         )
                     }
                 }
                 else -> {
-                    SnackbarController.sendEvent(
-                        SnackbarEvent(
-                            message = response.label!!,
-                            action = SnackbarAction(
-                                name = "Retry",
-                                action = { getSessionToken() }
-                            )
-                        )
+                    sendRetrySnackbar(
+                        label = response.label!!,
+                        action = { getSessionToken() }
                     )
                 }
             }
 
-            _authState.update { state ->
-                state.copy(isLoading = false)
-            }
+            updateState { it.copy(isLoading = false) }
         }
     }
 
@@ -117,16 +108,16 @@ class AuthVM @Inject constructor(
     private fun fetchLikesAmount() {
         viewModelScope.launch(dispatcherIo) {
             val response = likesRepository.getLikesAmount(_authState.value.sessionToken!!)
-            _authState.update { state ->
-                state.copy(
+            updateState {
+                it.copy(
                     likesError = false,
                     isLoading = true
                 )
             }
 
             if (response.error == NetworkErrors.SUCCESS) {
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         likesAmount = response.response!!.size,
                         isLoading = false
                     )
@@ -135,20 +126,15 @@ class AuthVM @Inject constructor(
                     fetchLikes()
                 }
             } else {
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         likesError = true,
                         isLoading = false
                     )
                 }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = "Проблема в получении избранных: ${response.label!!}",
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { fetchLikesAmount() }
-                        )
-                    )
+                sendRetrySnackbar(
+                    label = "Проблема в получении избранных: ${response.label!!}",
+                    action = { fetchLikesAmount() }
                 )
             }
         }
@@ -156,9 +142,7 @@ class AuthVM @Inject constructor(
 
     private fun fetchLikes() {
         viewModelScope.launch(dispatcherIo) {
-            _authState.update { state ->
-                state.copy(isLoading = true)
-            }
+            updateState { it.copy(isLoading = true) }
 
             val response = likesRepository.getLikes(
                 _authState.value.sessionToken!!,
@@ -166,27 +150,22 @@ class AuthVM @Inject constructor(
             )
 
             if (response.error == NetworkErrors.SUCCESS) {
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         likes = response.response!!.data,
                         isLoading = false
                     )
                 }
             } else {
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         likesError = true,
                         isLoading = false
                     )
                 }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = "Проблема в получении избранных: ${response.label!!}",
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { fetchLikesAmount() }
-                        )
-                    )
+                sendRetrySnackbar(
+                    label = "Проблема в получении избранных: ${response.label!!}",
+                    action = { fetchLikesAmount() }
                 )
             }
         }
@@ -194,9 +173,7 @@ class AuthVM @Inject constructor(
 
     private fun addLike(title: Data) {
         viewModelScope.launch(dispatcherIo) {
-            _authState.update { state ->
-                state.copy(isLoading = true)
-            }
+            updateState { it.copy(isLoading = true) }
 
             val response = likesRepository.addLike(
                 _authState.value.sessionToken!!,
@@ -204,27 +181,22 @@ class AuthVM @Inject constructor(
             )
 
             if (response.error == NetworkErrors.SUCCESS) {
-                _authState.update { state ->
-                    state.copy(
-                        likes = state.likes + title,
+                updateState {
+                    it.copy(
+                        likes = it.likes + title,
                         isLoading = false
                     )
                 }
             } else {
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         likesError = true,
                         isLoading = false
                     )
                 }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = "Ошибка в добавлении избранного: ${response.label!!}",
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { addLike(title) }
-                        )
-                    )
+                sendRetrySnackbar(
+                    label = "Ошибка в добавлении избранного: ${response.label!!}",
+                    action = { fetchLikesAmount() }
                 )
             }
         }
@@ -232,9 +204,7 @@ class AuthVM @Inject constructor(
 
     private fun removeLike(title: Data) {
         viewModelScope.launch(dispatcherIo) {
-            _authState.update { state ->
-                state.copy(isLoading = true)
-            }
+            updateState { it.copy(isLoading = true) }
 
             val response = likesRepository.removeLike(
                 _authState.value.sessionToken!!,
@@ -242,27 +212,22 @@ class AuthVM @Inject constructor(
             )
 
             if (response.error == NetworkErrors.SUCCESS) {
-                _authState.update { state ->
-                    state.copy(
-                        likes = state.likes - title,
+                updateState {
+                    it.copy(
+                        likes = it.likes - title,
                         isLoading = false
                     )
                 }
             } else {
-                _authState.update { state ->
-                    state.copy(
+                updateState {
+                    it.copy(
                         likesError = true,
                         isLoading = false
                     )
                 }
-                SnackbarController.sendEvent(
-                    SnackbarEvent(
-                        message = "Ошибка в добавлении избранного: ${response.label!!}",
-                        action = SnackbarAction(
-                            name = "Retry",
-                            action = { addLike(title) }
-                        )
-                    )
+                sendRetrySnackbar(
+                    label = "Ошибка в удалении избранного: ${response.label!!}",
+                    action = { fetchLikesAmount() }
                 )
             }
         }
