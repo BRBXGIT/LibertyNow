@@ -3,6 +3,8 @@ package com.example.navbar_screens.likes_screen.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -26,10 +28,17 @@ fun NavGraphBuilder.likesScreen(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
 ) {
+    val authState by authVM.authState.collectAsStateWithLifecycle()
+    val commonState by commonVM.commonState.collectAsStateWithLifecycle()
+    val likesScreenState by likesScreenVM.likesScreenState.collectAsStateWithLifecycle()
+
     LikesScreen(
-        viewModel = likesScreenVM,
-        commonVM = commonVM,
-        authVM = authVM,
+        authState = authState,
+        commonState = commonState,
+        screenState = likesScreenState,
+        onIntent = likesScreenVM::sendIntent,
+        onAuthIntent = authVM::sendIntent,
+        onCommonIntent = commonVM::sendIntent,
         navController = navController,
         useExpressive = useExpressive
     )

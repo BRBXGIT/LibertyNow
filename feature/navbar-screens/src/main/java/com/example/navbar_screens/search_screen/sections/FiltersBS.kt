@@ -18,7 +18,6 @@ import com.example.design_system.theme.CommonConstants
 import com.example.design_system.theme.mShapes
 import com.example.navbar_screens.search_screen.screen.SearchScreenIntent
 import com.example.navbar_screens.search_screen.screen.SearchScreenState
-import com.example.navbar_screens.search_screen.screen.SearchScreenVM
 
 object FiltersBSConstants {
     const val BOTTOM_SHEET_TEST_TAG = "BottomSheetTestTag"
@@ -30,10 +29,10 @@ object FiltersBSConstants {
 fun FiltersBS(
     screenState: SearchScreenState,
     topInnerPadding: Dp,
-    viewModel: SearchScreenVM,
+    onIntent: (SearchScreenIntent) -> Unit
 ) {
     ModalBottomSheet(
-        onDismissRequest = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) },
+        onDismissRequest = { onIntent(SearchScreenIntent.ChangeFiltersBSVisible) },
         shape = mShapes.small,
         modifier = Modifier
             .padding(top = topInnerPadding)
@@ -52,19 +51,19 @@ fun FiltersBS(
         ) {
             filterSection(
                 releaseEnd = screenState.releaseEnd,
-                onReleaseEndClick = { viewModel.sendIntent(SearchScreenIntent.ChangeReleaseEnd) }
+                onReleaseEndClick = { onIntent(SearchScreenIntent.ChangeReleaseEnd) }
             )
 
             sortSection(
                 sort = screenState.sortedBy,
-                onSortClick = { viewModel.sendIntent(SearchScreenIntent.ChangeSortedBy(it)) }
+                onSortClick = { onIntent(SearchScreenIntent.ChangeSortedBy(it)) }
             )
 
             yearsSection(
                 fromYear = screenState.fromYear,
                 toYear = screenState.toYear,
-                onFromYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeFromYear(it)) },
-                onToYearChange = { viewModel.sendIntent(SearchScreenIntent.ChangeToYear(it)) },
+                onFromYearChange = { onIntent(SearchScreenIntent.ChangeFromYear(it)) },
+                onToYearChange = { onIntent(SearchScreenIntent.ChangeToYear(it)) },
             )
 
             seasonSection(
@@ -72,7 +71,7 @@ fun FiltersBS(
                 chosenSeasons = screenState.chosenSeasons,
                 onSeasonClick = {
                     val currentSeasons = screenState.chosenSeasons.toMutableList()
-                    viewModel.sendIntent(
+                    onIntent(
                         SearchScreenIntent.ChangeChosenSeasons(
                             seasons = if (it in currentSeasons) currentSeasons - it else currentSeasons + it
                         )
@@ -85,10 +84,10 @@ fun FiltersBS(
                 chosenGenres = screenState.chosenAnimeGenres,
                 isLoading = screenState.isAnimeGenresLoading,
                 isError = screenState.isAnimeGenresError,
-                onGenresRetryClick = { viewModel.sendIntent(SearchScreenIntent.FetchAnimeGenres) },
+                onGenresRetryClick = { onIntent(SearchScreenIntent.FetchAnimeGenres) },
                 onGenreClick = {
                     val currentGenres = screenState.chosenAnimeGenres.toMutableList()
-                    viewModel.sendIntent(
+                    onIntent(
                         SearchScreenIntent.ChangeChosenAnimeGenres(
                             genres = if (it in currentGenres) currentGenres - it else currentGenres + it
                         )

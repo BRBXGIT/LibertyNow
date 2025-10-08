@@ -1,13 +1,16 @@
 package com.example.navbar_screens
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.common.CommonState
@@ -62,11 +65,17 @@ class SearchScreenTest {
         every { vm.searchScreenState } returns errorState
 
         composeTestRule.setContent {
+            val fakePagingItems = flowOf(PagingData.empty<Data>()).collectAsLazyPagingItems()
+            val state by vm.searchScreenState.collectAsStateWithLifecycle()
+
             SearchScreen(
-                viewModel = vm,
-                commonVM = commonVM,
+                screenState = state,
+                commonState = CommonState(),
+                animeByFilters = fakePagingItems,
+                onIntent = {},
+                onCommonIntent = {},
                 navController = navController,
-                useExpressive = false
+                useExpressive = false,
             )
         }
 
@@ -81,11 +90,17 @@ class SearchScreenTest {
         every { vm.searchScreenState } returns stateFlow
 
         composeTestRule.setContent {
+            val fakePagingItems = flowOf(PagingData.empty<Data>()).collectAsLazyPagingItems()
+            val state by vm.searchScreenState.collectAsStateWithLifecycle()
+
             SearchScreen(
-                viewModel = vm,
-                commonVM = commonVM,
+                screenState = state,
+                commonState = CommonState(),
+                animeByFilters = fakePagingItems,
+                onIntent = {},
+                onCommonIntent = {},
                 navController = navController,
-                useExpressive = false
+                useExpressive = false,
             )
         }
 
@@ -111,11 +126,16 @@ class SearchScreenTest {
         every { vm.animeByFilters } returns pagingItems
 
         composeTestRule.setContent {
+            val fakePagingItems = vm.animeByFilters.collectAsLazyPagingItems()
+
             SearchScreen(
-                viewModel = vm,
-                commonVM = commonVM,
+                screenState = SearchScreenState(isAnimeByFiltersError = true),
+                commonState = CommonState(),
+                animeByFilters = fakePagingItems,
+                onIntent = {},
+                onCommonIntent = {},
                 navController = navController,
-                useExpressive = false
+                useExpressive = false,
             )
         }
 

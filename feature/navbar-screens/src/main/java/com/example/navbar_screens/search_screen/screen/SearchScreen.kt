@@ -10,17 +10,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.LazyPagingItems
 import com.example.common.common.CommonIntent
-import com.example.common.common.CommonVM
+import com.example.common.common.CommonState
 import com.example.common.utils.PagingStatesContainer
 import com.example.common.utils.sendRetrySnackbar
 import com.example.design_system.sections.error_section.ErrorSection
@@ -30,33 +28,28 @@ import com.example.navbar_screens.common.BottomNavBar
 import com.example.navbar_screens.search_screen.sections.AnimeByFiltersSection
 import com.example.navbar_screens.search_screen.sections.FiltersBS
 import com.example.navbar_screens.search_screen.sections.SearchScreenTopBar
+import com.example.network.common.models.anime_list_with_pagination_response.Data
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    viewModel: SearchScreenVM,
-    commonVM: CommonVM,
     navController: NavController,
-    useExpressive: Boolean
+    useExpressive: Boolean,
+    screenState: SearchScreenState,
+    commonState: CommonState,
+    animeByFilters: LazyPagingItems<Data>,
+    onIntent: (SearchScreenIntent) -> Unit,
+    onCommonIntent: (CommonIntent) -> Unit
 ) {
-    val animeByFilters = viewModel.animeByFilters.collectAsLazyPagingItems()
-
-    val screenState by viewModel.searchScreenState.collectAsStateWithLifecycle()
-    val commonState by commonVM.commonState.collectAsStateWithLifecycle()
-
     val snackbarScope = rememberCoroutineScope()
     PagingStatesContainer(
         items = animeByFilters,
         onRetryRequest = { label, retry ->
             snackbarScope.launch { sendRetrySnackbar(label, retry) }
         },
-        onLoadingChange = {
-            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading(it))
-        },
-        onError = {
-            viewModel.sendIntent(SearchScreenIntent.ChangeAnimeByFiltersError(it))
-        }
+        onLoadingChange = { onIntent(SearchScreenIntent.ChangeAnimeByFiltersLoading(it)) },
+        onError = { onIntent(SearchScreenIntent.ChangeAnimeByFiltersError(it)) }
     )
 
     // Snackbars stuff
@@ -70,7 +63,7 @@ fun SearchScreen(
             BottomNavBar(
                 selectedItemIndex = commonState.selectedNavBarIndex,
                 onNavItemClick = { index, route ->
-                    commonVM.sendIntent(CommonIntent.ChangeNavIndex(index))
+                    onCommonIntent(CommonIntent.ChangeNavIndex(index))
                     navController.navigate(route)
                 }
             )
@@ -80,7 +73,7 @@ fun SearchScreen(
                 useExpressive = useExpressive,
                 isLoading = screenState.isAnimeByFiltersLoading,
                 scrollBehavior = topBarScrollBehavior,
-                onFiltersClick = { viewModel.sendIntent(SearchScreenIntent.ChangeFiltersBSVisible) }
+                onFiltersClick = { onIntent(SearchScreenIntent.ChangeFiltersBSVisible) }
             )
         },
         modifier = Modifier
@@ -91,7 +84,7 @@ fun SearchScreen(
             FiltersBS(
                 screenState = screenState,
                 topInnerPadding = innerPadding.calculateTopPadding(),
-                viewModel = viewModel,
+                onIntent = onIntent
             )
         }
 

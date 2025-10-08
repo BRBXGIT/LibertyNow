@@ -13,7 +13,10 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="moreItemUi_calls_navigate_method()">
+      <SelectionState runConfigName="animeUpdatesContent_displays_errorSection_if_error()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="animeUpdatesContent_displays_animeLVGContainer_if_success()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

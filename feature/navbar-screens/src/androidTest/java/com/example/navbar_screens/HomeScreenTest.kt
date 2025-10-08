@@ -66,7 +66,7 @@ class HomeScreenTest {
                     AnimeUpdatesContent(
                         screenState = HomeScreenState(isAnimeUpdatesError = true),
                         navController = navController,
-                        viewModel = vm
+                        onIntent = vm::sendIntent
                     )
                 }
             }
@@ -83,7 +83,7 @@ class HomeScreenTest {
                     AnimeUpdatesContent(
                         screenState = HomeScreenState(),
                         navController = navController,
-                        viewModel = vm
+                        onIntent = vm::sendIntent
                     )
                 }
             }

@@ -10,16 +10,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.common.auth.AuthIntent
-import com.example.common.auth.AuthVM
+import com.example.common.auth.AuthState
 import com.example.common.common.CommonIntent
-import com.example.common.common.CommonVM
+import com.example.common.common.CommonState
 import com.example.design_system.sections.auth_bs.AuthBS
 import com.example.design_system.snackbars.SnackbarObserver
 import com.example.design_system.theme.mColors
@@ -32,17 +30,15 @@ import com.example.local.datastore.auth.LoggingState as UserAuthState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LikesScreen(
-    viewModel: LikesScreenVM,
-    commonVM: CommonVM,
-    authVM: AuthVM,
+    authState: AuthState,
+    commonState: CommonState,
+    screenState: LikesScreenState,
     navController: NavController,
-    useExpressive: Boolean
+    useExpressive: Boolean,
+    onIntent: (LikesScreenIntent) -> Unit,
+    onAuthIntent: (AuthIntent) -> Unit,
+    onCommonIntent: (CommonIntent) -> Unit
 ) {
-    val authState by authVM.authState.collectAsStateWithLifecycle()
-    val commonState by commonVM.commonState.collectAsStateWithLifecycle()
-
-    val screenState by viewModel.likesScreenState.collectAsStateWithLifecycle()
-
     // Snackbars stuff
     val snackbarHostState = remember { SnackbarHostState() }
     SnackbarObserver(snackbarHostState)
@@ -54,7 +50,7 @@ fun LikesScreen(
             BottomNavBar(
                 selectedItemIndex = commonState.selectedNavBarIndex,
                 onNavItemClick = { index, route ->
-                    commonVM.sendIntent(CommonIntent.ChangeNavIndex(index))
+                    onCommonIntent(CommonIntent.ChangeNavIndex(index))
                     navController.navigate(route)
                 }
             )
@@ -67,9 +63,9 @@ fun LikesScreen(
                 isSearching = screenState.isSearching,
                 isLoading = authState.isLoading,
                 scrollBehavior = topBarScrollBehavior,
-                onSearchClick = { viewModel.sendIntent(LikesScreenIntent.ChangeIsSearching) },
-                onQueryInput = { viewModel.sendIntent(LikesScreenIntent.ChangeQuery(it)) },
-                onClearClick = { viewModel.sendIntent(LikesScreenIntent.ChangeQuery("")) }
+                onSearchClick = { onIntent(LikesScreenIntent.ChangeIsSearching) },
+                onQueryInput = { onIntent(LikesScreenIntent.ChangeQuery(it)) },
+                onClearClick = { onIntent(LikesScreenIntent.ChangeQuery("")) }
             )
         },
         modifier = Modifier
@@ -89,11 +85,11 @@ fun LikesScreen(
                     isPasswordVisible = authState.isPasswordVisible,
                     incorrectEmail = authState.incorrectEmail,
                     incorrectPassword = authState.incorrectPassword,
-                    onDismissRequest = { authVM.sendIntent(AuthIntent.ChangeIsAuthBsOpened) },
-                    onPasswordChange = { authVM.sendIntent(AuthIntent.ChangePassword(it)) },
-                    onEmailChange = { authVM.sendIntent(AuthIntent.ChangeEmail(it)) },
-                    onAuthClick = { authVM.sendIntent(AuthIntent.GetSessionToken) },
-                    onVisibleClick = { authVM.sendIntent(AuthIntent.ChangeIsPasswordVisible) }
+                    onDismissRequest = { onAuthIntent(AuthIntent.ChangeIsAuthBsOpened) },
+                    onPasswordChange = { onAuthIntent(AuthIntent.ChangePassword(it)) },
+                    onEmailChange = { onAuthIntent(AuthIntent.ChangeEmail(it)) },
+                    onAuthClick = { onAuthIntent(AuthIntent.GetSessionToken) },
+                    onVisibleClick = { onAuthIntent(AuthIntent.ChangeIsPasswordVisible) }
                 )
             }
 
@@ -109,7 +105,7 @@ fun LikesScreen(
                 UserAuthState.LoggedOut -> {
                     if (!authState.isLoading) {
                         LoggedOutSection(
-                            onAuthClick = { authVM.sendIntent(AuthIntent.ChangeIsAuthBsOpened) }
+                            onAuthClick = { onAuthIntent(AuthIntent.ChangeIsAuthBsOpened) }
                         )
                     }
                 }

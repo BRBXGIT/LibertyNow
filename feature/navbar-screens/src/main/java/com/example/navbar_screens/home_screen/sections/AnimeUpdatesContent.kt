@@ -14,13 +14,12 @@ import com.example.design_system.theme.DesignUtils
 import com.example.navbar_screens.common.AnimeLVGContainer
 import com.example.navbar_screens.home_screen.screen.HomeScreenIntent
 import com.example.navbar_screens.home_screen.screen.HomeScreenState
-import com.example.navbar_screens.home_screen.screen.HomeScreenVM
 
 @Composable
 fun BoxScope.AnimeUpdatesContent(
     screenState: HomeScreenState,
     navController: NavController,
-    viewModel: HomeScreenVM
+    onIntent: (HomeScreenIntent) -> Unit
 ) {
     if (screenState.isAnimeUpdatesError) {
         ErrorSection(modifier = Modifier.align(Alignment.Center))
@@ -31,7 +30,7 @@ fun BoxScope.AnimeUpdatesContent(
             ) {
                 RandomAnimeButton(
                     onClick = {
-                        viewModel.sendIntent(
+                        onIntent(
                             HomeScreenIntent.FetchRandomTitle(
                                 onComplete = {
                                     navController.navigate(AnimeScreenRoute(it))

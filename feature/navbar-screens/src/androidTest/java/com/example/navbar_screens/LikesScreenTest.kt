@@ -11,7 +11,7 @@ import com.example.anime_screen.navigation.AnimeScreenRoute
 import com.example.common.auth.AuthIntent
 import com.example.common.auth.AuthState
 import com.example.common.auth.AuthVM
-import com.example.common.common.CommonVM
+import com.example.common.common.CommonState
 import com.example.data.domain.AuthRepo
 import com.example.data.domain.LikesRepo
 import com.example.design_system.sections.auth_bs.AuthBSConstants
@@ -19,7 +19,6 @@ import com.example.design_system.theme.LibriaNowTheme
 import com.example.local.datastore.auth.LoggingState
 import com.example.navbar_screens.likes_screen.screen.LikesScreen
 import com.example.navbar_screens.likes_screen.screen.LikesScreenState
-import com.example.navbar_screens.likes_screen.screen.LikesScreenVM
 import com.example.navbar_screens.likes_screen.sections.LoggedInSection
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSection
 import com.example.navbar_screens.likes_screen.sections.LoggedOutSectionConstants
@@ -43,9 +42,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class LikesScreenTest {
 
-    private lateinit var vm: LikesScreenVM
     private lateinit var authVM: AuthVM
-    private lateinit var commonVM: CommonVM
 
     private val navController: NavController = mockk(relaxed = true)
     private val authRepo: AuthRepo = mockk(relaxed = true)
@@ -60,9 +57,7 @@ class LikesScreenTest {
         coEvery { authRepo.loggingState } returns flowOf(LoggingState.LoggedOut)
         coEvery { authRepo.userSessionToken } returns flowOf(null)
 
-        vm = LikesScreenVM()
         authVM = AuthVM(authRepo, likesRepo, dispatcher)
-        commonVM = CommonVM()
         Dispatchers.setMain(dispatcher)
     }
 
@@ -76,11 +71,14 @@ class LikesScreenTest {
         composeTestRule.setContent {
             LibriaNowTheme {
                 LikesScreen(
-                    viewModel = vm,
-                    commonVM = commonVM,
-                    authVM = authVM,
+                    authState = AuthState(isAuthBSOpened = true),
+                    commonState = CommonState(),
+                    screenState = LikesScreenState(),
                     navController = navController,
-                    useExpressive = false
+                    useExpressive = false,
+                    onIntent = {},
+                    onAuthIntent = {},
+                    onCommonIntent = {}
                 )
             }
         }

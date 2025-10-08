@@ -1,11 +1,13 @@
 package com.example.navbar_screens
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.common.auth.AuthState
@@ -58,11 +60,16 @@ class MoreScreenTest {
         every { vm.moreScreenState } returns MutableStateFlow(quitAdVisibleState)
 
         composeTestRule.setContent {
+            val moreScreenState by vm.moreScreenState.collectAsStateWithLifecycle()
+
             LibriaNowTheme {
                 MoreScreen(
-                    commonVM = commonVM,
-                    viewModel = vm,
-                    authVM = authVM,
+                    commonState = CommonState(),
+                    screenState = moreScreenState,
+                    authState = AuthState(),
+                    onCommonIntent = {},
+                    onAuthIntent = {},
+                    onIntent = {},
                     navController = navController
                 )
             }
@@ -78,9 +85,12 @@ class MoreScreenTest {
         composeTestRule.setContent {
             LibriaNowTheme {
                 MoreScreen(
-                    commonVM = commonVM,
-                    viewModel = vm,
-                    authVM = authVM,
+                    commonState = CommonState(),
+                    screenState = MoreScreenState(),
+                    authState = AuthState(),
+                    onCommonIntent = {},
+                    onAuthIntent = {},
+                    onIntent = {},
                     navController = navController
                 )
             }
@@ -118,9 +128,12 @@ class MoreScreenTest {
         composeTestRule.setContent {
             LibriaNowTheme {
                 MoreScreen(
-                    commonVM = commonVM,
-                    viewModel = vm,
-                    authVM = authVM,
+                    commonState = CommonState(),
+                    screenState = MoreScreenState(),
+                    authState = AuthState(),
+                    onCommonIntent = {},
+                    onAuthIntent = {},
+                    onIntent = {},
                     navController = navController
                 )
             }

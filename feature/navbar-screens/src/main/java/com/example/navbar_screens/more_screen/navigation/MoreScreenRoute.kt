@@ -3,6 +3,8 @@ package com.example.navbar_screens.more_screen.navigation
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -25,10 +27,17 @@ fun NavGraphBuilder.moreScreen(
     enterTransition = { fadeIn(tween(CommonConstants.ANIMATION_DURATION)) },
     exitTransition = { fadeOut(tween(CommonConstants.ANIMATION_DURATION)) }
 ) {
+    val commonState by commonVM.commonState.collectAsStateWithLifecycle()
+    val moreScreenState by moreScreenVM.moreScreenState.collectAsStateWithLifecycle()
+    val authState by authVM.authState.collectAsStateWithLifecycle()
+
     MoreScreen(
-        commonVM = commonVM,
+        commonState = commonState,
+        screenState = moreScreenState,
+        authState = authState,
+        onCommonIntent = commonVM::sendIntent,
+        onAuthIntent = authVM::sendIntent,
+        onIntent = moreScreenVM::sendIntent,
         navController = navController,
-        viewModel = moreScreenVM,
-        authVM = authVM
     )
 }
