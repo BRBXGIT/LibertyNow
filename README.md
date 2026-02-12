@@ -5,6 +5,8 @@
 # LibertyNow
 
 ### Неофициальный андроид клиент для [AniLiberty](https://anilibria.top/)
+### Project was migrated to [LibertyFlow](https://github.com/BRBXGIT/LibertyFlow) all new versions and fiterues there
+### This project is not supported anymore
 
 <img src="docs/app_logo.png"/>
 
@@ -35,3 +37,4 @@
 - Также если у вас не грузятся какие-то данные, например картинки, попробуйте подключить впн или dpi спуфер
 ## App preview
 https://github.com/user-attachments/assets/2eedc439-b503-49e0-929c-e30061b91116
+
